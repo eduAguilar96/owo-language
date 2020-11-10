@@ -102,7 +102,13 @@ precedence = (
     )
 
 # dictionary of names (for storing variables)
-names = { }
+current_type = None
+current_func = '#global'
+names = {
+    '#global': {
+        'vars': {}
+    }
+}
 
 start = 'PROGRAM'
 
@@ -125,13 +131,18 @@ def p_PROGRAM_AUX(p):
     '''
     pass
 
+def p_n_seen_type(p):
+    'n_seen_type : '
+    global current_type
+    current_type = p[-1]
+
 def p_TYPE(p):
     '''
-    TYPE : INT_TYPE
-    | STRING_TYPE
-    | DOUBLE_TYPE
-    | FLOAT_TYPE
-    | BOOL_TYPE
+    TYPE : INT_TYPE n_seen_type
+    | STRING_TYPE n_seen_type
+    | DOUBLE_TYPE n_seen_type
+    | FLOAT_TYPE n_seen_type
+    | BOOL_TYPE n_seen_type
     '''
     pass
 
@@ -235,9 +246,15 @@ def p_ASSIGN(p):
     '''
     pass
 
+def p_n_name_assign_aux(p):
+    'n_name_assign_aux : '
+    names[current_func]['vars'][p[-1]] = {
+        'type': current_type
+    }
+
 def p_ASSIGN_AUX(p):
     '''
-    ASSIGN_AUX : NAME EQUAL EXPRESSION
+    ASSIGN_AUX : NAME n_name_assign_aux EQUAL EXPRESSION
     '''
     pass
 
@@ -368,6 +385,7 @@ while True:
 
 result = parser.parse(data)
 print(result)
+print(names)
 
 # Notas para el futuro
 # nos falto definir 'true' y 'false' como constantes para variables de tipo bool
