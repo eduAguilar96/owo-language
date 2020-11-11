@@ -1,7 +1,7 @@
 import sys
 from scope_tree import ScopeTree
-from ply import lex
-from ply import yacc
+import lex
+import yacc
 
 reserved = {
     # Types
