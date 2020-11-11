@@ -35,122 +35,126 @@ Rule 23    literal -> INT
 Rule 24    literal -> STRING
 Rule 25    function_type -> type
 Rule 26    function_type -> VOID
-Rule 27    function_definition -> FUNCTION NAME parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY
-Rule 28    function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS
-Rule 29    parameter_list -> empty
-Rule 30    parameter_list -> parameter
-Rule 31    parameter_list -> parameter COMMA parameter_list
-Rule 32    parameter -> type NAME
-Rule 33    parameter -> assign
-Rule 34    expression -> exp
-Rule 35    expression -> exp logic_operator exp
-Rule 36    exp -> termino
-Rule 37    exp -> termino PLUS exp
-Rule 38    exp -> termino MINUS exp
-Rule 39    termino -> factor
-Rule 40    termino -> factor TIMES termino
-Rule 41    termino -> factor DIVIDE termino
-Rule 42    factor -> LPARENTHESIS expression RPARENTHESIS
-Rule 43    factor -> PLUS value
-Rule 44    factor -> MINUS value
-Rule 45    factor -> value
-Rule 46    value -> function_call
-Rule 47    value -> literal
-Rule 48    value -> NAME
-Rule 49    assign -> type NAME n_name_assign EQUAL expression
-Rule 50    assign -> NAME n_name_assign EQUAL expression
-Rule 51    n_name_assign -> <empty>
-Rule 52    statement -> statement_aux SEMICOLON
-Rule 53    statement_aux -> assign
-Rule 54    statement_aux -> function_call
-Rule 55    codeblock -> empty
-Rule 56    codeblock -> codeblock_aux codeblock
-Rule 57    codeblock_aux -> statement
-Rule 58    codeblock_aux -> function_definition
-Rule 59    codeblock_aux -> condition_if
-Rule 60    codeblock_aux -> loop
-Rule 61    loop -> forloop
-Rule 62    loop -> whileloop
-Rule 63    whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY
-Rule 64    forloop -> FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY
-Rule 65    condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY condition_else
-Rule 66    condition_else -> ELSE LCURLY codeblock RCURLY
-Rule 67    condition_else -> empty
+Rule 27    n_open_new_scope -> <empty>
+Rule 28    n_close_scope -> <empty>
+Rule 29    function_definition -> FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope
+Rule 30    function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS
+Rule 31    parameter_list -> empty
+Rule 32    parameter_list -> parameter
+Rule 33    parameter_list -> parameter COMMA parameter_list
+Rule 34    parameter -> type NAME n_name_assign
+Rule 35    parameter -> assign
+Rule 36    expression -> exp
+Rule 37    expression -> exp logic_operator exp
+Rule 38    exp -> termino
+Rule 39    exp -> termino PLUS exp
+Rule 40    exp -> termino MINUS exp
+Rule 41    termino -> factor
+Rule 42    termino -> factor TIMES termino
+Rule 43    termino -> factor DIVIDE termino
+Rule 44    factor -> LPARENTHESIS expression RPARENTHESIS
+Rule 45    factor -> PLUS value
+Rule 46    factor -> MINUS value
+Rule 47    factor -> value
+Rule 48    value -> function_call
+Rule 49    value -> literal
+Rule 50    value -> NAME
+Rule 51    assign -> type NAME n_name_assign EQUAL expression
+Rule 52    assign -> NAME n_name_assign EQUAL expression
+Rule 53    n_name_assign -> <empty>
+Rule 54    statement -> statement_aux SEMICOLON
+Rule 55    statement_aux -> assign
+Rule 56    statement_aux -> function_call
+Rule 57    codeblock -> empty
+Rule 58    codeblock -> codeblock_aux codeblock
+Rule 59    codeblock_aux -> statement
+Rule 60    codeblock_aux -> function_definition
+Rule 61    codeblock_aux -> condition_if
+Rule 62    codeblock_aux -> loop
+Rule 63    loop -> forloop
+Rule 64    loop -> whileloop
+Rule 65    whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope
+Rule 66    forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope
+Rule 67    condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else
+Rule 68    condition_else -> ELSE LCURLY n_open_new_scope codeblock RCURLY n_close_scope
+Rule 69    condition_else -> empty
 
 Terminals, with rules where they appear
 
 BOOL_TYPE            : 10
-COMMA                : 31
-DIVIDE               : 20 41
+COMMA                : 33
+DIVIDE               : 20 43
 DOT                  : 
-DOUBLEDOT            : 27 64 64
+DOUBLEDOT            : 29 66 66
 DOUBLE_TYPE          : 8
-ELSE                 : 66
-EQUAL                : 49 50
+ELSE                 : 68
+EQUAL                : 51 52
 EQUALEQUAL           : 13
 FLOAT                : 22
 FLOAT_TYPE           : 9
-FOR                  : 64
-FUNCTION             : 27
+FOR                  : 66
+FUNCTION             : 29
 GREATERTHAN          : 11
 GREATERTHANOREQUAL   : 15
 IDK                  : 3
-IF                   : 65
+IF                   : 67
 INT                  : 23
 INT_TYPE             : 6
 LBRACKET             : 
-LCURLY               : 27 63 64 65 66
+LCURLY               : 29 65 66 67 68
 LESSTHAN             : 12
 LESSTHANOREQUAL      : 14
-LPARENTHESIS         : 28 42 63 64 65
-MINUS                : 18 38 44
+LPARENTHESIS         : 30 44 65 66 67
+MINUS                : 18 40 46
 MODULUS              : 21
-NAME                 : 27 28 32 48 49 50
+NAME                 : 29 30 34 50 51 52
 NOTEQUAL             : 16
 OWO                  : 4
-PLUS                 : 17 37 43
+PLUS                 : 17 39 45
 RBRACKET             : 
-RCURLY               : 27 63 64 65 66
-RPARENTHESIS         : 28 42 63 64 65
-SEMICOLON            : 52
+RCURLY               : 29 65 66 67 68
+RPARENTHESIS         : 30 44 65 66 67
+SEMICOLON            : 54
 STRING               : 24
 STRING_TYPE          : 7
-TIMES                : 19 40
+TIMES                : 19 42
 VOID                 : 26
-WHILE                : 63
+WHILE                : 65
 error                : 
 
 Nonterminals, with rules where they appear
 
 arithmetic_operator  : 
-assign               : 33 53 64 64
-codeblock            : 2 27 56 63 64 65 66
-codeblock_aux        : 56
-condition_else       : 65
-condition_if         : 59
-empty                : 29 55 67
-exp                  : 34 35 35 37 38
-expression           : 42 49 50 63 64 65
-factor               : 39 40 41
-forloop              : 61
-function_call        : 46 54
-function_definition  : 58
-function_type        : 27
-literal              : 47
-logic_operator       : 35
-loop                 : 60
-n_name_assign        : 49 50
+assign               : 35 55 66 66
+codeblock            : 2 29 58 65 66 67 68
+codeblock_aux        : 58
+condition_else       : 67
+condition_if         : 61
+empty                : 31 57 69
+exp                  : 36 37 37 39 40
+expression           : 44 51 52 65 66 67
+factor               : 41 42 43
+forloop              : 63
+function_call        : 48 56
+function_definition  : 60
+function_type        : 29
+literal              : 49
+logic_operator       : 37
+loop                 : 62
+n_close_scope        : 29 65 66 67 68
+n_name_assign        : 34 51 52
+n_open_new_scope     : 29 65 66 67 68
 n_seen_type          : 6 7 8 9 10
-parameter            : 30 31
-parameter_list       : 27 28 31
+parameter            : 32 33
+parameter_list       : 29 30 33
 program              : 0
 program_aux          : 2
-statement            : 57
-statement_aux        : 52
-termino              : 36 37 38 40 41
-type                 : 25 32 49
-value                : 43 44 45
-whileloop            : 62
+statement            : 59
+statement_aux        : 54
+termino              : 38 39 40 42 43
+type                 : 25 34 51
+value                : 45 46 47
+whileloop            : 64
 
 Parsing method: LALR
 
@@ -176,25 +180,25 @@ state 1
 state 2
 
     (2) program -> program_aux . codeblock
-    (55) codeblock -> . empty
-    (56) codeblock -> . codeblock_aux codeblock
+    (57) codeblock -> . empty
+    (58) codeblock -> . codeblock_aux codeblock
     (1) empty -> .
-    (57) codeblock_aux -> . statement
-    (58) codeblock_aux -> . function_definition
-    (59) codeblock_aux -> . condition_if
-    (60) codeblock_aux -> . loop
-    (52) statement -> . statement_aux SEMICOLON
-    (27) function_definition -> . FUNCTION NAME parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY
-    (65) condition_if -> . IF LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY condition_else
-    (61) loop -> . forloop
-    (62) loop -> . whileloop
-    (53) statement_aux -> . assign
-    (54) statement_aux -> . function_call
-    (64) forloop -> . FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY
-    (63) whileloop -> . WHILE LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY
-    (49) assign -> . type NAME n_name_assign EQUAL expression
-    (50) assign -> . NAME n_name_assign EQUAL expression
-    (28) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
+    (59) codeblock_aux -> . statement
+    (60) codeblock_aux -> . function_definition
+    (61) codeblock_aux -> . condition_if
+    (62) codeblock_aux -> . loop
+    (54) statement -> . statement_aux SEMICOLON
+    (29) function_definition -> . FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope
+    (67) condition_if -> . IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else
+    (63) loop -> . forloop
+    (64) loop -> . whileloop
+    (55) statement_aux -> . assign
+    (56) statement_aux -> . function_call
+    (66) forloop -> . FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope
+    (65) whileloop -> . WHILE LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope
+    (51) assign -> . type NAME n_name_assign EQUAL expression
+    (52) assign -> . NAME n_name_assign EQUAL expression
+    (30) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
     (6) type -> . INT_TYPE n_seen_type
     (7) type -> . STRING_TYPE n_seen_type
     (8) type -> . DOUBLE_TYPE n_seen_type
@@ -270,34 +274,34 @@ state 5
 
 state 6
 
-    (55) codeblock -> empty .
+    (57) codeblock -> empty .
 
-    $end            reduce using rule 55 (codeblock -> empty .)
-    RCURLY          reduce using rule 55 (codeblock -> empty .)
+    $end            reduce using rule 57 (codeblock -> empty .)
+    RCURLY          reduce using rule 57 (codeblock -> empty .)
 
 
 state 7
 
-    (56) codeblock -> codeblock_aux . codeblock
-    (55) codeblock -> . empty
-    (56) codeblock -> . codeblock_aux codeblock
+    (58) codeblock -> codeblock_aux . codeblock
+    (57) codeblock -> . empty
+    (58) codeblock -> . codeblock_aux codeblock
     (1) empty -> .
-    (57) codeblock_aux -> . statement
-    (58) codeblock_aux -> . function_definition
-    (59) codeblock_aux -> . condition_if
-    (60) codeblock_aux -> . loop
-    (52) statement -> . statement_aux SEMICOLON
-    (27) function_definition -> . FUNCTION NAME parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY
-    (65) condition_if -> . IF LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY condition_else
-    (61) loop -> . forloop
-    (62) loop -> . whileloop
-    (53) statement_aux -> . assign
-    (54) statement_aux -> . function_call
-    (64) forloop -> . FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY
-    (63) whileloop -> . WHILE LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY
-    (49) assign -> . type NAME n_name_assign EQUAL expression
-    (50) assign -> . NAME n_name_assign EQUAL expression
-    (28) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
+    (59) codeblock_aux -> . statement
+    (60) codeblock_aux -> . function_definition
+    (61) codeblock_aux -> . condition_if
+    (62) codeblock_aux -> . loop
+    (54) statement -> . statement_aux SEMICOLON
+    (29) function_definition -> . FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope
+    (67) condition_if -> . IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else
+    (63) loop -> . forloop
+    (64) loop -> . whileloop
+    (55) statement_aux -> . assign
+    (56) statement_aux -> . function_call
+    (66) forloop -> . FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope
+    (65) whileloop -> . WHILE LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope
+    (51) assign -> . type NAME n_name_assign EQUAL expression
+    (52) assign -> . NAME n_name_assign EQUAL expression
+    (30) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
     (6) type -> . INT_TYPE n_seen_type
     (7) type -> . STRING_TYPE n_seen_type
     (8) type -> . DOUBLE_TYPE n_seen_type
@@ -333,175 +337,175 @@ state 7
 
 state 8
 
-    (57) codeblock_aux -> statement .
+    (59) codeblock_aux -> statement .
 
-    FUNCTION        reduce using rule 57 (codeblock_aux -> statement .)
-    IF              reduce using rule 57 (codeblock_aux -> statement .)
-    FOR             reduce using rule 57 (codeblock_aux -> statement .)
-    WHILE           reduce using rule 57 (codeblock_aux -> statement .)
-    NAME            reduce using rule 57 (codeblock_aux -> statement .)
-    INT_TYPE        reduce using rule 57 (codeblock_aux -> statement .)
-    STRING_TYPE     reduce using rule 57 (codeblock_aux -> statement .)
-    DOUBLE_TYPE     reduce using rule 57 (codeblock_aux -> statement .)
-    FLOAT_TYPE      reduce using rule 57 (codeblock_aux -> statement .)
-    BOOL_TYPE       reduce using rule 57 (codeblock_aux -> statement .)
-    $end            reduce using rule 57 (codeblock_aux -> statement .)
-    RCURLY          reduce using rule 57 (codeblock_aux -> statement .)
+    FUNCTION        reduce using rule 59 (codeblock_aux -> statement .)
+    IF              reduce using rule 59 (codeblock_aux -> statement .)
+    FOR             reduce using rule 59 (codeblock_aux -> statement .)
+    WHILE           reduce using rule 59 (codeblock_aux -> statement .)
+    NAME            reduce using rule 59 (codeblock_aux -> statement .)
+    INT_TYPE        reduce using rule 59 (codeblock_aux -> statement .)
+    STRING_TYPE     reduce using rule 59 (codeblock_aux -> statement .)
+    DOUBLE_TYPE     reduce using rule 59 (codeblock_aux -> statement .)
+    FLOAT_TYPE      reduce using rule 59 (codeblock_aux -> statement .)
+    BOOL_TYPE       reduce using rule 59 (codeblock_aux -> statement .)
+    $end            reduce using rule 59 (codeblock_aux -> statement .)
+    RCURLY          reduce using rule 59 (codeblock_aux -> statement .)
 
 
 state 9
 
-    (58) codeblock_aux -> function_definition .
+    (60) codeblock_aux -> function_definition .
 
-    FUNCTION        reduce using rule 58 (codeblock_aux -> function_definition .)
-    IF              reduce using rule 58 (codeblock_aux -> function_definition .)
-    FOR             reduce using rule 58 (codeblock_aux -> function_definition .)
-    WHILE           reduce using rule 58 (codeblock_aux -> function_definition .)
-    NAME            reduce using rule 58 (codeblock_aux -> function_definition .)
-    INT_TYPE        reduce using rule 58 (codeblock_aux -> function_definition .)
-    STRING_TYPE     reduce using rule 58 (codeblock_aux -> function_definition .)
-    DOUBLE_TYPE     reduce using rule 58 (codeblock_aux -> function_definition .)
-    FLOAT_TYPE      reduce using rule 58 (codeblock_aux -> function_definition .)
-    BOOL_TYPE       reduce using rule 58 (codeblock_aux -> function_definition .)
-    $end            reduce using rule 58 (codeblock_aux -> function_definition .)
-    RCURLY          reduce using rule 58 (codeblock_aux -> function_definition .)
+    FUNCTION        reduce using rule 60 (codeblock_aux -> function_definition .)
+    IF              reduce using rule 60 (codeblock_aux -> function_definition .)
+    FOR             reduce using rule 60 (codeblock_aux -> function_definition .)
+    WHILE           reduce using rule 60 (codeblock_aux -> function_definition .)
+    NAME            reduce using rule 60 (codeblock_aux -> function_definition .)
+    INT_TYPE        reduce using rule 60 (codeblock_aux -> function_definition .)
+    STRING_TYPE     reduce using rule 60 (codeblock_aux -> function_definition .)
+    DOUBLE_TYPE     reduce using rule 60 (codeblock_aux -> function_definition .)
+    FLOAT_TYPE      reduce using rule 60 (codeblock_aux -> function_definition .)
+    BOOL_TYPE       reduce using rule 60 (codeblock_aux -> function_definition .)
+    $end            reduce using rule 60 (codeblock_aux -> function_definition .)
+    RCURLY          reduce using rule 60 (codeblock_aux -> function_definition .)
 
 
 state 10
 
-    (59) codeblock_aux -> condition_if .
+    (61) codeblock_aux -> condition_if .
 
-    FUNCTION        reduce using rule 59 (codeblock_aux -> condition_if .)
-    IF              reduce using rule 59 (codeblock_aux -> condition_if .)
-    FOR             reduce using rule 59 (codeblock_aux -> condition_if .)
-    WHILE           reduce using rule 59 (codeblock_aux -> condition_if .)
-    NAME            reduce using rule 59 (codeblock_aux -> condition_if .)
-    INT_TYPE        reduce using rule 59 (codeblock_aux -> condition_if .)
-    STRING_TYPE     reduce using rule 59 (codeblock_aux -> condition_if .)
-    DOUBLE_TYPE     reduce using rule 59 (codeblock_aux -> condition_if .)
-    FLOAT_TYPE      reduce using rule 59 (codeblock_aux -> condition_if .)
-    BOOL_TYPE       reduce using rule 59 (codeblock_aux -> condition_if .)
-    $end            reduce using rule 59 (codeblock_aux -> condition_if .)
-    RCURLY          reduce using rule 59 (codeblock_aux -> condition_if .)
+    FUNCTION        reduce using rule 61 (codeblock_aux -> condition_if .)
+    IF              reduce using rule 61 (codeblock_aux -> condition_if .)
+    FOR             reduce using rule 61 (codeblock_aux -> condition_if .)
+    WHILE           reduce using rule 61 (codeblock_aux -> condition_if .)
+    NAME            reduce using rule 61 (codeblock_aux -> condition_if .)
+    INT_TYPE        reduce using rule 61 (codeblock_aux -> condition_if .)
+    STRING_TYPE     reduce using rule 61 (codeblock_aux -> condition_if .)
+    DOUBLE_TYPE     reduce using rule 61 (codeblock_aux -> condition_if .)
+    FLOAT_TYPE      reduce using rule 61 (codeblock_aux -> condition_if .)
+    BOOL_TYPE       reduce using rule 61 (codeblock_aux -> condition_if .)
+    $end            reduce using rule 61 (codeblock_aux -> condition_if .)
+    RCURLY          reduce using rule 61 (codeblock_aux -> condition_if .)
 
 
 state 11
 
-    (60) codeblock_aux -> loop .
+    (62) codeblock_aux -> loop .
 
-    FUNCTION        reduce using rule 60 (codeblock_aux -> loop .)
-    IF              reduce using rule 60 (codeblock_aux -> loop .)
-    FOR             reduce using rule 60 (codeblock_aux -> loop .)
-    WHILE           reduce using rule 60 (codeblock_aux -> loop .)
-    NAME            reduce using rule 60 (codeblock_aux -> loop .)
-    INT_TYPE        reduce using rule 60 (codeblock_aux -> loop .)
-    STRING_TYPE     reduce using rule 60 (codeblock_aux -> loop .)
-    DOUBLE_TYPE     reduce using rule 60 (codeblock_aux -> loop .)
-    FLOAT_TYPE      reduce using rule 60 (codeblock_aux -> loop .)
-    BOOL_TYPE       reduce using rule 60 (codeblock_aux -> loop .)
-    $end            reduce using rule 60 (codeblock_aux -> loop .)
-    RCURLY          reduce using rule 60 (codeblock_aux -> loop .)
+    FUNCTION        reduce using rule 62 (codeblock_aux -> loop .)
+    IF              reduce using rule 62 (codeblock_aux -> loop .)
+    FOR             reduce using rule 62 (codeblock_aux -> loop .)
+    WHILE           reduce using rule 62 (codeblock_aux -> loop .)
+    NAME            reduce using rule 62 (codeblock_aux -> loop .)
+    INT_TYPE        reduce using rule 62 (codeblock_aux -> loop .)
+    STRING_TYPE     reduce using rule 62 (codeblock_aux -> loop .)
+    DOUBLE_TYPE     reduce using rule 62 (codeblock_aux -> loop .)
+    FLOAT_TYPE      reduce using rule 62 (codeblock_aux -> loop .)
+    BOOL_TYPE       reduce using rule 62 (codeblock_aux -> loop .)
+    $end            reduce using rule 62 (codeblock_aux -> loop .)
+    RCURLY          reduce using rule 62 (codeblock_aux -> loop .)
 
 
 state 12
 
-    (52) statement -> statement_aux . SEMICOLON
+    (54) statement -> statement_aux . SEMICOLON
 
     SEMICOLON       shift and go to state 29
 
 
 state 13
 
-    (27) function_definition -> FUNCTION . NAME parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY
+    (29) function_definition -> FUNCTION . NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope
 
     NAME            shift and go to state 30
 
 
 state 14
 
-    (50) assign -> NAME . n_name_assign EQUAL expression
-    (28) function_call -> NAME . LPARENTHESIS parameter_list RPARENTHESIS
-    (51) n_name_assign -> .
+    (52) assign -> NAME . n_name_assign EQUAL expression
+    (30) function_call -> NAME . LPARENTHESIS parameter_list RPARENTHESIS
+    (53) n_name_assign -> .
 
     LPARENTHESIS    shift and go to state 32
-    EQUAL           reduce using rule 51 (n_name_assign -> .)
+    EQUAL           reduce using rule 53 (n_name_assign -> .)
 
     n_name_assign                  shift and go to state 31
 
 state 15
 
-    (65) condition_if -> IF . LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY condition_else
+    (67) condition_if -> IF . LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else
 
     LPARENTHESIS    shift and go to state 33
 
 
 state 16
 
-    (61) loop -> forloop .
+    (63) loop -> forloop .
 
-    FUNCTION        reduce using rule 61 (loop -> forloop .)
-    IF              reduce using rule 61 (loop -> forloop .)
-    FOR             reduce using rule 61 (loop -> forloop .)
-    WHILE           reduce using rule 61 (loop -> forloop .)
-    NAME            reduce using rule 61 (loop -> forloop .)
-    INT_TYPE        reduce using rule 61 (loop -> forloop .)
-    STRING_TYPE     reduce using rule 61 (loop -> forloop .)
-    DOUBLE_TYPE     reduce using rule 61 (loop -> forloop .)
-    FLOAT_TYPE      reduce using rule 61 (loop -> forloop .)
-    BOOL_TYPE       reduce using rule 61 (loop -> forloop .)
-    $end            reduce using rule 61 (loop -> forloop .)
-    RCURLY          reduce using rule 61 (loop -> forloop .)
+    FUNCTION        reduce using rule 63 (loop -> forloop .)
+    IF              reduce using rule 63 (loop -> forloop .)
+    FOR             reduce using rule 63 (loop -> forloop .)
+    WHILE           reduce using rule 63 (loop -> forloop .)
+    NAME            reduce using rule 63 (loop -> forloop .)
+    INT_TYPE        reduce using rule 63 (loop -> forloop .)
+    STRING_TYPE     reduce using rule 63 (loop -> forloop .)
+    DOUBLE_TYPE     reduce using rule 63 (loop -> forloop .)
+    FLOAT_TYPE      reduce using rule 63 (loop -> forloop .)
+    BOOL_TYPE       reduce using rule 63 (loop -> forloop .)
+    $end            reduce using rule 63 (loop -> forloop .)
+    RCURLY          reduce using rule 63 (loop -> forloop .)
 
 
 state 17
 
-    (62) loop -> whileloop .
+    (64) loop -> whileloop .
 
-    FUNCTION        reduce using rule 62 (loop -> whileloop .)
-    IF              reduce using rule 62 (loop -> whileloop .)
-    FOR             reduce using rule 62 (loop -> whileloop .)
-    WHILE           reduce using rule 62 (loop -> whileloop .)
-    NAME            reduce using rule 62 (loop -> whileloop .)
-    INT_TYPE        reduce using rule 62 (loop -> whileloop .)
-    STRING_TYPE     reduce using rule 62 (loop -> whileloop .)
-    DOUBLE_TYPE     reduce using rule 62 (loop -> whileloop .)
-    FLOAT_TYPE      reduce using rule 62 (loop -> whileloop .)
-    BOOL_TYPE       reduce using rule 62 (loop -> whileloop .)
-    $end            reduce using rule 62 (loop -> whileloop .)
-    RCURLY          reduce using rule 62 (loop -> whileloop .)
+    FUNCTION        reduce using rule 64 (loop -> whileloop .)
+    IF              reduce using rule 64 (loop -> whileloop .)
+    FOR             reduce using rule 64 (loop -> whileloop .)
+    WHILE           reduce using rule 64 (loop -> whileloop .)
+    NAME            reduce using rule 64 (loop -> whileloop .)
+    INT_TYPE        reduce using rule 64 (loop -> whileloop .)
+    STRING_TYPE     reduce using rule 64 (loop -> whileloop .)
+    DOUBLE_TYPE     reduce using rule 64 (loop -> whileloop .)
+    FLOAT_TYPE      reduce using rule 64 (loop -> whileloop .)
+    BOOL_TYPE       reduce using rule 64 (loop -> whileloop .)
+    $end            reduce using rule 64 (loop -> whileloop .)
+    RCURLY          reduce using rule 64 (loop -> whileloop .)
 
 
 state 18
 
-    (53) statement_aux -> assign .
+    (55) statement_aux -> assign .
 
-    SEMICOLON       reduce using rule 53 (statement_aux -> assign .)
+    SEMICOLON       reduce using rule 55 (statement_aux -> assign .)
 
 
 state 19
 
-    (54) statement_aux -> function_call .
+    (56) statement_aux -> function_call .
 
-    SEMICOLON       reduce using rule 54 (statement_aux -> function_call .)
+    SEMICOLON       reduce using rule 56 (statement_aux -> function_call .)
 
 
 state 20
 
-    (64) forloop -> FOR . LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY
+    (66) forloop -> FOR . LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope
 
     LPARENTHESIS    shift and go to state 34
 
 
 state 21
 
-    (63) whileloop -> WHILE . LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY
+    (65) whileloop -> WHILE . LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope
 
     LPARENTHESIS    shift and go to state 35
 
 
 state 22
 
-    (49) assign -> type . NAME n_name_assign EQUAL expression
+    (51) assign -> type . NAME n_name_assign EQUAL expression
 
     NAME            shift and go to state 36
 
@@ -558,84 +562,68 @@ state 27
 
 state 28
 
-    (56) codeblock -> codeblock_aux codeblock .
+    (58) codeblock -> codeblock_aux codeblock .
 
-    $end            reduce using rule 56 (codeblock -> codeblock_aux codeblock .)
-    RCURLY          reduce using rule 56 (codeblock -> codeblock_aux codeblock .)
+    $end            reduce using rule 58 (codeblock -> codeblock_aux codeblock .)
+    RCURLY          reduce using rule 58 (codeblock -> codeblock_aux codeblock .)
 
 
 state 29
 
-    (52) statement -> statement_aux SEMICOLON .
+    (54) statement -> statement_aux SEMICOLON .
 
-    FUNCTION        reduce using rule 52 (statement -> statement_aux SEMICOLON .)
-    IF              reduce using rule 52 (statement -> statement_aux SEMICOLON .)
-    FOR             reduce using rule 52 (statement -> statement_aux SEMICOLON .)
-    WHILE           reduce using rule 52 (statement -> statement_aux SEMICOLON .)
-    NAME            reduce using rule 52 (statement -> statement_aux SEMICOLON .)
-    INT_TYPE        reduce using rule 52 (statement -> statement_aux SEMICOLON .)
-    STRING_TYPE     reduce using rule 52 (statement -> statement_aux SEMICOLON .)
-    DOUBLE_TYPE     reduce using rule 52 (statement -> statement_aux SEMICOLON .)
-    FLOAT_TYPE      reduce using rule 52 (statement -> statement_aux SEMICOLON .)
-    BOOL_TYPE       reduce using rule 52 (statement -> statement_aux SEMICOLON .)
-    $end            reduce using rule 52 (statement -> statement_aux SEMICOLON .)
-    RCURLY          reduce using rule 52 (statement -> statement_aux SEMICOLON .)
+    FUNCTION        reduce using rule 54 (statement -> statement_aux SEMICOLON .)
+    IF              reduce using rule 54 (statement -> statement_aux SEMICOLON .)
+    FOR             reduce using rule 54 (statement -> statement_aux SEMICOLON .)
+    WHILE           reduce using rule 54 (statement -> statement_aux SEMICOLON .)
+    NAME            reduce using rule 54 (statement -> statement_aux SEMICOLON .)
+    INT_TYPE        reduce using rule 54 (statement -> statement_aux SEMICOLON .)
+    STRING_TYPE     reduce using rule 54 (statement -> statement_aux SEMICOLON .)
+    DOUBLE_TYPE     reduce using rule 54 (statement -> statement_aux SEMICOLON .)
+    FLOAT_TYPE      reduce using rule 54 (statement -> statement_aux SEMICOLON .)
+    BOOL_TYPE       reduce using rule 54 (statement -> statement_aux SEMICOLON .)
+    $end            reduce using rule 54 (statement -> statement_aux SEMICOLON .)
+    RCURLY          reduce using rule 54 (statement -> statement_aux SEMICOLON .)
 
 
 state 30
 
-    (27) function_definition -> FUNCTION NAME . parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY
-    (29) parameter_list -> . empty
-    (30) parameter_list -> . parameter
-    (31) parameter_list -> . parameter COMMA parameter_list
-    (1) empty -> .
-    (32) parameter -> . type NAME
-    (33) parameter -> . assign
-    (6) type -> . INT_TYPE n_seen_type
-    (7) type -> . STRING_TYPE n_seen_type
-    (8) type -> . DOUBLE_TYPE n_seen_type
-    (9) type -> . FLOAT_TYPE n_seen_type
-    (10) type -> . BOOL_TYPE n_seen_type
-    (49) assign -> . type NAME n_name_assign EQUAL expression
-    (50) assign -> . NAME n_name_assign EQUAL expression
+    (29) function_definition -> FUNCTION NAME . n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope
+    (27) n_open_new_scope -> .
 
-    DOUBLEDOT       reduce using rule 1 (empty -> .)
-    INT_TYPE        shift and go to state 23
-    STRING_TYPE     shift and go to state 24
-    DOUBLE_TYPE     shift and go to state 25
-    FLOAT_TYPE      shift and go to state 26
-    BOOL_TYPE       shift and go to state 27
-    NAME            shift and go to state 42
+    INT_TYPE        reduce using rule 27 (n_open_new_scope -> .)
+    STRING_TYPE     reduce using rule 27 (n_open_new_scope -> .)
+    DOUBLE_TYPE     reduce using rule 27 (n_open_new_scope -> .)
+    FLOAT_TYPE      reduce using rule 27 (n_open_new_scope -> .)
+    BOOL_TYPE       reduce using rule 27 (n_open_new_scope -> .)
+    NAME            reduce using rule 27 (n_open_new_scope -> .)
+    DOUBLEDOT       reduce using rule 27 (n_open_new_scope -> .)
 
-    parameter_list                 shift and go to state 43
-    empty                          shift and go to state 44
-    parameter                      shift and go to state 45
-    type                           shift and go to state 46
-    assign                         shift and go to state 47
+    n_open_new_scope               shift and go to state 42
 
 state 31
 
-    (50) assign -> NAME n_name_assign . EQUAL expression
+    (52) assign -> NAME n_name_assign . EQUAL expression
 
-    EQUAL           shift and go to state 48
+    EQUAL           shift and go to state 43
 
 
 state 32
 
-    (28) function_call -> NAME LPARENTHESIS . parameter_list RPARENTHESIS
-    (29) parameter_list -> . empty
-    (30) parameter_list -> . parameter
-    (31) parameter_list -> . parameter COMMA parameter_list
+    (30) function_call -> NAME LPARENTHESIS . parameter_list RPARENTHESIS
+    (31) parameter_list -> . empty
+    (32) parameter_list -> . parameter
+    (33) parameter_list -> . parameter COMMA parameter_list
     (1) empty -> .
-    (32) parameter -> . type NAME
-    (33) parameter -> . assign
+    (34) parameter -> . type NAME n_name_assign
+    (35) parameter -> . assign
     (6) type -> . INT_TYPE n_seen_type
     (7) type -> . STRING_TYPE n_seen_type
     (8) type -> . DOUBLE_TYPE n_seen_type
     (9) type -> . FLOAT_TYPE n_seen_type
     (10) type -> . BOOL_TYPE n_seen_type
-    (49) assign -> . type NAME n_name_assign EQUAL expression
-    (50) assign -> . NAME n_name_assign EQUAL expression
+    (51) assign -> . type NAME n_name_assign EQUAL expression
+    (52) assign -> . NAME n_name_assign EQUAL expression
 
     RPARENTHESIS    reduce using rule 1 (empty -> .)
     INT_TYPE        shift and go to state 23
@@ -643,33 +631,33 @@ state 32
     DOUBLE_TYPE     shift and go to state 25
     FLOAT_TYPE      shift and go to state 26
     BOOL_TYPE       shift and go to state 27
-    NAME            shift and go to state 42
+    NAME            shift and go to state 44
 
-    parameter_list                 shift and go to state 49
-    empty                          shift and go to state 44
-    parameter                      shift and go to state 45
-    type                           shift and go to state 46
-    assign                         shift and go to state 47
+    parameter_list                 shift and go to state 45
+    empty                          shift and go to state 46
+    parameter                      shift and go to state 47
+    type                           shift and go to state 48
+    assign                         shift and go to state 49
 
 state 33
 
-    (65) condition_if -> IF LPARENTHESIS . expression RPARENTHESIS LCURLY codeblock RCURLY condition_else
-    (34) expression -> . exp
-    (35) expression -> . exp logic_operator exp
-    (36) exp -> . termino
-    (37) exp -> . termino PLUS exp
-    (38) exp -> . termino MINUS exp
-    (39) termino -> . factor
-    (40) termino -> . factor TIMES termino
-    (41) termino -> . factor DIVIDE termino
-    (42) factor -> . LPARENTHESIS expression RPARENTHESIS
-    (43) factor -> . PLUS value
-    (44) factor -> . MINUS value
-    (45) factor -> . value
-    (46) value -> . function_call
-    (47) value -> . literal
-    (48) value -> . NAME
-    (28) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
+    (67) condition_if -> IF LPARENTHESIS . expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else
+    (36) expression -> . exp
+    (37) expression -> . exp logic_operator exp
+    (38) exp -> . termino
+    (39) exp -> . termino PLUS exp
+    (40) exp -> . termino MINUS exp
+    (41) termino -> . factor
+    (42) termino -> . factor TIMES termino
+    (43) termino -> . factor DIVIDE termino
+    (44) factor -> . LPARENTHESIS expression RPARENTHESIS
+    (45) factor -> . PLUS value
+    (46) factor -> . MINUS value
+    (47) factor -> . value
+    (48) value -> . function_call
+    (49) value -> . literal
+    (50) value -> . NAME
+    (30) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
     (22) literal -> . FLOAT
     (23) literal -> . INT
     (24) literal -> . STRING
@@ -692,44 +680,37 @@ state 33
 
 state 34
 
-    (64) forloop -> FOR LPARENTHESIS . assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY
-    (49) assign -> . type NAME n_name_assign EQUAL expression
-    (50) assign -> . NAME n_name_assign EQUAL expression
-    (6) type -> . INT_TYPE n_seen_type
-    (7) type -> . STRING_TYPE n_seen_type
-    (8) type -> . DOUBLE_TYPE n_seen_type
-    (9) type -> . FLOAT_TYPE n_seen_type
-    (10) type -> . BOOL_TYPE n_seen_type
+    (66) forloop -> FOR LPARENTHESIS . n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope
+    (27) n_open_new_scope -> .
 
-    NAME            shift and go to state 42
-    INT_TYPE        shift and go to state 23
-    STRING_TYPE     shift and go to state 24
-    DOUBLE_TYPE     shift and go to state 25
-    FLOAT_TYPE      shift and go to state 26
-    BOOL_TYPE       shift and go to state 27
+    NAME            reduce using rule 27 (n_open_new_scope -> .)
+    INT_TYPE        reduce using rule 27 (n_open_new_scope -> .)
+    STRING_TYPE     reduce using rule 27 (n_open_new_scope -> .)
+    DOUBLE_TYPE     reduce using rule 27 (n_open_new_scope -> .)
+    FLOAT_TYPE      reduce using rule 27 (n_open_new_scope -> .)
+    BOOL_TYPE       reduce using rule 27 (n_open_new_scope -> .)
 
-    assign                         shift and go to state 64
-    type                           shift and go to state 22
+    n_open_new_scope               shift and go to state 64
 
 state 35
 
-    (63) whileloop -> WHILE LPARENTHESIS . expression RPARENTHESIS LCURLY codeblock RCURLY
-    (34) expression -> . exp
-    (35) expression -> . exp logic_operator exp
-    (36) exp -> . termino
-    (37) exp -> . termino PLUS exp
-    (38) exp -> . termino MINUS exp
-    (39) termino -> . factor
-    (40) termino -> . factor TIMES termino
-    (41) termino -> . factor DIVIDE termino
-    (42) factor -> . LPARENTHESIS expression RPARENTHESIS
-    (43) factor -> . PLUS value
-    (44) factor -> . MINUS value
-    (45) factor -> . value
-    (46) value -> . function_call
-    (47) value -> . literal
-    (48) value -> . NAME
-    (28) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
+    (65) whileloop -> WHILE LPARENTHESIS . expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope
+    (36) expression -> . exp
+    (37) expression -> . exp logic_operator exp
+    (38) exp -> . termino
+    (39) exp -> . termino PLUS exp
+    (40) exp -> . termino MINUS exp
+    (41) termino -> . factor
+    (42) termino -> . factor TIMES termino
+    (43) termino -> . factor DIVIDE termino
+    (44) factor -> . LPARENTHESIS expression RPARENTHESIS
+    (45) factor -> . PLUS value
+    (46) factor -> . MINUS value
+    (47) factor -> . value
+    (48) value -> . function_call
+    (49) value -> . literal
+    (50) value -> . NAME
+    (30) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
     (22) literal -> . FLOAT
     (23) literal -> . INT
     (24) literal -> . STRING
@@ -752,10 +733,10 @@ state 35
 
 state 36
 
-    (49) assign -> type NAME . n_name_assign EQUAL expression
-    (51) n_name_assign -> .
+    (51) assign -> type NAME . n_name_assign EQUAL expression
+    (53) n_name_assign -> .
 
-    EQUAL           reduce using rule 51 (n_name_assign -> .)
+    EQUAL           reduce using rule 53 (n_name_assign -> .)
 
     n_name_assign                  shift and go to state 66
 
@@ -801,74 +782,54 @@ state 41
 
 state 42
 
-    (50) assign -> NAME . n_name_assign EQUAL expression
-    (51) n_name_assign -> .
+    (29) function_definition -> FUNCTION NAME n_open_new_scope . parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope
+    (31) parameter_list -> . empty
+    (32) parameter_list -> . parameter
+    (33) parameter_list -> . parameter COMMA parameter_list
+    (1) empty -> .
+    (34) parameter -> . type NAME n_name_assign
+    (35) parameter -> . assign
+    (6) type -> . INT_TYPE n_seen_type
+    (7) type -> . STRING_TYPE n_seen_type
+    (8) type -> . DOUBLE_TYPE n_seen_type
+    (9) type -> . FLOAT_TYPE n_seen_type
+    (10) type -> . BOOL_TYPE n_seen_type
+    (51) assign -> . type NAME n_name_assign EQUAL expression
+    (52) assign -> . NAME n_name_assign EQUAL expression
 
-    EQUAL           reduce using rule 51 (n_name_assign -> .)
+    DOUBLEDOT       reduce using rule 1 (empty -> .)
+    INT_TYPE        shift and go to state 23
+    STRING_TYPE     shift and go to state 24
+    DOUBLE_TYPE     shift and go to state 25
+    FLOAT_TYPE      shift and go to state 26
+    BOOL_TYPE       shift and go to state 27
+    NAME            shift and go to state 44
 
-    n_name_assign                  shift and go to state 31
+    parameter_list                 shift and go to state 67
+    empty                          shift and go to state 46
+    parameter                      shift and go to state 47
+    type                           shift and go to state 48
+    assign                         shift and go to state 49
 
 state 43
 
-    (27) function_definition -> FUNCTION NAME parameter_list . DOUBLEDOT function_type LCURLY codeblock RCURLY
-
-    DOUBLEDOT       shift and go to state 67
-
-
-state 44
-
-    (29) parameter_list -> empty .
-
-    DOUBLEDOT       reduce using rule 29 (parameter_list -> empty .)
-    RPARENTHESIS    reduce using rule 29 (parameter_list -> empty .)
-
-
-state 45
-
-    (30) parameter_list -> parameter .
-    (31) parameter_list -> parameter . COMMA parameter_list
-
-    DOUBLEDOT       reduce using rule 30 (parameter_list -> parameter .)
-    RPARENTHESIS    reduce using rule 30 (parameter_list -> parameter .)
-    COMMA           shift and go to state 68
-
-
-state 46
-
-    (32) parameter -> type . NAME
-    (49) assign -> type . NAME n_name_assign EQUAL expression
-
-    NAME            shift and go to state 69
-
-
-state 47
-
-    (33) parameter -> assign .
-
-    COMMA           reduce using rule 33 (parameter -> assign .)
-    DOUBLEDOT       reduce using rule 33 (parameter -> assign .)
-    RPARENTHESIS    reduce using rule 33 (parameter -> assign .)
-
-
-state 48
-
-    (50) assign -> NAME n_name_assign EQUAL . expression
-    (34) expression -> . exp
-    (35) expression -> . exp logic_operator exp
-    (36) exp -> . termino
-    (37) exp -> . termino PLUS exp
-    (38) exp -> . termino MINUS exp
-    (39) termino -> . factor
-    (40) termino -> . factor TIMES termino
-    (41) termino -> . factor DIVIDE termino
-    (42) factor -> . LPARENTHESIS expression RPARENTHESIS
-    (43) factor -> . PLUS value
-    (44) factor -> . MINUS value
-    (45) factor -> . value
-    (46) value -> . function_call
-    (47) value -> . literal
-    (48) value -> . NAME
-    (28) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
+    (52) assign -> NAME n_name_assign EQUAL . expression
+    (36) expression -> . exp
+    (37) expression -> . exp logic_operator exp
+    (38) exp -> . termino
+    (39) exp -> . termino PLUS exp
+    (40) exp -> . termino MINUS exp
+    (41) termino -> . factor
+    (42) termino -> . factor TIMES termino
+    (43) termino -> . factor DIVIDE termino
+    (44) factor -> . LPARENTHESIS expression RPARENTHESIS
+    (45) factor -> . PLUS value
+    (46) factor -> . MINUS value
+    (47) factor -> . value
+    (48) value -> . function_call
+    (49) value -> . literal
+    (50) value -> . NAME
+    (30) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
     (22) literal -> . FLOAT
     (23) literal -> . INT
     (24) literal -> . STRING
@@ -881,7 +842,7 @@ state 48
     INT             shift and go to state 62
     STRING          shift and go to state 63
 
-    expression                     shift and go to state 70
+    expression                     shift and go to state 68
     exp                            shift and go to state 52
     termino                        shift and go to state 53
     factor                         shift and go to state 56
@@ -889,32 +850,76 @@ state 48
     function_call                  shift and go to state 58
     literal                        shift and go to state 59
 
+state 44
+
+    (52) assign -> NAME . n_name_assign EQUAL expression
+    (53) n_name_assign -> .
+
+    EQUAL           reduce using rule 53 (n_name_assign -> .)
+
+    n_name_assign                  shift and go to state 31
+
+state 45
+
+    (30) function_call -> NAME LPARENTHESIS parameter_list . RPARENTHESIS
+
+    RPARENTHESIS    shift and go to state 69
+
+
+state 46
+
+    (31) parameter_list -> empty .
+
+    RPARENTHESIS    reduce using rule 31 (parameter_list -> empty .)
+    DOUBLEDOT       reduce using rule 31 (parameter_list -> empty .)
+
+
+state 47
+
+    (32) parameter_list -> parameter .
+    (33) parameter_list -> parameter . COMMA parameter_list
+
+    RPARENTHESIS    reduce using rule 32 (parameter_list -> parameter .)
+    DOUBLEDOT       reduce using rule 32 (parameter_list -> parameter .)
+    COMMA           shift and go to state 70
+
+
+state 48
+
+    (34) parameter -> type . NAME n_name_assign
+    (51) assign -> type . NAME n_name_assign EQUAL expression
+
+    NAME            shift and go to state 71
+
+
 state 49
 
-    (28) function_call -> NAME LPARENTHESIS parameter_list . RPARENTHESIS
+    (35) parameter -> assign .
 
-    RPARENTHESIS    shift and go to state 71
+    COMMA           reduce using rule 35 (parameter -> assign .)
+    RPARENTHESIS    reduce using rule 35 (parameter -> assign .)
+    DOUBLEDOT       reduce using rule 35 (parameter -> assign .)
 
 
 state 50
 
-    (42) factor -> LPARENTHESIS . expression RPARENTHESIS
-    (34) expression -> . exp
-    (35) expression -> . exp logic_operator exp
-    (36) exp -> . termino
-    (37) exp -> . termino PLUS exp
-    (38) exp -> . termino MINUS exp
-    (39) termino -> . factor
-    (40) termino -> . factor TIMES termino
-    (41) termino -> . factor DIVIDE termino
-    (42) factor -> . LPARENTHESIS expression RPARENTHESIS
-    (43) factor -> . PLUS value
-    (44) factor -> . MINUS value
-    (45) factor -> . value
-    (46) value -> . function_call
-    (47) value -> . literal
-    (48) value -> . NAME
-    (28) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
+    (44) factor -> LPARENTHESIS . expression RPARENTHESIS
+    (36) expression -> . exp
+    (37) expression -> . exp logic_operator exp
+    (38) exp -> . termino
+    (39) exp -> . termino PLUS exp
+    (40) exp -> . termino MINUS exp
+    (41) termino -> . factor
+    (42) termino -> . factor TIMES termino
+    (43) termino -> . factor DIVIDE termino
+    (44) factor -> . LPARENTHESIS expression RPARENTHESIS
+    (45) factor -> . PLUS value
+    (46) factor -> . MINUS value
+    (47) factor -> . value
+    (48) value -> . function_call
+    (49) value -> . literal
+    (50) value -> . NAME
+    (30) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
     (22) literal -> . FLOAT
     (23) literal -> . INT
     (24) literal -> . STRING
@@ -937,15 +942,15 @@ state 50
 
 state 51
 
-    (65) condition_if -> IF LPARENTHESIS expression . RPARENTHESIS LCURLY codeblock RCURLY condition_else
+    (67) condition_if -> IF LPARENTHESIS expression . RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else
 
     RPARENTHESIS    shift and go to state 73
 
 
 state 52
 
-    (34) expression -> exp .
-    (35) expression -> exp . logic_operator exp
+    (36) expression -> exp .
+    (37) expression -> exp . logic_operator exp
     (11) logic_operator -> . GREATERTHAN
     (12) logic_operator -> . LESSTHAN
     (13) logic_operator -> . EQUALEQUAL
@@ -953,10 +958,10 @@ state 52
     (15) logic_operator -> . GREATERTHANOREQUAL
     (16) logic_operator -> . NOTEQUAL
 
-    RPARENTHESIS    reduce using rule 34 (expression -> exp .)
-    SEMICOLON       reduce using rule 34 (expression -> exp .)
-    COMMA           reduce using rule 34 (expression -> exp .)
-    DOUBLEDOT       reduce using rule 34 (expression -> exp .)
+    RPARENTHESIS    reduce using rule 36 (expression -> exp .)
+    SEMICOLON       reduce using rule 36 (expression -> exp .)
+    COMMA           reduce using rule 36 (expression -> exp .)
+    DOUBLEDOT       reduce using rule 36 (expression -> exp .)
     GREATERTHAN     shift and go to state 75
     LESSTHAN        shift and go to state 76
     EQUALEQUAL      shift and go to state 77
@@ -968,31 +973,31 @@ state 52
 
 state 53
 
-    (36) exp -> termino .
-    (37) exp -> termino . PLUS exp
-    (38) exp -> termino . MINUS exp
+    (38) exp -> termino .
+    (39) exp -> termino . PLUS exp
+    (40) exp -> termino . MINUS exp
 
-    GREATERTHAN     reduce using rule 36 (exp -> termino .)
-    LESSTHAN        reduce using rule 36 (exp -> termino .)
-    EQUALEQUAL      reduce using rule 36 (exp -> termino .)
-    LESSTHANOREQUAL reduce using rule 36 (exp -> termino .)
-    GREATERTHANOREQUAL reduce using rule 36 (exp -> termino .)
-    NOTEQUAL        reduce using rule 36 (exp -> termino .)
-    RPARENTHESIS    reduce using rule 36 (exp -> termino .)
-    SEMICOLON       reduce using rule 36 (exp -> termino .)
-    COMMA           reduce using rule 36 (exp -> termino .)
-    DOUBLEDOT       reduce using rule 36 (exp -> termino .)
+    GREATERTHAN     reduce using rule 38 (exp -> termino .)
+    LESSTHAN        reduce using rule 38 (exp -> termino .)
+    EQUALEQUAL      reduce using rule 38 (exp -> termino .)
+    LESSTHANOREQUAL reduce using rule 38 (exp -> termino .)
+    GREATERTHANOREQUAL reduce using rule 38 (exp -> termino .)
+    NOTEQUAL        reduce using rule 38 (exp -> termino .)
+    RPARENTHESIS    reduce using rule 38 (exp -> termino .)
+    SEMICOLON       reduce using rule 38 (exp -> termino .)
+    COMMA           reduce using rule 38 (exp -> termino .)
+    DOUBLEDOT       reduce using rule 38 (exp -> termino .)
     PLUS            shift and go to state 81
     MINUS           shift and go to state 82
 
 
 state 54
 
-    (43) factor -> PLUS . value
-    (46) value -> . function_call
-    (47) value -> . literal
-    (48) value -> . NAME
-    (28) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
+    (45) factor -> PLUS . value
+    (48) value -> . function_call
+    (49) value -> . literal
+    (50) value -> . NAME
+    (30) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
     (22) literal -> . FLOAT
     (23) literal -> . INT
     (24) literal -> . STRING
@@ -1008,11 +1013,11 @@ state 54
 
 state 55
 
-    (44) factor -> MINUS . value
-    (46) value -> . function_call
-    (47) value -> . literal
-    (48) value -> . NAME
-    (28) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
+    (46) factor -> MINUS . value
+    (48) value -> . function_call
+    (49) value -> . literal
+    (50) value -> . NAME
+    (30) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
     (22) literal -> . FLOAT
     (23) literal -> . INT
     (24) literal -> . STRING
@@ -1028,105 +1033,105 @@ state 55
 
 state 56
 
-    (39) termino -> factor .
-    (40) termino -> factor . TIMES termino
-    (41) termino -> factor . DIVIDE termino
+    (41) termino -> factor .
+    (42) termino -> factor . TIMES termino
+    (43) termino -> factor . DIVIDE termino
 
-    PLUS            reduce using rule 39 (termino -> factor .)
-    MINUS           reduce using rule 39 (termino -> factor .)
-    GREATERTHAN     reduce using rule 39 (termino -> factor .)
-    LESSTHAN        reduce using rule 39 (termino -> factor .)
-    EQUALEQUAL      reduce using rule 39 (termino -> factor .)
-    LESSTHANOREQUAL reduce using rule 39 (termino -> factor .)
-    GREATERTHANOREQUAL reduce using rule 39 (termino -> factor .)
-    NOTEQUAL        reduce using rule 39 (termino -> factor .)
-    RPARENTHESIS    reduce using rule 39 (termino -> factor .)
-    SEMICOLON       reduce using rule 39 (termino -> factor .)
-    COMMA           reduce using rule 39 (termino -> factor .)
-    DOUBLEDOT       reduce using rule 39 (termino -> factor .)
+    PLUS            reduce using rule 41 (termino -> factor .)
+    MINUS           reduce using rule 41 (termino -> factor .)
+    GREATERTHAN     reduce using rule 41 (termino -> factor .)
+    LESSTHAN        reduce using rule 41 (termino -> factor .)
+    EQUALEQUAL      reduce using rule 41 (termino -> factor .)
+    LESSTHANOREQUAL reduce using rule 41 (termino -> factor .)
+    GREATERTHANOREQUAL reduce using rule 41 (termino -> factor .)
+    NOTEQUAL        reduce using rule 41 (termino -> factor .)
+    RPARENTHESIS    reduce using rule 41 (termino -> factor .)
+    SEMICOLON       reduce using rule 41 (termino -> factor .)
+    COMMA           reduce using rule 41 (termino -> factor .)
+    DOUBLEDOT       reduce using rule 41 (termino -> factor .)
     TIMES           shift and go to state 85
     DIVIDE          shift and go to state 86
 
 
 state 57
 
-    (45) factor -> value .
+    (47) factor -> value .
 
-    TIMES           reduce using rule 45 (factor -> value .)
-    DIVIDE          reduce using rule 45 (factor -> value .)
-    PLUS            reduce using rule 45 (factor -> value .)
-    MINUS           reduce using rule 45 (factor -> value .)
-    GREATERTHAN     reduce using rule 45 (factor -> value .)
-    LESSTHAN        reduce using rule 45 (factor -> value .)
-    EQUALEQUAL      reduce using rule 45 (factor -> value .)
-    LESSTHANOREQUAL reduce using rule 45 (factor -> value .)
-    GREATERTHANOREQUAL reduce using rule 45 (factor -> value .)
-    NOTEQUAL        reduce using rule 45 (factor -> value .)
-    RPARENTHESIS    reduce using rule 45 (factor -> value .)
-    SEMICOLON       reduce using rule 45 (factor -> value .)
-    COMMA           reduce using rule 45 (factor -> value .)
-    DOUBLEDOT       reduce using rule 45 (factor -> value .)
+    TIMES           reduce using rule 47 (factor -> value .)
+    DIVIDE          reduce using rule 47 (factor -> value .)
+    PLUS            reduce using rule 47 (factor -> value .)
+    MINUS           reduce using rule 47 (factor -> value .)
+    GREATERTHAN     reduce using rule 47 (factor -> value .)
+    LESSTHAN        reduce using rule 47 (factor -> value .)
+    EQUALEQUAL      reduce using rule 47 (factor -> value .)
+    LESSTHANOREQUAL reduce using rule 47 (factor -> value .)
+    GREATERTHANOREQUAL reduce using rule 47 (factor -> value .)
+    NOTEQUAL        reduce using rule 47 (factor -> value .)
+    RPARENTHESIS    reduce using rule 47 (factor -> value .)
+    SEMICOLON       reduce using rule 47 (factor -> value .)
+    COMMA           reduce using rule 47 (factor -> value .)
+    DOUBLEDOT       reduce using rule 47 (factor -> value .)
 
 
 state 58
 
-    (46) value -> function_call .
+    (48) value -> function_call .
 
-    TIMES           reduce using rule 46 (value -> function_call .)
-    DIVIDE          reduce using rule 46 (value -> function_call .)
-    PLUS            reduce using rule 46 (value -> function_call .)
-    MINUS           reduce using rule 46 (value -> function_call .)
-    GREATERTHAN     reduce using rule 46 (value -> function_call .)
-    LESSTHAN        reduce using rule 46 (value -> function_call .)
-    EQUALEQUAL      reduce using rule 46 (value -> function_call .)
-    LESSTHANOREQUAL reduce using rule 46 (value -> function_call .)
-    GREATERTHANOREQUAL reduce using rule 46 (value -> function_call .)
-    NOTEQUAL        reduce using rule 46 (value -> function_call .)
-    RPARENTHESIS    reduce using rule 46 (value -> function_call .)
-    SEMICOLON       reduce using rule 46 (value -> function_call .)
-    COMMA           reduce using rule 46 (value -> function_call .)
-    DOUBLEDOT       reduce using rule 46 (value -> function_call .)
+    TIMES           reduce using rule 48 (value -> function_call .)
+    DIVIDE          reduce using rule 48 (value -> function_call .)
+    PLUS            reduce using rule 48 (value -> function_call .)
+    MINUS           reduce using rule 48 (value -> function_call .)
+    GREATERTHAN     reduce using rule 48 (value -> function_call .)
+    LESSTHAN        reduce using rule 48 (value -> function_call .)
+    EQUALEQUAL      reduce using rule 48 (value -> function_call .)
+    LESSTHANOREQUAL reduce using rule 48 (value -> function_call .)
+    GREATERTHANOREQUAL reduce using rule 48 (value -> function_call .)
+    NOTEQUAL        reduce using rule 48 (value -> function_call .)
+    RPARENTHESIS    reduce using rule 48 (value -> function_call .)
+    SEMICOLON       reduce using rule 48 (value -> function_call .)
+    COMMA           reduce using rule 48 (value -> function_call .)
+    DOUBLEDOT       reduce using rule 48 (value -> function_call .)
 
 
 state 59
 
-    (47) value -> literal .
+    (49) value -> literal .
 
-    TIMES           reduce using rule 47 (value -> literal .)
-    DIVIDE          reduce using rule 47 (value -> literal .)
-    PLUS            reduce using rule 47 (value -> literal .)
-    MINUS           reduce using rule 47 (value -> literal .)
-    GREATERTHAN     reduce using rule 47 (value -> literal .)
-    LESSTHAN        reduce using rule 47 (value -> literal .)
-    EQUALEQUAL      reduce using rule 47 (value -> literal .)
-    LESSTHANOREQUAL reduce using rule 47 (value -> literal .)
-    GREATERTHANOREQUAL reduce using rule 47 (value -> literal .)
-    NOTEQUAL        reduce using rule 47 (value -> literal .)
-    RPARENTHESIS    reduce using rule 47 (value -> literal .)
-    SEMICOLON       reduce using rule 47 (value -> literal .)
-    COMMA           reduce using rule 47 (value -> literal .)
-    DOUBLEDOT       reduce using rule 47 (value -> literal .)
+    TIMES           reduce using rule 49 (value -> literal .)
+    DIVIDE          reduce using rule 49 (value -> literal .)
+    PLUS            reduce using rule 49 (value -> literal .)
+    MINUS           reduce using rule 49 (value -> literal .)
+    GREATERTHAN     reduce using rule 49 (value -> literal .)
+    LESSTHAN        reduce using rule 49 (value -> literal .)
+    EQUALEQUAL      reduce using rule 49 (value -> literal .)
+    LESSTHANOREQUAL reduce using rule 49 (value -> literal .)
+    GREATERTHANOREQUAL reduce using rule 49 (value -> literal .)
+    NOTEQUAL        reduce using rule 49 (value -> literal .)
+    RPARENTHESIS    reduce using rule 49 (value -> literal .)
+    SEMICOLON       reduce using rule 49 (value -> literal .)
+    COMMA           reduce using rule 49 (value -> literal .)
+    DOUBLEDOT       reduce using rule 49 (value -> literal .)
 
 
 state 60
 
-    (48) value -> NAME .
-    (28) function_call -> NAME . LPARENTHESIS parameter_list RPARENTHESIS
+    (50) value -> NAME .
+    (30) function_call -> NAME . LPARENTHESIS parameter_list RPARENTHESIS
 
-    TIMES           reduce using rule 48 (value -> NAME .)
-    DIVIDE          reduce using rule 48 (value -> NAME .)
-    PLUS            reduce using rule 48 (value -> NAME .)
-    MINUS           reduce using rule 48 (value -> NAME .)
-    GREATERTHAN     reduce using rule 48 (value -> NAME .)
-    LESSTHAN        reduce using rule 48 (value -> NAME .)
-    EQUALEQUAL      reduce using rule 48 (value -> NAME .)
-    LESSTHANOREQUAL reduce using rule 48 (value -> NAME .)
-    GREATERTHANOREQUAL reduce using rule 48 (value -> NAME .)
-    NOTEQUAL        reduce using rule 48 (value -> NAME .)
-    RPARENTHESIS    reduce using rule 48 (value -> NAME .)
-    SEMICOLON       reduce using rule 48 (value -> NAME .)
-    COMMA           reduce using rule 48 (value -> NAME .)
-    DOUBLEDOT       reduce using rule 48 (value -> NAME .)
+    TIMES           reduce using rule 50 (value -> NAME .)
+    DIVIDE          reduce using rule 50 (value -> NAME .)
+    PLUS            reduce using rule 50 (value -> NAME .)
+    MINUS           reduce using rule 50 (value -> NAME .)
+    GREATERTHAN     reduce using rule 50 (value -> NAME .)
+    LESSTHAN        reduce using rule 50 (value -> NAME .)
+    EQUALEQUAL      reduce using rule 50 (value -> NAME .)
+    LESSTHANOREQUAL reduce using rule 50 (value -> NAME .)
+    GREATERTHANOREQUAL reduce using rule 50 (value -> NAME .)
+    NOTEQUAL        reduce using rule 50 (value -> NAME .)
+    RPARENTHESIS    reduce using rule 50 (value -> NAME .)
+    SEMICOLON       reduce using rule 50 (value -> NAME .)
+    COMMA           reduce using rule 50 (value -> NAME .)
+    DOUBLEDOT       reduce using rule 50 (value -> NAME .)
     LPARENTHESIS    shift and go to state 32
 
 
@@ -1192,152 +1197,152 @@ state 63
 
 state 64
 
-    (64) forloop -> FOR LPARENTHESIS assign . DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY
+    (66) forloop -> FOR LPARENTHESIS n_open_new_scope . assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope
+    (51) assign -> . type NAME n_name_assign EQUAL expression
+    (52) assign -> . NAME n_name_assign EQUAL expression
+    (6) type -> . INT_TYPE n_seen_type
+    (7) type -> . STRING_TYPE n_seen_type
+    (8) type -> . DOUBLE_TYPE n_seen_type
+    (9) type -> . FLOAT_TYPE n_seen_type
+    (10) type -> . BOOL_TYPE n_seen_type
 
-    DOUBLEDOT       shift and go to state 87
+    NAME            shift and go to state 44
+    INT_TYPE        shift and go to state 23
+    STRING_TYPE     shift and go to state 24
+    DOUBLE_TYPE     shift and go to state 25
+    FLOAT_TYPE      shift and go to state 26
+    BOOL_TYPE       shift and go to state 27
 
+    assign                         shift and go to state 87
+    type                           shift and go to state 22
 
 state 65
 
-    (63) whileloop -> WHILE LPARENTHESIS expression . RPARENTHESIS LCURLY codeblock RCURLY
+    (65) whileloop -> WHILE LPARENTHESIS expression . RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope
 
     RPARENTHESIS    shift and go to state 88
 
 
 state 66
 
-    (49) assign -> type NAME n_name_assign . EQUAL expression
+    (51) assign -> type NAME n_name_assign . EQUAL expression
 
     EQUAL           shift and go to state 89
 
 
 state 67
 
-    (27) function_definition -> FUNCTION NAME parameter_list DOUBLEDOT . function_type LCURLY codeblock RCURLY
-    (25) function_type -> . type
-    (26) function_type -> . VOID
-    (6) type -> . INT_TYPE n_seen_type
-    (7) type -> . STRING_TYPE n_seen_type
-    (8) type -> . DOUBLE_TYPE n_seen_type
-    (9) type -> . FLOAT_TYPE n_seen_type
-    (10) type -> . BOOL_TYPE n_seen_type
+    (29) function_definition -> FUNCTION NAME n_open_new_scope parameter_list . DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope
 
-    VOID            shift and go to state 92
-    INT_TYPE        shift and go to state 23
-    STRING_TYPE     shift and go to state 24
-    DOUBLE_TYPE     shift and go to state 25
-    FLOAT_TYPE      shift and go to state 26
-    BOOL_TYPE       shift and go to state 27
+    DOUBLEDOT       shift and go to state 90
 
-    function_type                  shift and go to state 90
-    type                           shift and go to state 91
 
 state 68
 
-    (31) parameter_list -> parameter COMMA . parameter_list
-    (29) parameter_list -> . empty
-    (30) parameter_list -> . parameter
-    (31) parameter_list -> . parameter COMMA parameter_list
+    (52) assign -> NAME n_name_assign EQUAL expression .
+
+    SEMICOLON       reduce using rule 52 (assign -> NAME n_name_assign EQUAL expression .)
+    COMMA           reduce using rule 52 (assign -> NAME n_name_assign EQUAL expression .)
+    RPARENTHESIS    reduce using rule 52 (assign -> NAME n_name_assign EQUAL expression .)
+    DOUBLEDOT       reduce using rule 52 (assign -> NAME n_name_assign EQUAL expression .)
+
+
+state 69
+
+    (30) function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .
+
+    SEMICOLON       reduce using rule 30 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
+    TIMES           reduce using rule 30 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
+    DIVIDE          reduce using rule 30 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
+    PLUS            reduce using rule 30 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
+    MINUS           reduce using rule 30 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
+    GREATERTHAN     reduce using rule 30 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
+    LESSTHAN        reduce using rule 30 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
+    EQUALEQUAL      reduce using rule 30 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
+    LESSTHANOREQUAL reduce using rule 30 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
+    GREATERTHANOREQUAL reduce using rule 30 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
+    NOTEQUAL        reduce using rule 30 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
+    RPARENTHESIS    reduce using rule 30 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
+    COMMA           reduce using rule 30 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
+    DOUBLEDOT       reduce using rule 30 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
+
+
+state 70
+
+    (33) parameter_list -> parameter COMMA . parameter_list
+    (31) parameter_list -> . empty
+    (32) parameter_list -> . parameter
+    (33) parameter_list -> . parameter COMMA parameter_list
     (1) empty -> .
-    (32) parameter -> . type NAME
-    (33) parameter -> . assign
+    (34) parameter -> . type NAME n_name_assign
+    (35) parameter -> . assign
     (6) type -> . INT_TYPE n_seen_type
     (7) type -> . STRING_TYPE n_seen_type
     (8) type -> . DOUBLE_TYPE n_seen_type
     (9) type -> . FLOAT_TYPE n_seen_type
     (10) type -> . BOOL_TYPE n_seen_type
-    (49) assign -> . type NAME n_name_assign EQUAL expression
-    (50) assign -> . NAME n_name_assign EQUAL expression
+    (51) assign -> . type NAME n_name_assign EQUAL expression
+    (52) assign -> . NAME n_name_assign EQUAL expression
 
-    DOUBLEDOT       reduce using rule 1 (empty -> .)
     RPARENTHESIS    reduce using rule 1 (empty -> .)
+    DOUBLEDOT       reduce using rule 1 (empty -> .)
     INT_TYPE        shift and go to state 23
     STRING_TYPE     shift and go to state 24
     DOUBLE_TYPE     shift and go to state 25
     FLOAT_TYPE      shift and go to state 26
     BOOL_TYPE       shift and go to state 27
-    NAME            shift and go to state 42
+    NAME            shift and go to state 44
 
-    parameter                      shift and go to state 45
-    parameter_list                 shift and go to state 93
-    empty                          shift and go to state 44
-    type                           shift and go to state 46
-    assign                         shift and go to state 47
-
-state 69
-
-    (32) parameter -> type NAME .
-    (49) assign -> type NAME . n_name_assign EQUAL expression
-    (51) n_name_assign -> .
-
-    COMMA           reduce using rule 32 (parameter -> type NAME .)
-    DOUBLEDOT       reduce using rule 32 (parameter -> type NAME .)
-    RPARENTHESIS    reduce using rule 32 (parameter -> type NAME .)
-    EQUAL           reduce using rule 51 (n_name_assign -> .)
-
-    n_name_assign                  shift and go to state 66
-
-state 70
-
-    (50) assign -> NAME n_name_assign EQUAL expression .
-
-    SEMICOLON       reduce using rule 50 (assign -> NAME n_name_assign EQUAL expression .)
-    COMMA           reduce using rule 50 (assign -> NAME n_name_assign EQUAL expression .)
-    DOUBLEDOT       reduce using rule 50 (assign -> NAME n_name_assign EQUAL expression .)
-    RPARENTHESIS    reduce using rule 50 (assign -> NAME n_name_assign EQUAL expression .)
-
+    parameter                      shift and go to state 47
+    parameter_list                 shift and go to state 91
+    empty                          shift and go to state 46
+    type                           shift and go to state 48
+    assign                         shift and go to state 49
 
 state 71
 
-    (28) function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .
+    (34) parameter -> type NAME . n_name_assign
+    (51) assign -> type NAME . n_name_assign EQUAL expression
+    (53) n_name_assign -> .
 
-    SEMICOLON       reduce using rule 28 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
-    TIMES           reduce using rule 28 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
-    DIVIDE          reduce using rule 28 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
-    PLUS            reduce using rule 28 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
-    MINUS           reduce using rule 28 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
-    GREATERTHAN     reduce using rule 28 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
-    LESSTHAN        reduce using rule 28 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
-    EQUALEQUAL      reduce using rule 28 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
-    LESSTHANOREQUAL reduce using rule 28 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
-    GREATERTHANOREQUAL reduce using rule 28 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
-    NOTEQUAL        reduce using rule 28 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
-    RPARENTHESIS    reduce using rule 28 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
-    COMMA           reduce using rule 28 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
-    DOUBLEDOT       reduce using rule 28 (function_call -> NAME LPARENTHESIS parameter_list RPARENTHESIS .)
+    EQUAL           reduce using rule 53 (n_name_assign -> .)
+    COMMA           reduce using rule 53 (n_name_assign -> .)
+    RPARENTHESIS    reduce using rule 53 (n_name_assign -> .)
+    DOUBLEDOT       reduce using rule 53 (n_name_assign -> .)
 
+    n_name_assign                  shift and go to state 92
 
 state 72
 
-    (42) factor -> LPARENTHESIS expression . RPARENTHESIS
+    (44) factor -> LPARENTHESIS expression . RPARENTHESIS
 
-    RPARENTHESIS    shift and go to state 94
+    RPARENTHESIS    shift and go to state 93
 
 
 state 73
 
-    (65) condition_if -> IF LPARENTHESIS expression RPARENTHESIS . LCURLY codeblock RCURLY condition_else
+    (67) condition_if -> IF LPARENTHESIS expression RPARENTHESIS . LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else
 
-    LCURLY          shift and go to state 95
+    LCURLY          shift and go to state 94
 
 
 state 74
 
-    (35) expression -> exp logic_operator . exp
-    (36) exp -> . termino
-    (37) exp -> . termino PLUS exp
-    (38) exp -> . termino MINUS exp
-    (39) termino -> . factor
-    (40) termino -> . factor TIMES termino
-    (41) termino -> . factor DIVIDE termino
-    (42) factor -> . LPARENTHESIS expression RPARENTHESIS
-    (43) factor -> . PLUS value
-    (44) factor -> . MINUS value
-    (45) factor -> . value
-    (46) value -> . function_call
-    (47) value -> . literal
-    (48) value -> . NAME
-    (28) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
+    (37) expression -> exp logic_operator . exp
+    (38) exp -> . termino
+    (39) exp -> . termino PLUS exp
+    (40) exp -> . termino MINUS exp
+    (41) termino -> . factor
+    (42) termino -> . factor TIMES termino
+    (43) termino -> . factor DIVIDE termino
+    (44) factor -> . LPARENTHESIS expression RPARENTHESIS
+    (45) factor -> . PLUS value
+    (46) factor -> . MINUS value
+    (47) factor -> . value
+    (48) value -> . function_call
+    (49) value -> . literal
+    (50) value -> . NAME
+    (30) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
     (22) literal -> . FLOAT
     (23) literal -> . INT
     (24) literal -> . STRING
@@ -1350,7 +1355,7 @@ state 74
     INT             shift and go to state 62
     STRING          shift and go to state 63
 
-    exp                            shift and go to state 96
+    exp                            shift and go to state 95
     termino                        shift and go to state 53
     factor                         shift and go to state 56
     value                          shift and go to state 57
@@ -1437,21 +1442,57 @@ state 80
 
 state 81
 
-    (37) exp -> termino PLUS . exp
-    (36) exp -> . termino
-    (37) exp -> . termino PLUS exp
-    (38) exp -> . termino MINUS exp
-    (39) termino -> . factor
-    (40) termino -> . factor TIMES termino
-    (41) termino -> . factor DIVIDE termino
-    (42) factor -> . LPARENTHESIS expression RPARENTHESIS
-    (43) factor -> . PLUS value
-    (44) factor -> . MINUS value
-    (45) factor -> . value
-    (46) value -> . function_call
-    (47) value -> . literal
-    (48) value -> . NAME
-    (28) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
+    (39) exp -> termino PLUS . exp
+    (38) exp -> . termino
+    (39) exp -> . termino PLUS exp
+    (40) exp -> . termino MINUS exp
+    (41) termino -> . factor
+    (42) termino -> . factor TIMES termino
+    (43) termino -> . factor DIVIDE termino
+    (44) factor -> . LPARENTHESIS expression RPARENTHESIS
+    (45) factor -> . PLUS value
+    (46) factor -> . MINUS value
+    (47) factor -> . value
+    (48) value -> . function_call
+    (49) value -> . literal
+    (50) value -> . NAME
+    (30) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
+    (22) literal -> . FLOAT
+    (23) literal -> . INT
+    (24) literal -> . STRING
+
+    LPARENTHESIS    shift and go to state 50
+    PLUS            shift and go to state 54
+    MINUS           shift and go to state 55
+    NAME            shift and go to state 60
+    FLOAT           shift and go to state 61
+    INT             shift and go to state 62
+    STRING          shift and go to state 63
+
+    termino                        shift and go to state 53
+    exp                            shift and go to state 96
+    factor                         shift and go to state 56
+    value                          shift and go to state 57
+    function_call                  shift and go to state 58
+    literal                        shift and go to state 59
+
+state 82
+
+    (40) exp -> termino MINUS . exp
+    (38) exp -> . termino
+    (39) exp -> . termino PLUS exp
+    (40) exp -> . termino MINUS exp
+    (41) termino -> . factor
+    (42) termino -> . factor TIMES termino
+    (43) termino -> . factor DIVIDE termino
+    (44) factor -> . LPARENTHESIS expression RPARENTHESIS
+    (45) factor -> . PLUS value
+    (46) factor -> . MINUS value
+    (47) factor -> . value
+    (48) value -> . function_call
+    (49) value -> . literal
+    (50) value -> . NAME
+    (30) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
     (22) literal -> . FLOAT
     (23) literal -> . INT
     (24) literal -> . STRING
@@ -1471,23 +1512,60 @@ state 81
     function_call                  shift and go to state 58
     literal                        shift and go to state 59
 
-state 82
+state 83
 
-    (38) exp -> termino MINUS . exp
-    (36) exp -> . termino
-    (37) exp -> . termino PLUS exp
-    (38) exp -> . termino MINUS exp
-    (39) termino -> . factor
-    (40) termino -> . factor TIMES termino
-    (41) termino -> . factor DIVIDE termino
-    (42) factor -> . LPARENTHESIS expression RPARENTHESIS
-    (43) factor -> . PLUS value
-    (44) factor -> . MINUS value
-    (45) factor -> . value
-    (46) value -> . function_call
-    (47) value -> . literal
-    (48) value -> . NAME
-    (28) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
+    (45) factor -> PLUS value .
+
+    TIMES           reduce using rule 45 (factor -> PLUS value .)
+    DIVIDE          reduce using rule 45 (factor -> PLUS value .)
+    PLUS            reduce using rule 45 (factor -> PLUS value .)
+    MINUS           reduce using rule 45 (factor -> PLUS value .)
+    GREATERTHAN     reduce using rule 45 (factor -> PLUS value .)
+    LESSTHAN        reduce using rule 45 (factor -> PLUS value .)
+    EQUALEQUAL      reduce using rule 45 (factor -> PLUS value .)
+    LESSTHANOREQUAL reduce using rule 45 (factor -> PLUS value .)
+    GREATERTHANOREQUAL reduce using rule 45 (factor -> PLUS value .)
+    NOTEQUAL        reduce using rule 45 (factor -> PLUS value .)
+    RPARENTHESIS    reduce using rule 45 (factor -> PLUS value .)
+    SEMICOLON       reduce using rule 45 (factor -> PLUS value .)
+    COMMA           reduce using rule 45 (factor -> PLUS value .)
+    DOUBLEDOT       reduce using rule 45 (factor -> PLUS value .)
+
+
+state 84
+
+    (46) factor -> MINUS value .
+
+    TIMES           reduce using rule 46 (factor -> MINUS value .)
+    DIVIDE          reduce using rule 46 (factor -> MINUS value .)
+    PLUS            reduce using rule 46 (factor -> MINUS value .)
+    MINUS           reduce using rule 46 (factor -> MINUS value .)
+    GREATERTHAN     reduce using rule 46 (factor -> MINUS value .)
+    LESSTHAN        reduce using rule 46 (factor -> MINUS value .)
+    EQUALEQUAL      reduce using rule 46 (factor -> MINUS value .)
+    LESSTHANOREQUAL reduce using rule 46 (factor -> MINUS value .)
+    GREATERTHANOREQUAL reduce using rule 46 (factor -> MINUS value .)
+    NOTEQUAL        reduce using rule 46 (factor -> MINUS value .)
+    RPARENTHESIS    reduce using rule 46 (factor -> MINUS value .)
+    SEMICOLON       reduce using rule 46 (factor -> MINUS value .)
+    COMMA           reduce using rule 46 (factor -> MINUS value .)
+    DOUBLEDOT       reduce using rule 46 (factor -> MINUS value .)
+
+
+state 85
+
+    (42) termino -> factor TIMES . termino
+    (41) termino -> . factor
+    (42) termino -> . factor TIMES termino
+    (43) termino -> . factor DIVIDE termino
+    (44) factor -> . LPARENTHESIS expression RPARENTHESIS
+    (45) factor -> . PLUS value
+    (46) factor -> . MINUS value
+    (47) factor -> . value
+    (48) value -> . function_call
+    (49) value -> . literal
+    (50) value -> . NAME
+    (30) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
     (22) literal -> . FLOAT
     (23) literal -> . INT
     (24) literal -> . STRING
@@ -1500,67 +1578,26 @@ state 82
     INT             shift and go to state 62
     STRING          shift and go to state 63
 
-    termino                        shift and go to state 53
-    exp                            shift and go to state 98
     factor                         shift and go to state 56
+    termino                        shift and go to state 98
     value                          shift and go to state 57
     function_call                  shift and go to state 58
     literal                        shift and go to state 59
 
-state 83
+state 86
 
-    (43) factor -> PLUS value .
-
-    TIMES           reduce using rule 43 (factor -> PLUS value .)
-    DIVIDE          reduce using rule 43 (factor -> PLUS value .)
-    PLUS            reduce using rule 43 (factor -> PLUS value .)
-    MINUS           reduce using rule 43 (factor -> PLUS value .)
-    GREATERTHAN     reduce using rule 43 (factor -> PLUS value .)
-    LESSTHAN        reduce using rule 43 (factor -> PLUS value .)
-    EQUALEQUAL      reduce using rule 43 (factor -> PLUS value .)
-    LESSTHANOREQUAL reduce using rule 43 (factor -> PLUS value .)
-    GREATERTHANOREQUAL reduce using rule 43 (factor -> PLUS value .)
-    NOTEQUAL        reduce using rule 43 (factor -> PLUS value .)
-    RPARENTHESIS    reduce using rule 43 (factor -> PLUS value .)
-    SEMICOLON       reduce using rule 43 (factor -> PLUS value .)
-    COMMA           reduce using rule 43 (factor -> PLUS value .)
-    DOUBLEDOT       reduce using rule 43 (factor -> PLUS value .)
-
-
-state 84
-
-    (44) factor -> MINUS value .
-
-    TIMES           reduce using rule 44 (factor -> MINUS value .)
-    DIVIDE          reduce using rule 44 (factor -> MINUS value .)
-    PLUS            reduce using rule 44 (factor -> MINUS value .)
-    MINUS           reduce using rule 44 (factor -> MINUS value .)
-    GREATERTHAN     reduce using rule 44 (factor -> MINUS value .)
-    LESSTHAN        reduce using rule 44 (factor -> MINUS value .)
-    EQUALEQUAL      reduce using rule 44 (factor -> MINUS value .)
-    LESSTHANOREQUAL reduce using rule 44 (factor -> MINUS value .)
-    GREATERTHANOREQUAL reduce using rule 44 (factor -> MINUS value .)
-    NOTEQUAL        reduce using rule 44 (factor -> MINUS value .)
-    RPARENTHESIS    reduce using rule 44 (factor -> MINUS value .)
-    SEMICOLON       reduce using rule 44 (factor -> MINUS value .)
-    COMMA           reduce using rule 44 (factor -> MINUS value .)
-    DOUBLEDOT       reduce using rule 44 (factor -> MINUS value .)
-
-
-state 85
-
-    (40) termino -> factor TIMES . termino
-    (39) termino -> . factor
-    (40) termino -> . factor TIMES termino
-    (41) termino -> . factor DIVIDE termino
-    (42) factor -> . LPARENTHESIS expression RPARENTHESIS
-    (43) factor -> . PLUS value
-    (44) factor -> . MINUS value
-    (45) factor -> . value
-    (46) value -> . function_call
-    (47) value -> . literal
-    (48) value -> . NAME
-    (28) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
+    (43) termino -> factor DIVIDE . termino
+    (41) termino -> . factor
+    (42) termino -> . factor TIMES termino
+    (43) termino -> . factor DIVIDE termino
+    (44) factor -> . LPARENTHESIS expression RPARENTHESIS
+    (45) factor -> . PLUS value
+    (46) factor -> . MINUS value
+    (47) factor -> . value
+    (48) value -> . function_call
+    (49) value -> . literal
+    (50) value -> . NAME
+    (30) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
     (22) literal -> . FLOAT
     (23) literal -> . INT
     (24) literal -> . STRING
@@ -1579,103 +1616,39 @@ state 85
     function_call                  shift and go to state 58
     literal                        shift and go to state 59
 
-state 86
-
-    (41) termino -> factor DIVIDE . termino
-    (39) termino -> . factor
-    (40) termino -> . factor TIMES termino
-    (41) termino -> . factor DIVIDE termino
-    (42) factor -> . LPARENTHESIS expression RPARENTHESIS
-    (43) factor -> . PLUS value
-    (44) factor -> . MINUS value
-    (45) factor -> . value
-    (46) value -> . function_call
-    (47) value -> . literal
-    (48) value -> . NAME
-    (28) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
-    (22) literal -> . FLOAT
-    (23) literal -> . INT
-    (24) literal -> . STRING
-
-    LPARENTHESIS    shift and go to state 50
-    PLUS            shift and go to state 54
-    MINUS           shift and go to state 55
-    NAME            shift and go to state 60
-    FLOAT           shift and go to state 61
-    INT             shift and go to state 62
-    STRING          shift and go to state 63
-
-    factor                         shift and go to state 56
-    termino                        shift and go to state 100
-    value                          shift and go to state 57
-    function_call                  shift and go to state 58
-    literal                        shift and go to state 59
-
 state 87
 
-    (64) forloop -> FOR LPARENTHESIS assign DOUBLEDOT . expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY
-    (34) expression -> . exp
-    (35) expression -> . exp logic_operator exp
-    (36) exp -> . termino
-    (37) exp -> . termino PLUS exp
-    (38) exp -> . termino MINUS exp
-    (39) termino -> . factor
-    (40) termino -> . factor TIMES termino
-    (41) termino -> . factor DIVIDE termino
-    (42) factor -> . LPARENTHESIS expression RPARENTHESIS
-    (43) factor -> . PLUS value
-    (44) factor -> . MINUS value
-    (45) factor -> . value
-    (46) value -> . function_call
-    (47) value -> . literal
-    (48) value -> . NAME
-    (28) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
-    (22) literal -> . FLOAT
-    (23) literal -> . INT
-    (24) literal -> . STRING
+    (66) forloop -> FOR LPARENTHESIS n_open_new_scope assign . DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope
 
-    LPARENTHESIS    shift and go to state 50
-    PLUS            shift and go to state 54
-    MINUS           shift and go to state 55
-    NAME            shift and go to state 60
-    FLOAT           shift and go to state 61
-    INT             shift and go to state 62
-    STRING          shift and go to state 63
+    DOUBLEDOT       shift and go to state 100
 
-    expression                     shift and go to state 101
-    exp                            shift and go to state 52
-    termino                        shift and go to state 53
-    factor                         shift and go to state 56
-    value                          shift and go to state 57
-    function_call                  shift and go to state 58
-    literal                        shift and go to state 59
 
 state 88
 
-    (63) whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS . LCURLY codeblock RCURLY
+    (65) whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS . LCURLY n_open_new_scope codeblock RCURLY n_close_scope
 
-    LCURLY          shift and go to state 102
+    LCURLY          shift and go to state 101
 
 
 state 89
 
-    (49) assign -> type NAME n_name_assign EQUAL . expression
-    (34) expression -> . exp
-    (35) expression -> . exp logic_operator exp
-    (36) exp -> . termino
-    (37) exp -> . termino PLUS exp
-    (38) exp -> . termino MINUS exp
-    (39) termino -> . factor
-    (40) termino -> . factor TIMES termino
-    (41) termino -> . factor DIVIDE termino
-    (42) factor -> . LPARENTHESIS expression RPARENTHESIS
-    (43) factor -> . PLUS value
-    (44) factor -> . MINUS value
-    (45) factor -> . value
-    (46) value -> . function_call
-    (47) value -> . literal
-    (48) value -> . NAME
-    (28) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
+    (51) assign -> type NAME n_name_assign EQUAL . expression
+    (36) expression -> . exp
+    (37) expression -> . exp logic_operator exp
+    (38) exp -> . termino
+    (39) exp -> . termino PLUS exp
+    (40) exp -> . termino MINUS exp
+    (41) termino -> . factor
+    (42) termino -> . factor TIMES termino
+    (43) termino -> . factor DIVIDE termino
+    (44) factor -> . LPARENTHESIS expression RPARENTHESIS
+    (45) factor -> . PLUS value
+    (46) factor -> . MINUS value
+    (47) factor -> . value
+    (48) value -> . function_call
+    (49) value -> . literal
+    (50) value -> . NAME
+    (30) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
     (22) literal -> . FLOAT
     (23) literal -> . INT
     (24) literal -> . STRING
@@ -1688,7 +1661,7 @@ state 89
     INT             shift and go to state 62
     STRING          shift and go to state 63
 
-    expression                     shift and go to state 103
+    expression                     shift and go to state 102
     exp                            shift and go to state 52
     termino                        shift and go to state 53
     factor                         shift and go to state 56
@@ -1698,360 +1671,537 @@ state 89
 
 state 90
 
-    (27) function_definition -> FUNCTION NAME parameter_list DOUBLEDOT function_type . LCURLY codeblock RCURLY
+    (29) function_definition -> FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT . function_type LCURLY codeblock RCURLY n_close_scope
+    (25) function_type -> . type
+    (26) function_type -> . VOID
+    (6) type -> . INT_TYPE n_seen_type
+    (7) type -> . STRING_TYPE n_seen_type
+    (8) type -> . DOUBLE_TYPE n_seen_type
+    (9) type -> . FLOAT_TYPE n_seen_type
+    (10) type -> . BOOL_TYPE n_seen_type
 
-    LCURLY          shift and go to state 104
+    VOID            shift and go to state 105
+    INT_TYPE        shift and go to state 23
+    STRING_TYPE     shift and go to state 24
+    DOUBLE_TYPE     shift and go to state 25
+    FLOAT_TYPE      shift and go to state 26
+    BOOL_TYPE       shift and go to state 27
 
+    function_type                  shift and go to state 103
+    type                           shift and go to state 104
 
 state 91
+
+    (33) parameter_list -> parameter COMMA parameter_list .
+
+    RPARENTHESIS    reduce using rule 33 (parameter_list -> parameter COMMA parameter_list .)
+    DOUBLEDOT       reduce using rule 33 (parameter_list -> parameter COMMA parameter_list .)
+
+
+state 92
+
+    (34) parameter -> type NAME n_name_assign .
+    (51) assign -> type NAME n_name_assign . EQUAL expression
+
+    COMMA           reduce using rule 34 (parameter -> type NAME n_name_assign .)
+    RPARENTHESIS    reduce using rule 34 (parameter -> type NAME n_name_assign .)
+    DOUBLEDOT       reduce using rule 34 (parameter -> type NAME n_name_assign .)
+    EQUAL           shift and go to state 89
+
+
+state 93
+
+    (44) factor -> LPARENTHESIS expression RPARENTHESIS .
+
+    TIMES           reduce using rule 44 (factor -> LPARENTHESIS expression RPARENTHESIS .)
+    DIVIDE          reduce using rule 44 (factor -> LPARENTHESIS expression RPARENTHESIS .)
+    PLUS            reduce using rule 44 (factor -> LPARENTHESIS expression RPARENTHESIS .)
+    MINUS           reduce using rule 44 (factor -> LPARENTHESIS expression RPARENTHESIS .)
+    GREATERTHAN     reduce using rule 44 (factor -> LPARENTHESIS expression RPARENTHESIS .)
+    LESSTHAN        reduce using rule 44 (factor -> LPARENTHESIS expression RPARENTHESIS .)
+    EQUALEQUAL      reduce using rule 44 (factor -> LPARENTHESIS expression RPARENTHESIS .)
+    LESSTHANOREQUAL reduce using rule 44 (factor -> LPARENTHESIS expression RPARENTHESIS .)
+    GREATERTHANOREQUAL reduce using rule 44 (factor -> LPARENTHESIS expression RPARENTHESIS .)
+    NOTEQUAL        reduce using rule 44 (factor -> LPARENTHESIS expression RPARENTHESIS .)
+    RPARENTHESIS    reduce using rule 44 (factor -> LPARENTHESIS expression RPARENTHESIS .)
+    SEMICOLON       reduce using rule 44 (factor -> LPARENTHESIS expression RPARENTHESIS .)
+    COMMA           reduce using rule 44 (factor -> LPARENTHESIS expression RPARENTHESIS .)
+    DOUBLEDOT       reduce using rule 44 (factor -> LPARENTHESIS expression RPARENTHESIS .)
+
+
+state 94
+
+    (67) condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY . n_open_new_scope codeblock RCURLY n_close_scope condition_else
+    (27) n_open_new_scope -> .
+
+    FUNCTION        reduce using rule 27 (n_open_new_scope -> .)
+    IF              reduce using rule 27 (n_open_new_scope -> .)
+    FOR             reduce using rule 27 (n_open_new_scope -> .)
+    WHILE           reduce using rule 27 (n_open_new_scope -> .)
+    NAME            reduce using rule 27 (n_open_new_scope -> .)
+    INT_TYPE        reduce using rule 27 (n_open_new_scope -> .)
+    STRING_TYPE     reduce using rule 27 (n_open_new_scope -> .)
+    DOUBLE_TYPE     reduce using rule 27 (n_open_new_scope -> .)
+    FLOAT_TYPE      reduce using rule 27 (n_open_new_scope -> .)
+    BOOL_TYPE       reduce using rule 27 (n_open_new_scope -> .)
+    RCURLY          reduce using rule 27 (n_open_new_scope -> .)
+
+    n_open_new_scope               shift and go to state 106
+
+state 95
+
+    (37) expression -> exp logic_operator exp .
+
+    RPARENTHESIS    reduce using rule 37 (expression -> exp logic_operator exp .)
+    SEMICOLON       reduce using rule 37 (expression -> exp logic_operator exp .)
+    COMMA           reduce using rule 37 (expression -> exp logic_operator exp .)
+    DOUBLEDOT       reduce using rule 37 (expression -> exp logic_operator exp .)
+
+
+state 96
+
+    (39) exp -> termino PLUS exp .
+
+    GREATERTHAN     reduce using rule 39 (exp -> termino PLUS exp .)
+    LESSTHAN        reduce using rule 39 (exp -> termino PLUS exp .)
+    EQUALEQUAL      reduce using rule 39 (exp -> termino PLUS exp .)
+    LESSTHANOREQUAL reduce using rule 39 (exp -> termino PLUS exp .)
+    GREATERTHANOREQUAL reduce using rule 39 (exp -> termino PLUS exp .)
+    NOTEQUAL        reduce using rule 39 (exp -> termino PLUS exp .)
+    RPARENTHESIS    reduce using rule 39 (exp -> termino PLUS exp .)
+    SEMICOLON       reduce using rule 39 (exp -> termino PLUS exp .)
+    COMMA           reduce using rule 39 (exp -> termino PLUS exp .)
+    DOUBLEDOT       reduce using rule 39 (exp -> termino PLUS exp .)
+
+
+state 97
+
+    (40) exp -> termino MINUS exp .
+
+    GREATERTHAN     reduce using rule 40 (exp -> termino MINUS exp .)
+    LESSTHAN        reduce using rule 40 (exp -> termino MINUS exp .)
+    EQUALEQUAL      reduce using rule 40 (exp -> termino MINUS exp .)
+    LESSTHANOREQUAL reduce using rule 40 (exp -> termino MINUS exp .)
+    GREATERTHANOREQUAL reduce using rule 40 (exp -> termino MINUS exp .)
+    NOTEQUAL        reduce using rule 40 (exp -> termino MINUS exp .)
+    RPARENTHESIS    reduce using rule 40 (exp -> termino MINUS exp .)
+    SEMICOLON       reduce using rule 40 (exp -> termino MINUS exp .)
+    COMMA           reduce using rule 40 (exp -> termino MINUS exp .)
+    DOUBLEDOT       reduce using rule 40 (exp -> termino MINUS exp .)
+
+
+state 98
+
+    (42) termino -> factor TIMES termino .
+
+    PLUS            reduce using rule 42 (termino -> factor TIMES termino .)
+    MINUS           reduce using rule 42 (termino -> factor TIMES termino .)
+    GREATERTHAN     reduce using rule 42 (termino -> factor TIMES termino .)
+    LESSTHAN        reduce using rule 42 (termino -> factor TIMES termino .)
+    EQUALEQUAL      reduce using rule 42 (termino -> factor TIMES termino .)
+    LESSTHANOREQUAL reduce using rule 42 (termino -> factor TIMES termino .)
+    GREATERTHANOREQUAL reduce using rule 42 (termino -> factor TIMES termino .)
+    NOTEQUAL        reduce using rule 42 (termino -> factor TIMES termino .)
+    RPARENTHESIS    reduce using rule 42 (termino -> factor TIMES termino .)
+    SEMICOLON       reduce using rule 42 (termino -> factor TIMES termino .)
+    COMMA           reduce using rule 42 (termino -> factor TIMES termino .)
+    DOUBLEDOT       reduce using rule 42 (termino -> factor TIMES termino .)
+
+
+state 99
+
+    (43) termino -> factor DIVIDE termino .
+
+    PLUS            reduce using rule 43 (termino -> factor DIVIDE termino .)
+    MINUS           reduce using rule 43 (termino -> factor DIVIDE termino .)
+    GREATERTHAN     reduce using rule 43 (termino -> factor DIVIDE termino .)
+    LESSTHAN        reduce using rule 43 (termino -> factor DIVIDE termino .)
+    EQUALEQUAL      reduce using rule 43 (termino -> factor DIVIDE termino .)
+    LESSTHANOREQUAL reduce using rule 43 (termino -> factor DIVIDE termino .)
+    GREATERTHANOREQUAL reduce using rule 43 (termino -> factor DIVIDE termino .)
+    NOTEQUAL        reduce using rule 43 (termino -> factor DIVIDE termino .)
+    RPARENTHESIS    reduce using rule 43 (termino -> factor DIVIDE termino .)
+    SEMICOLON       reduce using rule 43 (termino -> factor DIVIDE termino .)
+    COMMA           reduce using rule 43 (termino -> factor DIVIDE termino .)
+    DOUBLEDOT       reduce using rule 43 (termino -> factor DIVIDE termino .)
+
+
+state 100
+
+    (66) forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT . expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope
+    (36) expression -> . exp
+    (37) expression -> . exp logic_operator exp
+    (38) exp -> . termino
+    (39) exp -> . termino PLUS exp
+    (40) exp -> . termino MINUS exp
+    (41) termino -> . factor
+    (42) termino -> . factor TIMES termino
+    (43) termino -> . factor DIVIDE termino
+    (44) factor -> . LPARENTHESIS expression RPARENTHESIS
+    (45) factor -> . PLUS value
+    (46) factor -> . MINUS value
+    (47) factor -> . value
+    (48) value -> . function_call
+    (49) value -> . literal
+    (50) value -> . NAME
+    (30) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
+    (22) literal -> . FLOAT
+    (23) literal -> . INT
+    (24) literal -> . STRING
+
+    LPARENTHESIS    shift and go to state 50
+    PLUS            shift and go to state 54
+    MINUS           shift and go to state 55
+    NAME            shift and go to state 60
+    FLOAT           shift and go to state 61
+    INT             shift and go to state 62
+    STRING          shift and go to state 63
+
+    expression                     shift and go to state 107
+    exp                            shift and go to state 52
+    termino                        shift and go to state 53
+    factor                         shift and go to state 56
+    value                          shift and go to state 57
+    function_call                  shift and go to state 58
+    literal                        shift and go to state 59
+
+state 101
+
+    (65) whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY . n_open_new_scope codeblock RCURLY n_close_scope
+    (27) n_open_new_scope -> .
+
+    FUNCTION        reduce using rule 27 (n_open_new_scope -> .)
+    IF              reduce using rule 27 (n_open_new_scope -> .)
+    FOR             reduce using rule 27 (n_open_new_scope -> .)
+    WHILE           reduce using rule 27 (n_open_new_scope -> .)
+    NAME            reduce using rule 27 (n_open_new_scope -> .)
+    INT_TYPE        reduce using rule 27 (n_open_new_scope -> .)
+    STRING_TYPE     reduce using rule 27 (n_open_new_scope -> .)
+    DOUBLE_TYPE     reduce using rule 27 (n_open_new_scope -> .)
+    FLOAT_TYPE      reduce using rule 27 (n_open_new_scope -> .)
+    BOOL_TYPE       reduce using rule 27 (n_open_new_scope -> .)
+    RCURLY          reduce using rule 27 (n_open_new_scope -> .)
+
+    n_open_new_scope               shift and go to state 108
+
+state 102
+
+    (51) assign -> type NAME n_name_assign EQUAL expression .
+
+    SEMICOLON       reduce using rule 51 (assign -> type NAME n_name_assign EQUAL expression .)
+    COMMA           reduce using rule 51 (assign -> type NAME n_name_assign EQUAL expression .)
+    RPARENTHESIS    reduce using rule 51 (assign -> type NAME n_name_assign EQUAL expression .)
+    DOUBLEDOT       reduce using rule 51 (assign -> type NAME n_name_assign EQUAL expression .)
+
+
+state 103
+
+    (29) function_definition -> FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type . LCURLY codeblock RCURLY n_close_scope
+
+    LCURLY          shift and go to state 109
+
+
+state 104
 
     (25) function_type -> type .
 
     LCURLY          reduce using rule 25 (function_type -> type .)
 
 
-state 92
+state 105
 
     (26) function_type -> VOID .
 
     LCURLY          reduce using rule 26 (function_type -> VOID .)
 
 
-state 93
-
-    (31) parameter_list -> parameter COMMA parameter_list .
-
-    DOUBLEDOT       reduce using rule 31 (parameter_list -> parameter COMMA parameter_list .)
-    RPARENTHESIS    reduce using rule 31 (parameter_list -> parameter COMMA parameter_list .)
-
-
-state 94
-
-    (42) factor -> LPARENTHESIS expression RPARENTHESIS .
-
-    TIMES           reduce using rule 42 (factor -> LPARENTHESIS expression RPARENTHESIS .)
-    DIVIDE          reduce using rule 42 (factor -> LPARENTHESIS expression RPARENTHESIS .)
-    PLUS            reduce using rule 42 (factor -> LPARENTHESIS expression RPARENTHESIS .)
-    MINUS           reduce using rule 42 (factor -> LPARENTHESIS expression RPARENTHESIS .)
-    GREATERTHAN     reduce using rule 42 (factor -> LPARENTHESIS expression RPARENTHESIS .)
-    LESSTHAN        reduce using rule 42 (factor -> LPARENTHESIS expression RPARENTHESIS .)
-    EQUALEQUAL      reduce using rule 42 (factor -> LPARENTHESIS expression RPARENTHESIS .)
-    LESSTHANOREQUAL reduce using rule 42 (factor -> LPARENTHESIS expression RPARENTHESIS .)
-    GREATERTHANOREQUAL reduce using rule 42 (factor -> LPARENTHESIS expression RPARENTHESIS .)
-    NOTEQUAL        reduce using rule 42 (factor -> LPARENTHESIS expression RPARENTHESIS .)
-    RPARENTHESIS    reduce using rule 42 (factor -> LPARENTHESIS expression RPARENTHESIS .)
-    SEMICOLON       reduce using rule 42 (factor -> LPARENTHESIS expression RPARENTHESIS .)
-    COMMA           reduce using rule 42 (factor -> LPARENTHESIS expression RPARENTHESIS .)
-    DOUBLEDOT       reduce using rule 42 (factor -> LPARENTHESIS expression RPARENTHESIS .)
-
-
-state 95
-
-    (65) condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY . codeblock RCURLY condition_else
-    (55) codeblock -> . empty
-    (56) codeblock -> . codeblock_aux codeblock
-    (1) empty -> .
-    (57) codeblock_aux -> . statement
-    (58) codeblock_aux -> . function_definition
-    (59) codeblock_aux -> . condition_if
-    (60) codeblock_aux -> . loop
-    (52) statement -> . statement_aux SEMICOLON
-    (27) function_definition -> . FUNCTION NAME parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY
-    (65) condition_if -> . IF LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY condition_else
-    (61) loop -> . forloop
-    (62) loop -> . whileloop
-    (53) statement_aux -> . assign
-    (54) statement_aux -> . function_call
-    (64) forloop -> . FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY
-    (63) whileloop -> . WHILE LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY
-    (49) assign -> . type NAME n_name_assign EQUAL expression
-    (50) assign -> . NAME n_name_assign EQUAL expression
-    (28) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
-    (6) type -> . INT_TYPE n_seen_type
-    (7) type -> . STRING_TYPE n_seen_type
-    (8) type -> . DOUBLE_TYPE n_seen_type
-    (9) type -> . FLOAT_TYPE n_seen_type
-    (10) type -> . BOOL_TYPE n_seen_type
-
-    RCURLY          reduce using rule 1 (empty -> .)
-    FUNCTION        shift and go to state 13
-    IF              shift and go to state 15
-    FOR             shift and go to state 20
-    WHILE           shift and go to state 21
-    NAME            shift and go to state 14
-    INT_TYPE        shift and go to state 23
-    STRING_TYPE     shift and go to state 24
-    DOUBLE_TYPE     shift and go to state 25
-    FLOAT_TYPE      shift and go to state 26
-    BOOL_TYPE       shift and go to state 27
-
-    codeblock                      shift and go to state 105
-    empty                          shift and go to state 6
-    codeblock_aux                  shift and go to state 7
-    statement                      shift and go to state 8
-    function_definition            shift and go to state 9
-    condition_if                   shift and go to state 10
-    loop                           shift and go to state 11
-    statement_aux                  shift and go to state 12
-    forloop                        shift and go to state 16
-    whileloop                      shift and go to state 17
-    assign                         shift and go to state 18
-    function_call                  shift and go to state 19
-    type                           shift and go to state 22
-
-state 96
-
-    (35) expression -> exp logic_operator exp .
-
-    RPARENTHESIS    reduce using rule 35 (expression -> exp logic_operator exp .)
-    SEMICOLON       reduce using rule 35 (expression -> exp logic_operator exp .)
-    COMMA           reduce using rule 35 (expression -> exp logic_operator exp .)
-    DOUBLEDOT       reduce using rule 35 (expression -> exp logic_operator exp .)
-
-
-state 97
-
-    (37) exp -> termino PLUS exp .
-
-    GREATERTHAN     reduce using rule 37 (exp -> termino PLUS exp .)
-    LESSTHAN        reduce using rule 37 (exp -> termino PLUS exp .)
-    EQUALEQUAL      reduce using rule 37 (exp -> termino PLUS exp .)
-    LESSTHANOREQUAL reduce using rule 37 (exp -> termino PLUS exp .)
-    GREATERTHANOREQUAL reduce using rule 37 (exp -> termino PLUS exp .)
-    NOTEQUAL        reduce using rule 37 (exp -> termino PLUS exp .)
-    RPARENTHESIS    reduce using rule 37 (exp -> termino PLUS exp .)
-    SEMICOLON       reduce using rule 37 (exp -> termino PLUS exp .)
-    COMMA           reduce using rule 37 (exp -> termino PLUS exp .)
-    DOUBLEDOT       reduce using rule 37 (exp -> termino PLUS exp .)
-
-
-state 98
-
-    (38) exp -> termino MINUS exp .
-
-    GREATERTHAN     reduce using rule 38 (exp -> termino MINUS exp .)
-    LESSTHAN        reduce using rule 38 (exp -> termino MINUS exp .)
-    EQUALEQUAL      reduce using rule 38 (exp -> termino MINUS exp .)
-    LESSTHANOREQUAL reduce using rule 38 (exp -> termino MINUS exp .)
-    GREATERTHANOREQUAL reduce using rule 38 (exp -> termino MINUS exp .)
-    NOTEQUAL        reduce using rule 38 (exp -> termino MINUS exp .)
-    RPARENTHESIS    reduce using rule 38 (exp -> termino MINUS exp .)
-    SEMICOLON       reduce using rule 38 (exp -> termino MINUS exp .)
-    COMMA           reduce using rule 38 (exp -> termino MINUS exp .)
-    DOUBLEDOT       reduce using rule 38 (exp -> termino MINUS exp .)
-
-
-state 99
-
-    (40) termino -> factor TIMES termino .
-
-    PLUS            reduce using rule 40 (termino -> factor TIMES termino .)
-    MINUS           reduce using rule 40 (termino -> factor TIMES termino .)
-    GREATERTHAN     reduce using rule 40 (termino -> factor TIMES termino .)
-    LESSTHAN        reduce using rule 40 (termino -> factor TIMES termino .)
-    EQUALEQUAL      reduce using rule 40 (termino -> factor TIMES termino .)
-    LESSTHANOREQUAL reduce using rule 40 (termino -> factor TIMES termino .)
-    GREATERTHANOREQUAL reduce using rule 40 (termino -> factor TIMES termino .)
-    NOTEQUAL        reduce using rule 40 (termino -> factor TIMES termino .)
-    RPARENTHESIS    reduce using rule 40 (termino -> factor TIMES termino .)
-    SEMICOLON       reduce using rule 40 (termino -> factor TIMES termino .)
-    COMMA           reduce using rule 40 (termino -> factor TIMES termino .)
-    DOUBLEDOT       reduce using rule 40 (termino -> factor TIMES termino .)
-
-
-state 100
-
-    (41) termino -> factor DIVIDE termino .
-
-    PLUS            reduce using rule 41 (termino -> factor DIVIDE termino .)
-    MINUS           reduce using rule 41 (termino -> factor DIVIDE termino .)
-    GREATERTHAN     reduce using rule 41 (termino -> factor DIVIDE termino .)
-    LESSTHAN        reduce using rule 41 (termino -> factor DIVIDE termino .)
-    EQUALEQUAL      reduce using rule 41 (termino -> factor DIVIDE termino .)
-    LESSTHANOREQUAL reduce using rule 41 (termino -> factor DIVIDE termino .)
-    GREATERTHANOREQUAL reduce using rule 41 (termino -> factor DIVIDE termino .)
-    NOTEQUAL        reduce using rule 41 (termino -> factor DIVIDE termino .)
-    RPARENTHESIS    reduce using rule 41 (termino -> factor DIVIDE termino .)
-    SEMICOLON       reduce using rule 41 (termino -> factor DIVIDE termino .)
-    COMMA           reduce using rule 41 (termino -> factor DIVIDE termino .)
-    DOUBLEDOT       reduce using rule 41 (termino -> factor DIVIDE termino .)
-
-
-state 101
-
-    (64) forloop -> FOR LPARENTHESIS assign DOUBLEDOT expression . DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY
-
-    DOUBLEDOT       shift and go to state 106
-
-
-state 102
-
-    (63) whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY . codeblock RCURLY
-    (55) codeblock -> . empty
-    (56) codeblock -> . codeblock_aux codeblock
-    (1) empty -> .
-    (57) codeblock_aux -> . statement
-    (58) codeblock_aux -> . function_definition
-    (59) codeblock_aux -> . condition_if
-    (60) codeblock_aux -> . loop
-    (52) statement -> . statement_aux SEMICOLON
-    (27) function_definition -> . FUNCTION NAME parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY
-    (65) condition_if -> . IF LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY condition_else
-    (61) loop -> . forloop
-    (62) loop -> . whileloop
-    (53) statement_aux -> . assign
-    (54) statement_aux -> . function_call
-    (64) forloop -> . FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY
-    (63) whileloop -> . WHILE LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY
-    (49) assign -> . type NAME n_name_assign EQUAL expression
-    (50) assign -> . NAME n_name_assign EQUAL expression
-    (28) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
-    (6) type -> . INT_TYPE n_seen_type
-    (7) type -> . STRING_TYPE n_seen_type
-    (8) type -> . DOUBLE_TYPE n_seen_type
-    (9) type -> . FLOAT_TYPE n_seen_type
-    (10) type -> . BOOL_TYPE n_seen_type
-
-    RCURLY          reduce using rule 1 (empty -> .)
-    FUNCTION        shift and go to state 13
-    IF              shift and go to state 15
-    FOR             shift and go to state 20
-    WHILE           shift and go to state 21
-    NAME            shift and go to state 14
-    INT_TYPE        shift and go to state 23
-    STRING_TYPE     shift and go to state 24
-    DOUBLE_TYPE     shift and go to state 25
-    FLOAT_TYPE      shift and go to state 26
-    BOOL_TYPE       shift and go to state 27
-
-    codeblock                      shift and go to state 107
-    empty                          shift and go to state 6
-    codeblock_aux                  shift and go to state 7
-    statement                      shift and go to state 8
-    function_definition            shift and go to state 9
-    condition_if                   shift and go to state 10
-    loop                           shift and go to state 11
-    statement_aux                  shift and go to state 12
-    forloop                        shift and go to state 16
-    whileloop                      shift and go to state 17
-    assign                         shift and go to state 18
-    function_call                  shift and go to state 19
-    type                           shift and go to state 22
-
-state 103
-
-    (49) assign -> type NAME n_name_assign EQUAL expression .
-
-    SEMICOLON       reduce using rule 49 (assign -> type NAME n_name_assign EQUAL expression .)
-    COMMA           reduce using rule 49 (assign -> type NAME n_name_assign EQUAL expression .)
-    DOUBLEDOT       reduce using rule 49 (assign -> type NAME n_name_assign EQUAL expression .)
-    RPARENTHESIS    reduce using rule 49 (assign -> type NAME n_name_assign EQUAL expression .)
-
-
-state 104
-
-    (27) function_definition -> FUNCTION NAME parameter_list DOUBLEDOT function_type LCURLY . codeblock RCURLY
-    (55) codeblock -> . empty
-    (56) codeblock -> . codeblock_aux codeblock
-    (1) empty -> .
-    (57) codeblock_aux -> . statement
-    (58) codeblock_aux -> . function_definition
-    (59) codeblock_aux -> . condition_if
-    (60) codeblock_aux -> . loop
-    (52) statement -> . statement_aux SEMICOLON
-    (27) function_definition -> . FUNCTION NAME parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY
-    (65) condition_if -> . IF LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY condition_else
-    (61) loop -> . forloop
-    (62) loop -> . whileloop
-    (53) statement_aux -> . assign
-    (54) statement_aux -> . function_call
-    (64) forloop -> . FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY
-    (63) whileloop -> . WHILE LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY
-    (49) assign -> . type NAME n_name_assign EQUAL expression
-    (50) assign -> . NAME n_name_assign EQUAL expression
-    (28) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
-    (6) type -> . INT_TYPE n_seen_type
-    (7) type -> . STRING_TYPE n_seen_type
-    (8) type -> . DOUBLE_TYPE n_seen_type
-    (9) type -> . FLOAT_TYPE n_seen_type
-    (10) type -> . BOOL_TYPE n_seen_type
-
-    RCURLY          reduce using rule 1 (empty -> .)
-    FUNCTION        shift and go to state 13
-    IF              shift and go to state 15
-    FOR             shift and go to state 20
-    WHILE           shift and go to state 21
-    NAME            shift and go to state 14
-    INT_TYPE        shift and go to state 23
-    STRING_TYPE     shift and go to state 24
-    DOUBLE_TYPE     shift and go to state 25
-    FLOAT_TYPE      shift and go to state 26
-    BOOL_TYPE       shift and go to state 27
-
-    codeblock                      shift and go to state 108
-    empty                          shift and go to state 6
-    codeblock_aux                  shift and go to state 7
-    statement                      shift and go to state 8
-    function_definition            shift and go to state 9
-    condition_if                   shift and go to state 10
-    loop                           shift and go to state 11
-    statement_aux                  shift and go to state 12
-    forloop                        shift and go to state 16
-    whileloop                      shift and go to state 17
-    assign                         shift and go to state 18
-    function_call                  shift and go to state 19
-    type                           shift and go to state 22
-
-state 105
-
-    (65) condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY codeblock . RCURLY condition_else
-
-    RCURLY          shift and go to state 109
-
-
 state 106
 
-    (64) forloop -> FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT . assign RPARENTHESIS LCURLY codeblock RCURLY
-    (49) assign -> . type NAME n_name_assign EQUAL expression
-    (50) assign -> . NAME n_name_assign EQUAL expression
+    (67) condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope . codeblock RCURLY n_close_scope condition_else
+    (57) codeblock -> . empty
+    (58) codeblock -> . codeblock_aux codeblock
+    (1) empty -> .
+    (59) codeblock_aux -> . statement
+    (60) codeblock_aux -> . function_definition
+    (61) codeblock_aux -> . condition_if
+    (62) codeblock_aux -> . loop
+    (54) statement -> . statement_aux SEMICOLON
+    (29) function_definition -> . FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope
+    (67) condition_if -> . IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else
+    (63) loop -> . forloop
+    (64) loop -> . whileloop
+    (55) statement_aux -> . assign
+    (56) statement_aux -> . function_call
+    (66) forloop -> . FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope
+    (65) whileloop -> . WHILE LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope
+    (51) assign -> . type NAME n_name_assign EQUAL expression
+    (52) assign -> . NAME n_name_assign EQUAL expression
+    (30) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
     (6) type -> . INT_TYPE n_seen_type
     (7) type -> . STRING_TYPE n_seen_type
     (8) type -> . DOUBLE_TYPE n_seen_type
     (9) type -> . FLOAT_TYPE n_seen_type
     (10) type -> . BOOL_TYPE n_seen_type
 
-    NAME            shift and go to state 42
+    RCURLY          reduce using rule 1 (empty -> .)
+    FUNCTION        shift and go to state 13
+    IF              shift and go to state 15
+    FOR             shift and go to state 20
+    WHILE           shift and go to state 21
+    NAME            shift and go to state 14
     INT_TYPE        shift and go to state 23
     STRING_TYPE     shift and go to state 24
     DOUBLE_TYPE     shift and go to state 25
     FLOAT_TYPE      shift and go to state 26
     BOOL_TYPE       shift and go to state 27
 
-    assign                         shift and go to state 110
+    codeblock                      shift and go to state 110
+    empty                          shift and go to state 6
+    codeblock_aux                  shift and go to state 7
+    statement                      shift and go to state 8
+    function_definition            shift and go to state 9
+    condition_if                   shift and go to state 10
+    loop                           shift and go to state 11
+    statement_aux                  shift and go to state 12
+    forloop                        shift and go to state 16
+    whileloop                      shift and go to state 17
+    assign                         shift and go to state 18
+    function_call                  shift and go to state 19
     type                           shift and go to state 22
 
 state 107
 
-    (63) whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY codeblock . RCURLY
+    (66) forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression . DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope
 
-    RCURLY          shift and go to state 111
+    DOUBLEDOT       shift and go to state 111
 
 
 state 108
 
-    (27) function_definition -> FUNCTION NAME parameter_list DOUBLEDOT function_type LCURLY codeblock . RCURLY
+    (65) whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope . codeblock RCURLY n_close_scope
+    (57) codeblock -> . empty
+    (58) codeblock -> . codeblock_aux codeblock
+    (1) empty -> .
+    (59) codeblock_aux -> . statement
+    (60) codeblock_aux -> . function_definition
+    (61) codeblock_aux -> . condition_if
+    (62) codeblock_aux -> . loop
+    (54) statement -> . statement_aux SEMICOLON
+    (29) function_definition -> . FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope
+    (67) condition_if -> . IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else
+    (63) loop -> . forloop
+    (64) loop -> . whileloop
+    (55) statement_aux -> . assign
+    (56) statement_aux -> . function_call
+    (66) forloop -> . FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope
+    (65) whileloop -> . WHILE LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope
+    (51) assign -> . type NAME n_name_assign EQUAL expression
+    (52) assign -> . NAME n_name_assign EQUAL expression
+    (30) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
+    (6) type -> . INT_TYPE n_seen_type
+    (7) type -> . STRING_TYPE n_seen_type
+    (8) type -> . DOUBLE_TYPE n_seen_type
+    (9) type -> . FLOAT_TYPE n_seen_type
+    (10) type -> . BOOL_TYPE n_seen_type
 
-    RCURLY          shift and go to state 112
+    RCURLY          reduce using rule 1 (empty -> .)
+    FUNCTION        shift and go to state 13
+    IF              shift and go to state 15
+    FOR             shift and go to state 20
+    WHILE           shift and go to state 21
+    NAME            shift and go to state 14
+    INT_TYPE        shift and go to state 23
+    STRING_TYPE     shift and go to state 24
+    DOUBLE_TYPE     shift and go to state 25
+    FLOAT_TYPE      shift and go to state 26
+    BOOL_TYPE       shift and go to state 27
 
+    codeblock                      shift and go to state 112
+    empty                          shift and go to state 6
+    codeblock_aux                  shift and go to state 7
+    statement                      shift and go to state 8
+    function_definition            shift and go to state 9
+    condition_if                   shift and go to state 10
+    loop                           shift and go to state 11
+    statement_aux                  shift and go to state 12
+    forloop                        shift and go to state 16
+    whileloop                      shift and go to state 17
+    assign                         shift and go to state 18
+    function_call                  shift and go to state 19
+    type                           shift and go to state 22
 
 state 109
 
-    (65) condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY . condition_else
-    (66) condition_else -> . ELSE LCURLY codeblock RCURLY
-    (67) condition_else -> . empty
+    (29) function_definition -> FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY . codeblock RCURLY n_close_scope
+    (57) codeblock -> . empty
+    (58) codeblock -> . codeblock_aux codeblock
+    (1) empty -> .
+    (59) codeblock_aux -> . statement
+    (60) codeblock_aux -> . function_definition
+    (61) codeblock_aux -> . condition_if
+    (62) codeblock_aux -> . loop
+    (54) statement -> . statement_aux SEMICOLON
+    (29) function_definition -> . FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope
+    (67) condition_if -> . IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else
+    (63) loop -> . forloop
+    (64) loop -> . whileloop
+    (55) statement_aux -> . assign
+    (56) statement_aux -> . function_call
+    (66) forloop -> . FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope
+    (65) whileloop -> . WHILE LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope
+    (51) assign -> . type NAME n_name_assign EQUAL expression
+    (52) assign -> . NAME n_name_assign EQUAL expression
+    (30) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
+    (6) type -> . INT_TYPE n_seen_type
+    (7) type -> . STRING_TYPE n_seen_type
+    (8) type -> . DOUBLE_TYPE n_seen_type
+    (9) type -> . FLOAT_TYPE n_seen_type
+    (10) type -> . BOOL_TYPE n_seen_type
+
+    RCURLY          reduce using rule 1 (empty -> .)
+    FUNCTION        shift and go to state 13
+    IF              shift and go to state 15
+    FOR             shift and go to state 20
+    WHILE           shift and go to state 21
+    NAME            shift and go to state 14
+    INT_TYPE        shift and go to state 23
+    STRING_TYPE     shift and go to state 24
+    DOUBLE_TYPE     shift and go to state 25
+    FLOAT_TYPE      shift and go to state 26
+    BOOL_TYPE       shift and go to state 27
+
+    codeblock                      shift and go to state 113
+    empty                          shift and go to state 6
+    codeblock_aux                  shift and go to state 7
+    statement                      shift and go to state 8
+    function_definition            shift and go to state 9
+    condition_if                   shift and go to state 10
+    loop                           shift and go to state 11
+    statement_aux                  shift and go to state 12
+    forloop                        shift and go to state 16
+    whileloop                      shift and go to state 17
+    assign                         shift and go to state 18
+    function_call                  shift and go to state 19
+    type                           shift and go to state 22
+
+state 110
+
+    (67) condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock . RCURLY n_close_scope condition_else
+
+    RCURLY          shift and go to state 114
+
+
+state 111
+
+    (66) forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT . assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope
+    (51) assign -> . type NAME n_name_assign EQUAL expression
+    (52) assign -> . NAME n_name_assign EQUAL expression
+    (6) type -> . INT_TYPE n_seen_type
+    (7) type -> . STRING_TYPE n_seen_type
+    (8) type -> . DOUBLE_TYPE n_seen_type
+    (9) type -> . FLOAT_TYPE n_seen_type
+    (10) type -> . BOOL_TYPE n_seen_type
+
+    NAME            shift and go to state 44
+    INT_TYPE        shift and go to state 23
+    STRING_TYPE     shift and go to state 24
+    DOUBLE_TYPE     shift and go to state 25
+    FLOAT_TYPE      shift and go to state 26
+    BOOL_TYPE       shift and go to state 27
+
+    assign                         shift and go to state 115
+    type                           shift and go to state 22
+
+state 112
+
+    (65) whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock . RCURLY n_close_scope
+
+    RCURLY          shift and go to state 116
+
+
+state 113
+
+    (29) function_definition -> FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock . RCURLY n_close_scope
+
+    RCURLY          shift and go to state 117
+
+
+state 114
+
+    (67) condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY . n_close_scope condition_else
+    (28) n_close_scope -> .
+
+    ELSE            reduce using rule 28 (n_close_scope -> .)
+    FUNCTION        reduce using rule 28 (n_close_scope -> .)
+    IF              reduce using rule 28 (n_close_scope -> .)
+    FOR             reduce using rule 28 (n_close_scope -> .)
+    WHILE           reduce using rule 28 (n_close_scope -> .)
+    NAME            reduce using rule 28 (n_close_scope -> .)
+    INT_TYPE        reduce using rule 28 (n_close_scope -> .)
+    STRING_TYPE     reduce using rule 28 (n_close_scope -> .)
+    DOUBLE_TYPE     reduce using rule 28 (n_close_scope -> .)
+    FLOAT_TYPE      reduce using rule 28 (n_close_scope -> .)
+    BOOL_TYPE       reduce using rule 28 (n_close_scope -> .)
+    $end            reduce using rule 28 (n_close_scope -> .)
+    RCURLY          reduce using rule 28 (n_close_scope -> .)
+
+    n_close_scope                  shift and go to state 118
+
+state 115
+
+    (66) forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign . RPARENTHESIS LCURLY codeblock RCURLY n_close_scope
+
+    RPARENTHESIS    shift and go to state 119
+
+
+state 116
+
+    (65) whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY . n_close_scope
+    (28) n_close_scope -> .
+
+    FUNCTION        reduce using rule 28 (n_close_scope -> .)
+    IF              reduce using rule 28 (n_close_scope -> .)
+    FOR             reduce using rule 28 (n_close_scope -> .)
+    WHILE           reduce using rule 28 (n_close_scope -> .)
+    NAME            reduce using rule 28 (n_close_scope -> .)
+    INT_TYPE        reduce using rule 28 (n_close_scope -> .)
+    STRING_TYPE     reduce using rule 28 (n_close_scope -> .)
+    DOUBLE_TYPE     reduce using rule 28 (n_close_scope -> .)
+    FLOAT_TYPE      reduce using rule 28 (n_close_scope -> .)
+    BOOL_TYPE       reduce using rule 28 (n_close_scope -> .)
+    $end            reduce using rule 28 (n_close_scope -> .)
+    RCURLY          reduce using rule 28 (n_close_scope -> .)
+
+    n_close_scope                  shift and go to state 120
+
+state 117
+
+    (29) function_definition -> FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY . n_close_scope
+    (28) n_close_scope -> .
+
+    FUNCTION        reduce using rule 28 (n_close_scope -> .)
+    IF              reduce using rule 28 (n_close_scope -> .)
+    FOR             reduce using rule 28 (n_close_scope -> .)
+    WHILE           reduce using rule 28 (n_close_scope -> .)
+    NAME            reduce using rule 28 (n_close_scope -> .)
+    INT_TYPE        reduce using rule 28 (n_close_scope -> .)
+    STRING_TYPE     reduce using rule 28 (n_close_scope -> .)
+    DOUBLE_TYPE     reduce using rule 28 (n_close_scope -> .)
+    FLOAT_TYPE      reduce using rule 28 (n_close_scope -> .)
+    BOOL_TYPE       reduce using rule 28 (n_close_scope -> .)
+    $end            reduce using rule 28 (n_close_scope -> .)
+    RCURLY          reduce using rule 28 (n_close_scope -> .)
+
+    n_close_scope                  shift and go to state 121
+
+state 118
+
+    (67) condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope . condition_else
+    (68) condition_else -> . ELSE LCURLY n_open_new_scope codeblock RCURLY n_close_scope
+    (69) condition_else -> . empty
     (1) empty -> .
 
-    ELSE            shift and go to state 114
+    ELSE            shift and go to state 123
     FUNCTION        reduce using rule 1 (empty -> .)
     IF              reduce using rule 1 (empty -> .)
     FOR             reduce using rule 1 (empty -> .)
@@ -2065,256 +2215,308 @@ state 109
     $end            reduce using rule 1 (empty -> .)
     RCURLY          reduce using rule 1 (empty -> .)
 
-    condition_else                 shift and go to state 113
-    empty                          shift and go to state 115
-
-state 110
-
-    (64) forloop -> FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign . RPARENTHESIS LCURLY codeblock RCURLY
-
-    RPARENTHESIS    shift and go to state 116
-
-
-state 111
-
-    (63) whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY .
-
-    FUNCTION        reduce using rule 63 (whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY .)
-    IF              reduce using rule 63 (whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY .)
-    FOR             reduce using rule 63 (whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY .)
-    WHILE           reduce using rule 63 (whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY .)
-    NAME            reduce using rule 63 (whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY .)
-    INT_TYPE        reduce using rule 63 (whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY .)
-    STRING_TYPE     reduce using rule 63 (whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY .)
-    DOUBLE_TYPE     reduce using rule 63 (whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY .)
-    FLOAT_TYPE      reduce using rule 63 (whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY .)
-    BOOL_TYPE       reduce using rule 63 (whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY .)
-    $end            reduce using rule 63 (whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY .)
-    RCURLY          reduce using rule 63 (whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY .)
-
-
-state 112
-
-    (27) function_definition -> FUNCTION NAME parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY .
-
-    FUNCTION        reduce using rule 27 (function_definition -> FUNCTION NAME parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY .)
-    IF              reduce using rule 27 (function_definition -> FUNCTION NAME parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY .)
-    FOR             reduce using rule 27 (function_definition -> FUNCTION NAME parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY .)
-    WHILE           reduce using rule 27 (function_definition -> FUNCTION NAME parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY .)
-    NAME            reduce using rule 27 (function_definition -> FUNCTION NAME parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY .)
-    INT_TYPE        reduce using rule 27 (function_definition -> FUNCTION NAME parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY .)
-    STRING_TYPE     reduce using rule 27 (function_definition -> FUNCTION NAME parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY .)
-    DOUBLE_TYPE     reduce using rule 27 (function_definition -> FUNCTION NAME parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY .)
-    FLOAT_TYPE      reduce using rule 27 (function_definition -> FUNCTION NAME parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY .)
-    BOOL_TYPE       reduce using rule 27 (function_definition -> FUNCTION NAME parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY .)
-    $end            reduce using rule 27 (function_definition -> FUNCTION NAME parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY .)
-    RCURLY          reduce using rule 27 (function_definition -> FUNCTION NAME parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY .)
-
-
-state 113
-
-    (65) condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY condition_else .
-
-    FUNCTION        reduce using rule 65 (condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY condition_else .)
-    IF              reduce using rule 65 (condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY condition_else .)
-    FOR             reduce using rule 65 (condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY condition_else .)
-    WHILE           reduce using rule 65 (condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY condition_else .)
-    NAME            reduce using rule 65 (condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY condition_else .)
-    INT_TYPE        reduce using rule 65 (condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY condition_else .)
-    STRING_TYPE     reduce using rule 65 (condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY condition_else .)
-    DOUBLE_TYPE     reduce using rule 65 (condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY condition_else .)
-    FLOAT_TYPE      reduce using rule 65 (condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY condition_else .)
-    BOOL_TYPE       reduce using rule 65 (condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY condition_else .)
-    $end            reduce using rule 65 (condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY condition_else .)
-    RCURLY          reduce using rule 65 (condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY condition_else .)
-
-
-state 114
-
-    (66) condition_else -> ELSE . LCURLY codeblock RCURLY
-
-    LCURLY          shift and go to state 117
-
-
-state 115
-
-    (67) condition_else -> empty .
-
-    FUNCTION        reduce using rule 67 (condition_else -> empty .)
-    IF              reduce using rule 67 (condition_else -> empty .)
-    FOR             reduce using rule 67 (condition_else -> empty .)
-    WHILE           reduce using rule 67 (condition_else -> empty .)
-    NAME            reduce using rule 67 (condition_else -> empty .)
-    INT_TYPE        reduce using rule 67 (condition_else -> empty .)
-    STRING_TYPE     reduce using rule 67 (condition_else -> empty .)
-    DOUBLE_TYPE     reduce using rule 67 (condition_else -> empty .)
-    FLOAT_TYPE      reduce using rule 67 (condition_else -> empty .)
-    BOOL_TYPE       reduce using rule 67 (condition_else -> empty .)
-    $end            reduce using rule 67 (condition_else -> empty .)
-    RCURLY          reduce using rule 67 (condition_else -> empty .)
-
-
-state 116
-
-    (64) forloop -> FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS . LCURLY codeblock RCURLY
-
-    LCURLY          shift and go to state 118
-
-
-state 117
-
-    (66) condition_else -> ELSE LCURLY . codeblock RCURLY
-    (55) codeblock -> . empty
-    (56) codeblock -> . codeblock_aux codeblock
-    (1) empty -> .
-    (57) codeblock_aux -> . statement
-    (58) codeblock_aux -> . function_definition
-    (59) codeblock_aux -> . condition_if
-    (60) codeblock_aux -> . loop
-    (52) statement -> . statement_aux SEMICOLON
-    (27) function_definition -> . FUNCTION NAME parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY
-    (65) condition_if -> . IF LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY condition_else
-    (61) loop -> . forloop
-    (62) loop -> . whileloop
-    (53) statement_aux -> . assign
-    (54) statement_aux -> . function_call
-    (64) forloop -> . FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY
-    (63) whileloop -> . WHILE LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY
-    (49) assign -> . type NAME n_name_assign EQUAL expression
-    (50) assign -> . NAME n_name_assign EQUAL expression
-    (28) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
-    (6) type -> . INT_TYPE n_seen_type
-    (7) type -> . STRING_TYPE n_seen_type
-    (8) type -> . DOUBLE_TYPE n_seen_type
-    (9) type -> . FLOAT_TYPE n_seen_type
-    (10) type -> . BOOL_TYPE n_seen_type
-
-    RCURLY          reduce using rule 1 (empty -> .)
-    FUNCTION        shift and go to state 13
-    IF              shift and go to state 15
-    FOR             shift and go to state 20
-    WHILE           shift and go to state 21
-    NAME            shift and go to state 14
-    INT_TYPE        shift and go to state 23
-    STRING_TYPE     shift and go to state 24
-    DOUBLE_TYPE     shift and go to state 25
-    FLOAT_TYPE      shift and go to state 26
-    BOOL_TYPE       shift and go to state 27
-
-    codeblock                      shift and go to state 119
-    empty                          shift and go to state 6
-    codeblock_aux                  shift and go to state 7
-    statement                      shift and go to state 8
-    function_definition            shift and go to state 9
-    condition_if                   shift and go to state 10
-    loop                           shift and go to state 11
-    statement_aux                  shift and go to state 12
-    forloop                        shift and go to state 16
-    whileloop                      shift and go to state 17
-    assign                         shift and go to state 18
-    function_call                  shift and go to state 19
-    type                           shift and go to state 22
-
-state 118
-
-    (64) forloop -> FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY . codeblock RCURLY
-    (55) codeblock -> . empty
-    (56) codeblock -> . codeblock_aux codeblock
-    (1) empty -> .
-    (57) codeblock_aux -> . statement
-    (58) codeblock_aux -> . function_definition
-    (59) codeblock_aux -> . condition_if
-    (60) codeblock_aux -> . loop
-    (52) statement -> . statement_aux SEMICOLON
-    (27) function_definition -> . FUNCTION NAME parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY
-    (65) condition_if -> . IF LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY condition_else
-    (61) loop -> . forloop
-    (62) loop -> . whileloop
-    (53) statement_aux -> . assign
-    (54) statement_aux -> . function_call
-    (64) forloop -> . FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY
-    (63) whileloop -> . WHILE LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY
-    (49) assign -> . type NAME n_name_assign EQUAL expression
-    (50) assign -> . NAME n_name_assign EQUAL expression
-    (28) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
-    (6) type -> . INT_TYPE n_seen_type
-    (7) type -> . STRING_TYPE n_seen_type
-    (8) type -> . DOUBLE_TYPE n_seen_type
-    (9) type -> . FLOAT_TYPE n_seen_type
-    (10) type -> . BOOL_TYPE n_seen_type
-
-    RCURLY          reduce using rule 1 (empty -> .)
-    FUNCTION        shift and go to state 13
-    IF              shift and go to state 15
-    FOR             shift and go to state 20
-    WHILE           shift and go to state 21
-    NAME            shift and go to state 14
-    INT_TYPE        shift and go to state 23
-    STRING_TYPE     shift and go to state 24
-    DOUBLE_TYPE     shift and go to state 25
-    FLOAT_TYPE      shift and go to state 26
-    BOOL_TYPE       shift and go to state 27
-
-    assign                         shift and go to state 18
-    codeblock                      shift and go to state 120
-    empty                          shift and go to state 6
-    codeblock_aux                  shift and go to state 7
-    statement                      shift and go to state 8
-    function_definition            shift and go to state 9
-    condition_if                   shift and go to state 10
-    loop                           shift and go to state 11
-    statement_aux                  shift and go to state 12
-    forloop                        shift and go to state 16
-    whileloop                      shift and go to state 17
-    function_call                  shift and go to state 19
-    type                           shift and go to state 22
+    condition_else                 shift and go to state 122
+    empty                          shift and go to state 124
 
 state 119
 
-    (66) condition_else -> ELSE LCURLY codeblock . RCURLY
+    (66) forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS . LCURLY codeblock RCURLY n_close_scope
 
-    RCURLY          shift and go to state 121
+    LCURLY          shift and go to state 125
 
 
 state 120
 
-    (64) forloop -> FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock . RCURLY
+    (65) whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope .
 
-    RCURLY          shift and go to state 122
+    FUNCTION        reduce using rule 65 (whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope .)
+    IF              reduce using rule 65 (whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope .)
+    FOR             reduce using rule 65 (whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope .)
+    WHILE           reduce using rule 65 (whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope .)
+    NAME            reduce using rule 65 (whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope .)
+    INT_TYPE        reduce using rule 65 (whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope .)
+    STRING_TYPE     reduce using rule 65 (whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope .)
+    DOUBLE_TYPE     reduce using rule 65 (whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope .)
+    FLOAT_TYPE      reduce using rule 65 (whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope .)
+    BOOL_TYPE       reduce using rule 65 (whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope .)
+    $end            reduce using rule 65 (whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope .)
+    RCURLY          reduce using rule 65 (whileloop -> WHILE LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope .)
 
 
 state 121
 
-    (66) condition_else -> ELSE LCURLY codeblock RCURLY .
+    (29) function_definition -> FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope .
 
-    FUNCTION        reduce using rule 66 (condition_else -> ELSE LCURLY codeblock RCURLY .)
-    IF              reduce using rule 66 (condition_else -> ELSE LCURLY codeblock RCURLY .)
-    FOR             reduce using rule 66 (condition_else -> ELSE LCURLY codeblock RCURLY .)
-    WHILE           reduce using rule 66 (condition_else -> ELSE LCURLY codeblock RCURLY .)
-    NAME            reduce using rule 66 (condition_else -> ELSE LCURLY codeblock RCURLY .)
-    INT_TYPE        reduce using rule 66 (condition_else -> ELSE LCURLY codeblock RCURLY .)
-    STRING_TYPE     reduce using rule 66 (condition_else -> ELSE LCURLY codeblock RCURLY .)
-    DOUBLE_TYPE     reduce using rule 66 (condition_else -> ELSE LCURLY codeblock RCURLY .)
-    FLOAT_TYPE      reduce using rule 66 (condition_else -> ELSE LCURLY codeblock RCURLY .)
-    BOOL_TYPE       reduce using rule 66 (condition_else -> ELSE LCURLY codeblock RCURLY .)
-    $end            reduce using rule 66 (condition_else -> ELSE LCURLY codeblock RCURLY .)
-    RCURLY          reduce using rule 66 (condition_else -> ELSE LCURLY codeblock RCURLY .)
+    FUNCTION        reduce using rule 29 (function_definition -> FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope .)
+    IF              reduce using rule 29 (function_definition -> FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope .)
+    FOR             reduce using rule 29 (function_definition -> FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope .)
+    WHILE           reduce using rule 29 (function_definition -> FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope .)
+    NAME            reduce using rule 29 (function_definition -> FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope .)
+    INT_TYPE        reduce using rule 29 (function_definition -> FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope .)
+    STRING_TYPE     reduce using rule 29 (function_definition -> FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope .)
+    DOUBLE_TYPE     reduce using rule 29 (function_definition -> FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope .)
+    FLOAT_TYPE      reduce using rule 29 (function_definition -> FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope .)
+    BOOL_TYPE       reduce using rule 29 (function_definition -> FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope .)
+    $end            reduce using rule 29 (function_definition -> FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope .)
+    RCURLY          reduce using rule 29 (function_definition -> FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope .)
 
 
 state 122
 
-    (64) forloop -> FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY .
+    (67) condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else .
 
-    FUNCTION        reduce using rule 64 (forloop -> FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY .)
-    IF              reduce using rule 64 (forloop -> FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY .)
-    FOR             reduce using rule 64 (forloop -> FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY .)
-    WHILE           reduce using rule 64 (forloop -> FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY .)
-    NAME            reduce using rule 64 (forloop -> FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY .)
-    INT_TYPE        reduce using rule 64 (forloop -> FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY .)
-    STRING_TYPE     reduce using rule 64 (forloop -> FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY .)
-    DOUBLE_TYPE     reduce using rule 64 (forloop -> FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY .)
-    FLOAT_TYPE      reduce using rule 64 (forloop -> FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY .)
-    BOOL_TYPE       reduce using rule 64 (forloop -> FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY .)
-    $end            reduce using rule 64 (forloop -> FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY .)
-    RCURLY          reduce using rule 64 (forloop -> FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY .)
+    FUNCTION        reduce using rule 67 (condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else .)
+    IF              reduce using rule 67 (condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else .)
+    FOR             reduce using rule 67 (condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else .)
+    WHILE           reduce using rule 67 (condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else .)
+    NAME            reduce using rule 67 (condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else .)
+    INT_TYPE        reduce using rule 67 (condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else .)
+    STRING_TYPE     reduce using rule 67 (condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else .)
+    DOUBLE_TYPE     reduce using rule 67 (condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else .)
+    FLOAT_TYPE      reduce using rule 67 (condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else .)
+    BOOL_TYPE       reduce using rule 67 (condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else .)
+    $end            reduce using rule 67 (condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else .)
+    RCURLY          reduce using rule 67 (condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else .)
+
+
+state 123
+
+    (68) condition_else -> ELSE . LCURLY n_open_new_scope codeblock RCURLY n_close_scope
+
+    LCURLY          shift and go to state 126
+
+
+state 124
+
+    (69) condition_else -> empty .
+
+    FUNCTION        reduce using rule 69 (condition_else -> empty .)
+    IF              reduce using rule 69 (condition_else -> empty .)
+    FOR             reduce using rule 69 (condition_else -> empty .)
+    WHILE           reduce using rule 69 (condition_else -> empty .)
+    NAME            reduce using rule 69 (condition_else -> empty .)
+    INT_TYPE        reduce using rule 69 (condition_else -> empty .)
+    STRING_TYPE     reduce using rule 69 (condition_else -> empty .)
+    DOUBLE_TYPE     reduce using rule 69 (condition_else -> empty .)
+    FLOAT_TYPE      reduce using rule 69 (condition_else -> empty .)
+    BOOL_TYPE       reduce using rule 69 (condition_else -> empty .)
+    $end            reduce using rule 69 (condition_else -> empty .)
+    RCURLY          reduce using rule 69 (condition_else -> empty .)
+
+
+state 125
+
+    (66) forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY . codeblock RCURLY n_close_scope
+    (57) codeblock -> . empty
+    (58) codeblock -> . codeblock_aux codeblock
+    (1) empty -> .
+    (59) codeblock_aux -> . statement
+    (60) codeblock_aux -> . function_definition
+    (61) codeblock_aux -> . condition_if
+    (62) codeblock_aux -> . loop
+    (54) statement -> . statement_aux SEMICOLON
+    (29) function_definition -> . FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope
+    (67) condition_if -> . IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else
+    (63) loop -> . forloop
+    (64) loop -> . whileloop
+    (55) statement_aux -> . assign
+    (56) statement_aux -> . function_call
+    (66) forloop -> . FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope
+    (65) whileloop -> . WHILE LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope
+    (51) assign -> . type NAME n_name_assign EQUAL expression
+    (52) assign -> . NAME n_name_assign EQUAL expression
+    (30) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
+    (6) type -> . INT_TYPE n_seen_type
+    (7) type -> . STRING_TYPE n_seen_type
+    (8) type -> . DOUBLE_TYPE n_seen_type
+    (9) type -> . FLOAT_TYPE n_seen_type
+    (10) type -> . BOOL_TYPE n_seen_type
+
+    RCURLY          reduce using rule 1 (empty -> .)
+    FUNCTION        shift and go to state 13
+    IF              shift and go to state 15
+    FOR             shift and go to state 20
+    WHILE           shift and go to state 21
+    NAME            shift and go to state 14
+    INT_TYPE        shift and go to state 23
+    STRING_TYPE     shift and go to state 24
+    DOUBLE_TYPE     shift and go to state 25
+    FLOAT_TYPE      shift and go to state 26
+    BOOL_TYPE       shift and go to state 27
+
+    assign                         shift and go to state 18
+    codeblock                      shift and go to state 127
+    empty                          shift and go to state 6
+    codeblock_aux                  shift and go to state 7
+    statement                      shift and go to state 8
+    function_definition            shift and go to state 9
+    condition_if                   shift and go to state 10
+    loop                           shift and go to state 11
+    statement_aux                  shift and go to state 12
+    forloop                        shift and go to state 16
+    whileloop                      shift and go to state 17
+    function_call                  shift and go to state 19
+    type                           shift and go to state 22
+
+state 126
+
+    (68) condition_else -> ELSE LCURLY . n_open_new_scope codeblock RCURLY n_close_scope
+    (27) n_open_new_scope -> .
+
+    FUNCTION        reduce using rule 27 (n_open_new_scope -> .)
+    IF              reduce using rule 27 (n_open_new_scope -> .)
+    FOR             reduce using rule 27 (n_open_new_scope -> .)
+    WHILE           reduce using rule 27 (n_open_new_scope -> .)
+    NAME            reduce using rule 27 (n_open_new_scope -> .)
+    INT_TYPE        reduce using rule 27 (n_open_new_scope -> .)
+    STRING_TYPE     reduce using rule 27 (n_open_new_scope -> .)
+    DOUBLE_TYPE     reduce using rule 27 (n_open_new_scope -> .)
+    FLOAT_TYPE      reduce using rule 27 (n_open_new_scope -> .)
+    BOOL_TYPE       reduce using rule 27 (n_open_new_scope -> .)
+    RCURLY          reduce using rule 27 (n_open_new_scope -> .)
+
+    n_open_new_scope               shift and go to state 128
+
+state 127
+
+    (66) forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock . RCURLY n_close_scope
+
+    RCURLY          shift and go to state 129
+
+
+state 128
+
+    (68) condition_else -> ELSE LCURLY n_open_new_scope . codeblock RCURLY n_close_scope
+    (57) codeblock -> . empty
+    (58) codeblock -> . codeblock_aux codeblock
+    (1) empty -> .
+    (59) codeblock_aux -> . statement
+    (60) codeblock_aux -> . function_definition
+    (61) codeblock_aux -> . condition_if
+    (62) codeblock_aux -> . loop
+    (54) statement -> . statement_aux SEMICOLON
+    (29) function_definition -> . FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope
+    (67) condition_if -> . IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else
+    (63) loop -> . forloop
+    (64) loop -> . whileloop
+    (55) statement_aux -> . assign
+    (56) statement_aux -> . function_call
+    (66) forloop -> . FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope
+    (65) whileloop -> . WHILE LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope
+    (51) assign -> . type NAME n_name_assign EQUAL expression
+    (52) assign -> . NAME n_name_assign EQUAL expression
+    (30) function_call -> . NAME LPARENTHESIS parameter_list RPARENTHESIS
+    (6) type -> . INT_TYPE n_seen_type
+    (7) type -> . STRING_TYPE n_seen_type
+    (8) type -> . DOUBLE_TYPE n_seen_type
+    (9) type -> . FLOAT_TYPE n_seen_type
+    (10) type -> . BOOL_TYPE n_seen_type
+
+    RCURLY          reduce using rule 1 (empty -> .)
+    FUNCTION        shift and go to state 13
+    IF              shift and go to state 15
+    FOR             shift and go to state 20
+    WHILE           shift and go to state 21
+    NAME            shift and go to state 14
+    INT_TYPE        shift and go to state 23
+    STRING_TYPE     shift and go to state 24
+    DOUBLE_TYPE     shift and go to state 25
+    FLOAT_TYPE      shift and go to state 26
+    BOOL_TYPE       shift and go to state 27
+
+    codeblock                      shift and go to state 130
+    empty                          shift and go to state 6
+    codeblock_aux                  shift and go to state 7
+    statement                      shift and go to state 8
+    function_definition            shift and go to state 9
+    condition_if                   shift and go to state 10
+    loop                           shift and go to state 11
+    statement_aux                  shift and go to state 12
+    forloop                        shift and go to state 16
+    whileloop                      shift and go to state 17
+    assign                         shift and go to state 18
+    function_call                  shift and go to state 19
+    type                           shift and go to state 22
+
+state 129
+
+    (66) forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY . n_close_scope
+    (28) n_close_scope -> .
+
+    FUNCTION        reduce using rule 28 (n_close_scope -> .)
+    IF              reduce using rule 28 (n_close_scope -> .)
+    FOR             reduce using rule 28 (n_close_scope -> .)
+    WHILE           reduce using rule 28 (n_close_scope -> .)
+    NAME            reduce using rule 28 (n_close_scope -> .)
+    INT_TYPE        reduce using rule 28 (n_close_scope -> .)
+    STRING_TYPE     reduce using rule 28 (n_close_scope -> .)
+    DOUBLE_TYPE     reduce using rule 28 (n_close_scope -> .)
+    FLOAT_TYPE      reduce using rule 28 (n_close_scope -> .)
+    BOOL_TYPE       reduce using rule 28 (n_close_scope -> .)
+    $end            reduce using rule 28 (n_close_scope -> .)
+    RCURLY          reduce using rule 28 (n_close_scope -> .)
+
+    n_close_scope                  shift and go to state 131
+
+state 130
+
+    (68) condition_else -> ELSE LCURLY n_open_new_scope codeblock . RCURLY n_close_scope
+
+    RCURLY          shift and go to state 132
+
+
+state 131
+
+    (66) forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope .
+
+    FUNCTION        reduce using rule 66 (forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope .)
+    IF              reduce using rule 66 (forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope .)
+    FOR             reduce using rule 66 (forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope .)
+    WHILE           reduce using rule 66 (forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope .)
+    NAME            reduce using rule 66 (forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope .)
+    INT_TYPE        reduce using rule 66 (forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope .)
+    STRING_TYPE     reduce using rule 66 (forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope .)
+    DOUBLE_TYPE     reduce using rule 66 (forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope .)
+    FLOAT_TYPE      reduce using rule 66 (forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope .)
+    BOOL_TYPE       reduce using rule 66 (forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope .)
+    $end            reduce using rule 66 (forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope .)
+    RCURLY          reduce using rule 66 (forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope .)
+
+
+state 132
+
+    (68) condition_else -> ELSE LCURLY n_open_new_scope codeblock RCURLY . n_close_scope
+    (28) n_close_scope -> .
+
+    FUNCTION        reduce using rule 28 (n_close_scope -> .)
+    IF              reduce using rule 28 (n_close_scope -> .)
+    FOR             reduce using rule 28 (n_close_scope -> .)
+    WHILE           reduce using rule 28 (n_close_scope -> .)
+    NAME            reduce using rule 28 (n_close_scope -> .)
+    INT_TYPE        reduce using rule 28 (n_close_scope -> .)
+    STRING_TYPE     reduce using rule 28 (n_close_scope -> .)
+    DOUBLE_TYPE     reduce using rule 28 (n_close_scope -> .)
+    FLOAT_TYPE      reduce using rule 28 (n_close_scope -> .)
+    BOOL_TYPE       reduce using rule 28 (n_close_scope -> .)
+    $end            reduce using rule 28 (n_close_scope -> .)
+    RCURLY          reduce using rule 28 (n_close_scope -> .)
+
+    n_close_scope                  shift and go to state 133
+
+state 133
+
+    (68) condition_else -> ELSE LCURLY n_open_new_scope codeblock RCURLY n_close_scope .
+
+    FUNCTION        reduce using rule 68 (condition_else -> ELSE LCURLY n_open_new_scope codeblock RCURLY n_close_scope .)
+    IF              reduce using rule 68 (condition_else -> ELSE LCURLY n_open_new_scope codeblock RCURLY n_close_scope .)
+    FOR             reduce using rule 68 (condition_else -> ELSE LCURLY n_open_new_scope codeblock RCURLY n_close_scope .)
+    WHILE           reduce using rule 68 (condition_else -> ELSE LCURLY n_open_new_scope codeblock RCURLY n_close_scope .)
+    NAME            reduce using rule 68 (condition_else -> ELSE LCURLY n_open_new_scope codeblock RCURLY n_close_scope .)
+    INT_TYPE        reduce using rule 68 (condition_else -> ELSE LCURLY n_open_new_scope codeblock RCURLY n_close_scope .)
+    STRING_TYPE     reduce using rule 68 (condition_else -> ELSE LCURLY n_open_new_scope codeblock RCURLY n_close_scope .)
+    DOUBLE_TYPE     reduce using rule 68 (condition_else -> ELSE LCURLY n_open_new_scope codeblock RCURLY n_close_scope .)
+    FLOAT_TYPE      reduce using rule 68 (condition_else -> ELSE LCURLY n_open_new_scope codeblock RCURLY n_close_scope .)
+    BOOL_TYPE       reduce using rule 68 (condition_else -> ELSE LCURLY n_open_new_scope codeblock RCURLY n_close_scope .)
+    $end            reduce using rule 68 (condition_else -> ELSE LCURLY n_open_new_scope codeblock RCURLY n_close_scope .)
+    RCURLY          reduce using rule 68 (condition_else -> ELSE LCURLY n_open_new_scope codeblock RCURLY n_close_scope .)
 

@@ -1,4 +1,5 @@
 import sys
+from scope_tree import ScopeTree
 from ply import lex
 from ply import yacc
 
@@ -88,12 +89,15 @@ t_ignore_COMMENT = r'\#.*'
 
 # dictionary of names (for storing variables)
 current_type = None
-current_func = '#global'
-names = {
-    '#global': {
-        'vars': {}
-    }
-}
+
+global_scope_counter_list = [0]
+# current_scope_counter = lambda global_scope_counter_list : global_scope_counter_list[0]
+scope_dict = {}
+global_scope = ScopeTree(global_scope_counter_list, -1)
+scope_dict[global_scope.ref] = global_scope
+current_scope_ref = global_scope.ref
+print(f" verificar {global_scope_counter_list[0]} == 1")
+
 
 start = 'program'
 
@@ -184,9 +188,23 @@ def p_function_type(p):
     '''
     pass
 
+def p_n_open_new_scope(p):
+    'n_open_new_scope : '
+    global current_scope_ref
+    new_scope = ScopeTree(global_scope_counter_list, scope_dict[current_scope_ref].ref)
+    scope_dict[new_scope.ref] = new_scope
+    current_scope_ref = new_scope.ref
+    pass
+
+def p_n_close_scope(p):
+    'n_close_scope : '
+    global current_scope_ref
+    current_scope_ref = scope_dict[current_scope_ref].parent_ref
+    pass
+
 def p_function_definition(p):
     '''
-    function_definition : FUNCTION NAME parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY
+    function_definition : FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope
     '''
     pass
 
@@ -206,7 +224,7 @@ def p_parameter_list(p):
 
 def p_parameter(p):
     '''
-    parameter : type NAME
+    parameter : type NAME n_name_assign
     | assign
     '''
     pass
@@ -260,10 +278,7 @@ def p_assign(p):
 
 def p_n_name_assign(p):
     'n_name_assign : '
-    global current_func
-    names[current_func]['vars'][p[-1]] = {
-        'type': current_type
-    }
+    scope_dict[current_scope_ref].set_variable(p[-1], current_type)
     pass
 
 def p_statement(p):
@@ -305,30 +320,30 @@ def p_loop(p):
 
 def p_whileloop(p):
     '''
-    whileloop : WHILE LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY
+    whileloop : WHILE LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope
     '''
     pass
 
 def p_forloop(p):
     '''
-    forloop : FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY
+    forloop : FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope
     '''
     pass
 
 def p_condition_if(p):
     '''
-    condition_if : IF LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY condition_else
+    condition_if : IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else
     '''
     pass
 
 def p_condition_else(p):
     '''
-    condition_else : ELSE LCURLY codeblock RCURLY
+    condition_else : ELSE LCURLY n_open_new_scope codeblock RCURLY n_close_scope
     | empty
     '''
     pass
 
-    # Error handling lexer
+# Error handling lexer
 def t_error(t):
     print(f"Illegal character {t.value[0]!r}")
     print("Illegal character '%s'" % t.value[0])
@@ -385,8 +400,4 @@ while True:
 
 result = parser.parse(data)
 # print(result)
-print(names)
-
-# Notas para el futuro
-# nos falto definir 'true' y 'false' como constantes para variables de tipo bool
-# nos falto definir syntaxis para comentarios
+[print(scope_dict[ref]) for ref in range(0, global_scope_counter_list[0])]
