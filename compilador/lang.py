@@ -1,3 +1,4 @@
+import sys
 from ply import lex
 from ply import yacc
 
@@ -13,7 +14,7 @@ reserved = {
     'void': 'VOID',
     # Program
     'function': 'FUNCTION',
-    '(OwO)': 'OWO',
+    'OwO': 'OWO',
     'CHIEF/AARON': 'IDK',
     # Flow
     'if': 'IF',
@@ -42,11 +43,11 @@ tokens = [
 def t_NAME(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
     # Check if id is reserved keyword
-    t.type = reserved.get(t.value, 'ID')
+    t.type = reserved.get(t.value, 'NAME')
     return t
 
-t_FLOAT = r'(0.0|-?[0-9]*\.[0-9])'
-t_INT = r'(0|-?[1-9][0-9]*)'
+t_FLOAT = r'([0-9]*\.[0-9]*)'
+t_INT = r'([1-9][0-9]*)'
 t_STRING = r'\".*\"'
 
 # Arithmetic operators
@@ -82,18 +83,13 @@ t_NOTEQUAL = r'!='
 t_LESSTHANOREQUAL = r'<='
 t_GREATERTHANOREQUAL = r'>='
 
-
+# Track line numbers
 def t_newline(t):
     r'\n+'
-    t.lexer.lineno += t.value.count("\n")
+    t.lexer.lineno += len(t.value)
 
 # A string containing ignored characters
 t_ignore = ' \t'
-
-# Error handling lexer
-def t_error(t):
-    print(f"Illegal character {t.value[0]!r}")
-    t.lexer.skip(1)
 
 # Precedence rules for the arithmetic operators
 precedence = (
@@ -110,7 +106,7 @@ names = {
     }
 }
 
-start = 'PROGRAM'
+start = 'program'
 
 def p_empty(p):
     '''
@@ -118,15 +114,15 @@ def p_empty(p):
     '''
     pass
 
-def p_PROGRAM(p):
+def p_program(p):
     '''
-    PROGRAM : PROGRAM_AUX CODEBLOCK
+    program : program_aux codeblock
     '''
     pass
 
-def p_PROGRAM_AUX(p):
+def p_program_aux(p):
     '''
-    PROGRAM_AUX : IDK
+    program_aux : IDK
     | OWO
     '''
     pass
@@ -134,11 +130,12 @@ def p_PROGRAM_AUX(p):
 def p_n_seen_type(p):
     'n_seen_type : '
     global current_type
+    # print(current_type)
     current_type = p[-1]
 
-def p_TYPE(p):
+def p_type(p):
     '''
-    TYPE : INT_TYPE n_seen_type
+    type : INT_TYPE n_seen_type
     | STRING_TYPE n_seen_type
     | DOUBLE_TYPE n_seen_type
     | FLOAT_TYPE n_seen_type
@@ -146,9 +143,9 @@ def p_TYPE(p):
     '''
     pass
 
-def p_LOGIC_OPERATOR(p):
+def p_logic_operator(p):
     '''
-    LOGIC_OPERATOR : GREATERTHAN
+    logic_operator : GREATERTHAN
     | LESSTHAN
     | EQUALEQUAL
     | LESSTHANOREQUAL
@@ -157,9 +154,20 @@ def p_LOGIC_OPERATOR(p):
     '''
     pass
 
-def p_ARITHMETIC_OPERATOR(p):
+# def p_relational_operator(p):
+#     '''
+#     logic_operator : GREATERTHAN
+#     | LESSTHAN
+#     | EQUALEQUAL
+#     | LESSTHANOREQUAL
+#     | GREATERTHANOREQUAL
+#     | NOTEQUAL
+#     '''
+#     pass
+
+def p_arithmetic_operator(p):
     '''
-    ARITHMETIC_OPERATOR : PLUS
+    arithmetic_operator : PLUS
     | MINUS
     | TIMES
     | DIVIDE
@@ -167,191 +175,194 @@ def p_ARITHMETIC_OPERATOR(p):
     '''
     pass
 
-def p_LITERAL(p):
+def p_literal(p):
     '''
-    LITERAL : FLOAT
-    | NAME
+    literal : FLOAT
     | INT
     | STRING
     '''
     pass
 
-def p_FUNCTION_TYPE(p):
+def p_function_type(p):
     '''
-    FUNCTION_TYPE : TYPE
+    function_type : type
     | VOID
     '''
     pass
 
-def p_FUNCTION_DEFINITION(p):
+def p_function_definition(p):
     '''
-    FUNCTION_DEFINITION : FUNCTION NAME PARAMETER_LIST DOUBLEDOT FUNCTION_TYPE LCURLY CODEBLOCK RCURLY
-    '''
-    pass
-
-def p_FUNCTION_CALL(p):
-    '''
-    FUNCTION_CALL : NAME LPARENTHESIS PARAMETER_LIST RPARENTHESIS
+    function_definition : FUNCTION NAME parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY
     '''
     pass
 
-def p_PARAMETER_LIST(p):
+def p_function_call(p):
     '''
-    PARAMETER_LIST : empty
-    | PARAMETER
-    | PARAMETER COMMA PARAMETER_LIST
+    function_call : NAME LPARENTHESIS parameter_list RPARENTHESIS
     '''
     pass
 
-def p_PARAMETER(p):
+def p_parameter_list(p):
     '''
-    PARAMETER : TYPE NAME
-    | ASSIGN
-    '''
-    pass
-
-def p_EXPRESSION(p):
-    '''
-    EXPRESSION : WRAP_EXP
-    | WRAP_EXP LOGIC_OPERATOR WRAP_EXP
+    parameter_list : empty
+    | parameter
+    | parameter COMMA parameter_list
     '''
     pass
 
-def p_WRAP_EXP(p):
+def p_parameter(p):
     '''
-    WRAP_EXP : EXP
-    | LPARENTHESIS EXP RPARENTHESIS
-    '''
-    pass
-
-def p_EXP(p):
-    '''
-    EXP : VALUE
-    | VALUE ARITHMETIC_OPERATOR WRAP_EXP
+    parameter : type NAME
+    | assign
     '''
     pass
 
-def p_VALUE(p):
+def p_expression(p):
     '''
-    VALUE : FUNCTION_CALL
-    | LITERAL
+    expression : exp
+    | exp logic_operator exp
+    '''
+    pass
+
+def p_exp(p):
+    '''
+    exp : termino
+    | termino PLUS exp
+    | termino MINUS exp
+    '''
+    pass
+
+def p_termino(p):
+    '''
+    termino : factor
+    | factor TIMES termino
+    | factor DIVIDE termino
+    '''
+    pass
+
+def p_factor(p):
+    '''
+    factor : LPARENTHESIS expression RPARENTHESIS
+    | PLUS value
+    | MINUS value
+    | value
+    '''
+    pass
+
+def p_value(p):
+    '''
+    value : function_call
+    | literal
     | NAME
     '''
     pass
 
-def p_ASSIGN(p):
+def p_assign(p):
     '''
-    ASSIGN : TYPE ASSIGN_AUX AS_AGAIN
-    | ASSIGN_AUX AS_AGAIN
+    assign : type NAME n_name_assign EQUAL expression
+    | NAME n_name_assign EQUAL expression
     '''
     pass
 
-def p_n_name_assign_aux(p):
-    'n_name_assign_aux : '
+def p_n_name_assign(p):
+    'n_name_assign : '
+    global current_func
     names[current_func]['vars'][p[-1]] = {
         'type': current_type
     }
+    pass
 
-def p_ASSIGN_AUX(p):
+def p_statement(p):
     '''
-    ASSIGN_AUX : NAME n_name_assign_aux EQUAL EXPRESSION
+    statement : statement_aux SEMICOLON
     '''
     pass
 
-def p_AS_AGAIN(p):
+def p_statement_aux(p):
     '''
-    AS_AGAIN : COMMA ASSIGN
-    | empty
-    '''
-    pass
-
-def p_STATEMENT(p):
-    '''
-    STATEMENT : STATEMENT_AUX SEMICOLON
-    '''
-    pass
-
-def p_STATEMENT_AUX(p):
-    '''
-    STATEMENT_AUX : ASSIGN
-    | FUNCTION_CALL
+    statement_aux : assign
+    | function_call
     '''
     # | PRINT
     pass
 
-def p_CODEBLOCK(p):
+def p_codeblock(p):
     '''
-    CODEBLOCK : empty
-    | CODEBLOCK_AUX CODEBLOCK
-    '''
-    pass
-
-def p_CODEBLOCK_AUX(p):
-    '''
-    CODEBLOCK_AUX : STATEMENT
-    | FUNCTION_DEFINITION
-    | CONDITION_IF
-    | LOOP
+    codeblock : empty
+    | codeblock_aux codeblock
     '''
     pass
 
-def p_LOOP(p):
+def p_codeblock_aux(p):
     '''
-    LOOP : FORLOOP
-    | WHILELOOP
-    '''
-    pass
-
-def p_WHILELOOP(p):
-    '''
-    WHILELOOP : WHILE LPARENTHESIS EXPRESSION RPARENTHESIS LCURLY CODEBLOCK RCURLY
+    codeblock_aux : statement
+    | function_definition
+    | condition_if
+    | loop
     '''
     pass
 
-def p_FORLOOP(p):
+def p_loop(p):
     '''
-    FORLOOP : FOR ASSIGN DOUBLEDOT EXPRESSION DOUBLEDOT ASSIGN RPARENTHESIS LCURLY CODEBLOCK RCURLY
-    '''
-    pass
-
-def p_CONDITION_IF(p):
-    '''
-    CONDITION_IF : IF LPARENTHESIS EXPRESSION RPARENTHESIS LCURLY CODEBLOCK RCURLY CONDITION_ELSE
+    loop : forloop
+    | whileloop
     '''
     pass
 
-def p_CONDITION_ELSE(p):
+def p_whileloop(p):
     '''
-    CONDITION_ELSE : ELSE
-    | CONDITION_ELSE_AUX
+    whileloop : WHILE LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY
     '''
     pass
 
-def p_CONDITION_ELSE_AUX(p):
+def p_forloop(p):
     '''
-    CONDITION_ELSE_AUX : empty
-    | LCURLY CODEBLOCK RCURLY
-    | ELSE CONDITION_IF
+    forloop : FOR LPARENTHESIS assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY
     '''
     pass
+
+def p_condition_if(p):
+    '''
+    condition_if : IF LPARENTHESIS expression RPARENTHESIS LCURLY codeblock RCURLY condition_else
+    '''
+    pass
+
+def p_condition_else(p):
+    '''
+    condition_else : ELSE LCURLY codeblock RCURLY
+    | empty
+    '''
+    pass
+#
+# def p_condition_else_aux(p):
+#     '''
+#     condition_else_aux : empty
+#     | LCURLY codeblock RCURLY
+#     | ELSE condition_if
+#     '''
+#     pass
+
+# Error handling lexer
+def t_error(t):
+    print(f"Illegal character {t.value[0]!r}")
+    print("Illegal character '%s'" % t.value[0])
+    t.lexer.skip(1)
 
 # Error handling parser
 def p_error(p):
-    print("Done")
+    print("p_error called")
     if not p:
         print("End of File!")
         return
-
-    while True:
-        tok = parser.token()  # Get next token
-        if not tok or tok.type == 'closebrac':
-            break
-    parser.restart()
+    print("error")
+    print(f"Error {p}")
+    sys.exit()
 
 # Build the lexer
 lexer = lex.lex()
 # Build the parser
 parser = yacc.yacc()
+
 user_input = int(
     input("1.Programa valido\n2.Programa no valido\n3.Documento Mock\n"))
 
@@ -381,7 +392,7 @@ while True:
     tok = lexer.token()
     if not tok:
         break
-    print(tok)
+    # print(tok)
 
 result = parser.parse(data)
 print(result)

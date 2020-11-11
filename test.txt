@@ -1,10 +1,29 @@
-(OwO)
+OwO
 
 string mi_nombre = "Jaimito";
-int a = 1, b = 0;
-float fu = -0.1, ack = 0.314;
+int a = 1;
+float ack = 0.314;
 
-for (int i = -1: i < 10: i = i + 1) {
+for (int uno = -1: dos < 10: tres = cuatro + 1) {
   a = a + 1;
   b = b - 1;
+}
+
+if(a < 10) {
+  if(ack < 10) {
+    a = 14;
+  } else {
+    b = 24;
+  }
+}
+
+while (false) {
+
+}
+
+function aaron_ve_hentai int x, int j : void {
+  float f = 0.01111111;
+  float f2 = -0.0;
+  float f3 = 1234.;
+  int a = 4-789*8*(9--7);
 }
