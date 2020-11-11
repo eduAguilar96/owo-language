@@ -2,8 +2,6 @@ import sys
 from ply import lex
 from ply import yacc
 
-print("Hello World")
-
 reserved = {
     # Types
     'int': 'INT_TYPE',
@@ -57,7 +55,6 @@ t_TIMES   = r'\*'
 t_DIVIDE  = r'/'
 t_MODULUS = r'%'
 
-
 # Encapsulators
 t_LPARENTHESIS = r'\('
 t_RPARENTHESIS = r'\)'
@@ -83,19 +80,11 @@ t_NOTEQUAL = r'!='
 t_LESSTHANOREQUAL = r'<='
 t_GREATERTHANOREQUAL = r'>='
 
-# Track line numbers
-def t_newline(t):
-    r'\n+'
-    t.lexer.lineno += len(t.value)
-
 # A string containing ignored characters
 t_ignore = ' \t'
 
-# Precedence rules for the arithmetic operators
-precedence = (
-    ('left','PLUS','MINUS'),
-    ('left','TIMES','DIVIDE'),
-    )
+# Comments
+t_ignore_COMMENT = r'\#.*'
 
 # dictionary of names (for storing variables)
 current_type = None
@@ -107,6 +96,11 @@ names = {
 }
 
 start = 'program'
+
+# Track line numbers
+def t_newline(t):
+    r'\n+'
+    t.lexer.lineno += len(t.value)
 
 def p_empty(p):
     '''
@@ -333,16 +327,8 @@ def p_condition_else(p):
     | empty
     '''
     pass
-#
-# def p_condition_else_aux(p):
-#     '''
-#     condition_else_aux : empty
-#     | LCURLY codeblock RCURLY
-#     | ELSE condition_if
-#     '''
-#     pass
 
-# Error handling lexer
+    # Error handling lexer
 def t_error(t):
     print(f"Illegal character {t.value[0]!r}")
     print("Illegal character '%s'" % t.value[0])
@@ -370,12 +356,15 @@ data = ""
 
 if user_input == 1:
     data = '''
-            (OwO)
+            OwO
             int nombre = 12345;
             '''
 
 elif user_input == 2:
-    data = '''estoEstaMal *()+`'''
+    data = '''
+        OwO
+        int nombre = 12345;
+        estoEstaMal *()+`'''
 
 elif user_input == 3:
     f = open("test.txt", "r")
@@ -395,7 +384,7 @@ while True:
     # print(tok)
 
 result = parser.parse(data)
-print(result)
+# print(result)
 print(names)
 
 # Notas para el futuro
