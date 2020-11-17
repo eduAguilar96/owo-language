@@ -20,6 +20,10 @@ reserved = {
     'else': 'ELSE',
     'while': 'WHILE',
     'for': 'FOR',
+    #logical
+    'and': 'AND',
+    'or': 'OR',
+    'not': 'NOT'
 }
 
 # Tokens
@@ -132,6 +136,51 @@ def p_n_name(p):
     scope_dict[current_scope_ref].set_variable(p[-1], current_type)
     pass
 
+def p_n_math_expression_1(p):
+    'n_math_expression_1 : '
+    print("p_n_math_expression_1")
+    pass
+
+def p_n_math_expression_2(p):
+    'n_math_expression_2 : '
+    print("p_n_math_expression_2")
+    pass
+
+def p_n_math_expression_3(p):
+    'n_math_expression_3 : '
+    print("p_n_math_expression_3")
+    pass
+
+def p_n_math_expression_4(p):
+    'n_math_expression_4 : '
+    print("p_n_math_expression_4")
+    pass
+
+def p_n_math_expression_5(p):
+    'n_math_expression_5 : '
+    print("p_n_math_expression_5")
+    pass
+
+def p_n_math_expression_6(p):
+    'n_math_expression_6 : '
+    print("p_n_math_expression_6")
+    pass
+
+def p_n_math_expression_7(p):
+    'n_math_expression_7 : '
+    print("p_n_math_expression_7")
+    pass
+
+def p_n_math_expression_8(p):
+    'n_math_expression_8 : '
+    print("p_n_math_expression_8")
+    pass
+
+def p_n_math_expression_9(p):
+    'n_math_expression_9 : '
+    print("p_n_math_expression_9")
+    pass
+
 # Gramatica
 
 ## Track line numbers
@@ -168,27 +217,25 @@ def p_type(p):
     '''
     pass
 
-def p_logic_operator(p):
+def p_relational_operator(p):
     '''
-    logic_operator : GREATERTHAN
-    | LESSTHAN
-    | EQUALEQUAL
-    | LESSTHANOREQUAL
-    | GREATERTHANOREQUAL
-    | NOTEQUAL
+    relational_operator : GREATERTHAN n_math_expression_8
+    | LESSTHAN n_math_expression_8
+    | EQUALEQUAL n_math_expression_8
+    | LESSTHANOREQUAL n_math_expression_8
+    | GREATERTHANOREQUAL n_math_expression_8
+    | NOTEQUAL n_math_expression_8
     '''
     pass
 
-# def p_relational_operator(p):
-#     '''
-#     logic_operator : GREATERTHAN
-#     | LESSTHAN
-#     | EQUALEQUAL
-#     | LESSTHANOREQUAL
-#     | GREATERTHANOREQUAL
-#     | NOTEQUAL
-#     '''
-#     pass
+# TODO todavia no implementamos el not
+def p_logical_operator(p):
+    '''
+    logical_operator : AND
+    | OR
+    | NOT
+    '''
+    pass
 
 def p_arithmetic_operator(p):
     '''
@@ -202,9 +249,9 @@ def p_arithmetic_operator(p):
 
 def p_literal(p):
     '''
-    literal : FLOAT
-    | INT
-    | STRING
+    literal : FLOAT n_math_expression_1
+    | INT n_math_expression_1
+    | STRING n_math_expression_1
     '''
     pass
 
@@ -242,43 +289,66 @@ def p_parameter(p):
     '''
     pass
 
+# TODO borrar comentario
+# p_expression
 def p_expression(p):
     '''
-    expression : exp
-    | exp logic_operator exp
+    expression : expression_or
+    | expression_or AND expression
     '''
     pass
 
+# TODO borrar comentario
+# p_exp
+def p_expression_or(p):
+    '''
+    expression_or : expression_rel
+    | expression_rel OR expression_or
+    '''
+    pass
+
+# TODO borrar comentario
+# p_xp
+def p_expression_rel(p):
+    '''
+    expression_rel : exp
+    | exp relational_operator exp n_math_expression_9
+    '''
+    pass
+
+# TODO borrar comentario
+# p_x
 def p_exp(p):
     '''
-    exp : termino
-    | termino PLUS exp
-    | termino MINUS exp
+    exp : termino n_math_expression_4
+    | termino n_math_expression_4 PLUS n_math_expression_2 exp
+    | termino n_math_expression_4 MINUS n_math_expression_2 exp
     '''
     pass
 
 def p_termino(p):
     '''
-    termino : factor
-    | factor TIMES termino
-    | factor DIVIDE termino
+    termino : factor n_math_expression_5
+    | factor n_math_expression_5 TIMES n_math_expression_3 termino
+    | factor n_math_expression_5 DIVIDE n_math_expression_3 termino
     '''
     pass
 
 def p_factor(p):
     '''
-    factor : LPARENTHESIS expression RPARENTHESIS
+    factor : LPARENTHESIS n_math_expression_6 expression RPARENTHESIS n_math_expression_7
     | PLUS value
     | MINUS value
     | value
     '''
     pass
 
+# TODO falta agregar n_math_expression_1 para function_call
 def p_value(p):
     '''
     value : function_call
     | literal
-    | NAME
+    | NAME n_math_expression_1
     '''
     pass
 
