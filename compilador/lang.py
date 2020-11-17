@@ -188,12 +188,16 @@ def p_n_math_expression_3(p):
 
 def p_n_math_expression_4(p):
     'n_math_expression_4 : '
-    n_math_expression_gen_quad([Operations.PLUS, Operations.MINUS])
+    e = n_math_expression_gen_quad([Operations.PLUS, Operations.MINUS])
+    if(e):
+        e_error(e, p)
     pass
 
 def p_n_math_expression_5(p):
     'n_math_expression_5 : '
-    n_math_expression_gen_quad([Operations.TIMES, Operations.DIVIDE])
+    e = n_math_expression_gen_quad([Operations.TIMES, Operations.DIVIDE])
+    if(e):
+        e_error(e, p)
     pass
 
 def p_n_math_expression_6(p):
@@ -214,7 +218,7 @@ def p_n_math_expression_8(p):
 def p_n_math_expression_9(p):
     'n_math_expression_9 : '
     # procesar operadores relacionales
-    n_math_expression_gen_quad([
+    e = n_math_expression_gen_quad([
         Operations.LESSTHAN,
         Operations.GREATERTHAN,
         Operations.EQUALEQUAL,
@@ -222,6 +226,8 @@ def p_n_math_expression_9(p):
         Operations.LESSTHANOREQUAL,
         Operations.GREATERTHANOREQUAL,
     ])
+    if(e):
+        e_error(e, p)
     pass
 
 def p_n_math_expression_10(p):
@@ -233,13 +239,17 @@ def p_n_math_expression_10(p):
 def p_n_math_expression_11(p):
     'n_math_expression_11 : '
     # procesar operadores and
-    n_math_expression_gen_quad([Operations.AND])
+    e = n_math_expression_gen_quad([Operations.AND])
+    if e:
+        e_error(e, p)
     pass
 
 def p_n_math_expression_12(p):
     'n_math_expression_12 : '
     # procesar operadores or
-    n_math_expression_gen_quad([Operations.OR])
+    e = n_math_expression_gen_quad([Operations.OR])
+    if e:
+        e_error(e, p)
     pass
 
 def n_math_expression_gen_quad(operadores):
@@ -262,13 +272,14 @@ def n_math_expression_gen_quad(operadores):
             PTypes.append(result_type)
             # TODO si algun operand es temparal(t#) entonces regresarla a "AVAILABLE", se puede volver a usar
         else:
-            raise Exception("Type Mismatch")
+            return "Type Mismatch"
+
 
 def p_n_two_way_conditional_1(p):
     'n_two_way_conditional_1 : '
     exp_type = PTypes.pop()
     if(exp_type != Types.BOOL_TYPE):
-        raise Exception("Type Mismatch")
+        e_error("Type Mismatch", p)
     else:
         result = PilaO.pop()
         temp_quad = Quad(Operations.GOTOF, result)
@@ -304,7 +315,7 @@ def p_n_pre_condition_loop_2(p):
     'p_n_pre_condition_loop_2 : '
     exp_type = PTypes.pop()
     if(exp_type != Types.BOOL_TYPE):
-        raise Exception("Type Mismatch")
+        e_error("Type Mismatch", p)
     else:
         result = PilaO.pop()
         temp_quad = Quad(Operations.GOTOF, result)
@@ -338,19 +349,22 @@ def do_assign():
         right_type = PTypes.pop()
         operator = POper.pop()
         result_type = semantic_cube[left_type][right_type][operator]
+        print(f"{left_type} {right_type} {operator}")
+        print(f"{left_operand} {right_operand}")
         if result_type:
             temp_quad = Quad(operator, left_operand, target=right_operand)
             quad_list.append(temp_quad)
             # TODO si algun operand es temparal(t#) entonces regresarla a "AVAILABLE", se puede volver a usar
         else:
-            raise Exception("Type Mismatch")
+            return "Type Mismatch"
+    pass
 
 # Gramatica
 
 ## Track line numbers
 def t_newline(t):
-    r'\n+'
-    t.lexer.lineno += len(t.value)
+  r'[\n]+'
+  t.lexer.lineno += len(t.value)
 
 def p_empty(p):
     '''
@@ -503,7 +517,9 @@ def p_assign(p):
     assign : type NAME n_math_expression_1_name n_name EQUAL n_seen_equal_op expression
     | NAME n_math_expression_1_name n_name EQUAL n_seen_equal_op expression
     '''
-    do_assign()
+    e = do_assign()
+    if e:
+        e_error(e, p)
     pass
 
 def p_statement(p):
@@ -568,10 +584,26 @@ def p_condition_else(p):
     '''
     pass
 
+## Utility
+
+def print_variable_scopes():
+    print("--Variable scopes")
+    [print(scope_dict[ref]) for ref in range(0, global_scope_counter_list[0])]
+
+def print_pilas():
+    print(f"--PilaO: {PilaO}\n--PTypes: {PTypes}\n--POper: {POper}")
+
+def print_quads():
+    print("--Quads")
+    [print(f"{ref} {quad_list[ref]}") for ref in range(0, len(quad_list))]
+
+# Error handling for semantic exceptions
+def e_error(e, p):
+    raise Exception(f"{e} in {p.lineno(-1)}")
+
 # Error handling lexer
 def t_error(t):
-    print(f"Illegal character {t.value[0]!r}")
-    print("Illegal character '%s'" % t.value[0])
+    print(f"Illegal character {t}")
     t.lexer.skip(1)
 
 # Error handling parser
@@ -580,7 +612,6 @@ def p_error(p):
     if not p:
         print("End of File!")
         return
-    print("error")
     print(f"Error {p}")
     sys.exit()
 
@@ -648,18 +679,8 @@ while True:
         break
     # print(tok)
 
-result = parser.parse(data)
+result = parser.parse(data, tracking=True)
 
-def print_variable_scopes():
-    print("--Variable scopes")
-    [print(scope_dict[ref]) for ref in range(0, global_scope_counter_list[0])]
-
-def print_pilas():
-    print(f"--PilaO: {PilaO}\n--PTypes: {PTypes}\n--POper: {POper}")
-
-def print_quads():
-    print("--Quads")
-    [print(f"{ref} {quad_list[ref]}") for ref in range(0, len(quad_list))]
 
 # print_variable_scopes()
 print_pilas()

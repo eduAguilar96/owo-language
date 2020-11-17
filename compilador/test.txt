@@ -1,8 +1,8 @@
 OwO
 
-string mi_nombre = "Jaimito";
 int a = 1;
 float ack = 0.314;
+string mi_nombre = "Jaimito";
 
 for (int uno = -1: dos < 10: tres = cuatro + 1) {
   a = a + 1;
