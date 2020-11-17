@@ -18,7 +18,7 @@ class Operations(Enum):
   MINUS   = '-'
   TIMES   = '*'
   DIVIDE  = '/'
-  MODULUS = '%' #TODO add to sematic cube
+  MODULUS = '%'
   # Logical Operators
   AND = 'and'
   OR = 'or'
@@ -34,6 +34,38 @@ class Operations(Enum):
   # MISC
   PLUSUNARY = '+'
   MINUSUNARY = '-'
+  # Machine
+  GOTO = 'goto'
+  GOTOT = 'gotoT'
+  GOTOF = 'gotoF'
+  GOSUB = 'gosub'
+  ERA = 'era'
+  ENDFUNC = 'endFunc'
+
+#Tokens to Enum
+operations_map = {
+  '+': Operations.PLUS,
+  '-': Operations.MINUS,
+  '*': Operations.TIMES,
+  '/': Operations.DIVIDE,
+  '%': Operations.MODULUS,
+  'and': Operations.AND,
+  # NOT TODO
+  'or': Operations.OR,
+  '=': Operations.EQUAL,
+  '<': Operations.LESSTHAN,
+  '>': Operations.GREATERTHAN,
+  '==': Operations.EQUALEQUAL,
+  '!=': Operations.NOTEQUAL,
+  '<=': Operations.LESSTHANOREQUAL,
+  '>=': Operations.GREATERTHANOREQUAL,
+  'goto': Operations.GOTO,
+  'gotoT': Operations.GOTOT,
+  'gotoF': Operations.GOTOF,
+  'gosub': Operations.GOSUB,
+  'era': Operations.ERA,
+  'endFunc': Operations.ENDFUNC,
+}
 
 semantic_cube = defaultdict(
   lambda: defaultdict(lambda: defaultdict(lambda: None)))
@@ -45,6 +77,7 @@ semantic_cube[Types.INT_TYPE][Types.INT_TYPE][Operations.GREATERTHAN] = Types.BO
 semantic_cube[Types.INT_TYPE][Types.INT_TYPE][Operations.NOTEQUAL] = Types.BOOL_TYPE
 semantic_cube[Types.INT_TYPE][Types.INT_TYPE][Operations.EQUALEQUAL] = Types.BOOL_TYPE
 semantic_cube[Types.INT_TYPE][Types.INT_TYPE][Operations.LESSTHANOREQUAL] = Types.BOOL_TYPE
+semantic_cube[Types.INT_TYPE][Types.INT_TYPE][Operations.GREATERTHANOREQUAL] = Types.BOOL_TYPE
 semantic_cube[Types.INT_TYPE][Types.INT_TYPE][Operations.PLUS] = Types.INT_TYPE
 semantic_cube[Types.INT_TYPE][Types.INT_TYPE][Operations.MINUS] = Types.INT_TYPE
 semantic_cube[Types.INT_TYPE][Types.INT_TYPE][Operations.TIMES] = Types.INT_TYPE
@@ -62,6 +95,7 @@ semantic_cube[Types.FLOAT_TYPE][Types.FLOAT_TYPE][Operations.GREATERTHAN] = Type
 semantic_cube[Types.FLOAT_TYPE][Types.FLOAT_TYPE][Operations.NOTEQUAL] = Types.BOOL_TYPE
 semantic_cube[Types.FLOAT_TYPE][Types.FLOAT_TYPE][Operations.EQUALEQUAL] = Types.BOOL_TYPE
 semantic_cube[Types.FLOAT_TYPE][Types.FLOAT_TYPE][Operations.LESSTHANOREQUAL] = Types.BOOL_TYPE
+semantic_cube[Types.FLOAT_TYPE][Types.FLOAT_TYPE][Operations.GREATERTHANOREQUAL] = Types.BOOL_TYPE
 semantic_cube[Types.FLOAT_TYPE][Types.FLOAT_TYPE][Operations.PLUS] = Types.FLOAT_TYPE
 semantic_cube[Types.FLOAT_TYPE][Types.FLOAT_TYPE][Operations.MINUS] = Types.FLOAT_TYPE
 semantic_cube[Types.FLOAT_TYPE][Types.FLOAT_TYPE][Operations.TIMES] = Types.FLOAT_TYPE
@@ -79,6 +113,7 @@ semantic_cube[Types.BOOL_TYPE][Types.BOOL_TYPE][Operations.GREATERTHAN] = Types.
 semantic_cube[Types.BOOL_TYPE][Types.BOOL_TYPE][Operations.NOTEQUAL] = Types.BOOL_TYPE
 semantic_cube[Types.BOOL_TYPE][Types.BOOL_TYPE][Operations.EQUALEQUAL] = Types.BOOL_TYPE
 semantic_cube[Types.BOOL_TYPE][Types.BOOL_TYPE][Operations.LESSTHANOREQUAL] = Types.BOOL_TYPE
+semantic_cube[Types.BOOL_TYPE][Types.BOOL_TYPE][Operations.GREATERTHANOREQUAL] = Types.BOOL_TYPE
 semantic_cube[Types.BOOL_TYPE][Types.BOOL_TYPE][Operations.PLUS] = Types.INT_TYPE
 semantic_cube[Types.BOOL_TYPE][Types.BOOL_TYPE][Operations.MINUS] = Types.INT_TYPE
 semantic_cube[Types.BOOL_TYPE][Types.BOOL_TYPE][Operations.TIMES] = Types.INT_TYPE
@@ -95,6 +130,7 @@ semantic_cube[Types.INT_TYPE][Types.FLOAT_TYPE][Operations.GREATERTHAN] = semant
 semantic_cube[Types.INT_TYPE][Types.FLOAT_TYPE][Operations.NOTEQUAL] = semantic_cube[Types.FLOAT_TYPE][Types.INT_TYPE][Operations.NOTEQUAL] = Types.BOOL_TYPE
 semantic_cube[Types.INT_TYPE][Types.FLOAT_TYPE][Operations.EQUALEQUAL] = semantic_cube[Types.FLOAT_TYPE][Types.INT_TYPE][Operations.EQUALEQUAL] = Types.BOOL_TYPE
 semantic_cube[Types.INT_TYPE][Types.FLOAT_TYPE][Operations.LESSTHANOREQUAL] = semantic_cube[Types.FLOAT_TYPE][Types.INT_TYPE][Operations.LESSTHANOREQUAL] = Types.BOOL_TYPE
+semantic_cube[Types.INT_TYPE][Types.FLOAT_TYPE][Operations.GREATERTHANOREQUAL] = semantic_cube[Types.FLOAT_TYPE][Types.INT_TYPE][Operations.GREATERTHANOREQUAL] = Types.BOOL_TYPE
 semantic_cube[Types.INT_TYPE][Types.FLOAT_TYPE][Operations.PLUS] = semantic_cube[Types.FLOAT_TYPE][Types.INT_TYPE][Operations.PLUS] = Types.FLOAT_TYPE
 semantic_cube[Types.INT_TYPE][Types.FLOAT_TYPE][Operations.MINUS] = semantic_cube[Types.FLOAT_TYPE][Types.INT_TYPE][Operations.MINUS] = Types.FLOAT_TYPE
 semantic_cube[Types.INT_TYPE][Types.FLOAT_TYPE][Operations.TIMES] = semantic_cube[Types.FLOAT_TYPE][Types.INT_TYPE][Operations.TIMES] = Types.FLOAT_TYPE
@@ -110,6 +146,7 @@ semantic_cube[Types.INT_TYPE][Types.BOOL_TYPE][Operations.GREATERTHAN] = semanti
 semantic_cube[Types.INT_TYPE][Types.BOOL_TYPE][Operations.NOTEQUAL] = semantic_cube[Types.BOOL_TYPE][Types.INT_TYPE][Operations.NOTEQUAL] = Types.BOOL_TYPE
 semantic_cube[Types.INT_TYPE][Types.BOOL_TYPE][Operations.EQUALEQUAL] = semantic_cube[Types.BOOL_TYPE][Types.INT_TYPE][Operations.EQUALEQUAL] = Types.BOOL_TYPE
 semantic_cube[Types.INT_TYPE][Types.BOOL_TYPE][Operations.LESSTHANOREQUAL] = semantic_cube[Types.BOOL_TYPE][Types.INT_TYPE][Operations.LESSTHANOREQUAL] = Types.BOOL_TYPE
+semantic_cube[Types.INT_TYPE][Types.BOOL_TYPE][Operations.GREATERTHANOREQUAL] = semantic_cube[Types.BOOL_TYPE][Types.INT_TYPE][Operations.GREATERTHANOREQUAL] = Types.BOOL_TYPE
 semantic_cube[Types.INT_TYPE][Types.BOOL_TYPE][Operations.PLUS] = semantic_cube[Types.BOOL_TYPE][Types.INT_TYPE][Operations.PLUS] = Types.INT_TYPE
 semantic_cube[Types.INT_TYPE][Types.BOOL_TYPE][Operations.MINUS] = semantic_cube[Types.BOOL_TYPE][Types.INT_TYPE][Operations.MINUS] = Types.INT_TYPE
 semantic_cube[Types.INT_TYPE][Types.BOOL_TYPE][Operations.TIMES] = semantic_cube[Types.BOOL_TYPE][Types.INT_TYPE][Operations.TIMES] = Types.INT_TYPE
@@ -124,6 +161,7 @@ semantic_cube[Types.FLOAT_TYPE][Types.BOOL_TYPE][Operations.GREATERTHAN] = seman
 semantic_cube[Types.FLOAT_TYPE][Types.BOOL_TYPE][Operations.NOTEQUAL] = semantic_cube[Types.BOOL_TYPE][Types.FLOAT_TYPE][Operations.NOTEQUAL] = Types.BOOL_TYPE
 semantic_cube[Types.FLOAT_TYPE][Types.BOOL_TYPE][Operations.EQUALEQUAL] = semantic_cube[Types.BOOL_TYPE][Types.FLOAT_TYPE][Operations.EQUALEQUAL] = Types.BOOL_TYPE
 semantic_cube[Types.FLOAT_TYPE][Types.BOOL_TYPE][Operations.LESSTHANOREQUAL] = semantic_cube[Types.BOOL_TYPE][Types.FLOAT_TYPE][Operations.LESSTHANOREQUAL] = Types.BOOL_TYPE
+semantic_cube[Types.FLOAT_TYPE][Types.BOOL_TYPE][Operations.GREATERTHANOREQUAL] = semantic_cube[Types.BOOL_TYPE][Types.FLOAT_TYPE][Operations.GREATERTHANOREQUAL] = Types.BOOL_TYPE
 semantic_cube[Types.FLOAT_TYPE][Types.BOOL_TYPE][Operations.PLUS] = semantic_cube[Types.BOOL_TYPE][Types.FLOAT_TYPE][Operations.PLUS] = Types.FLOAT_TYPE
 semantic_cube[Types.FLOAT_TYPE][Types.BOOL_TYPE][Operations.MINUS] = semantic_cube[Types.BOOL_TYPE][Types.FLOAT_TYPE][Operations.MINUS] = Types.FLOAT_TYPE
 semantic_cube[Types.FLOAT_TYPE][Types.BOOL_TYPE][Operations.TIMES] = semantic_cube[Types.BOOL_TYPE][Types.FLOAT_TYPE][Operations.TIMES] = Types.FLOAT_TYPE

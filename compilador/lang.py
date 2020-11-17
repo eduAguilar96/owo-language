@@ -1,7 +1,8 @@
 import sys
 import lex
 import yacc
-from scope_tree import ScopeTree
+from utility.scope_tree import ScopeTree
+from utility.quad import *
 from utility.constants import *
 
 reserved = {
@@ -42,24 +43,6 @@ tokens = [
     # Compound Comparators
     'EQUALEQUAL', 'NOTEQUAL', 'LESSTHANOREQUAL', 'GREATERTHANOREQUAL',
 ] + list(reserved.values())
-
-#Tokens to Enum
-operations_map = {
-  '+': Operations.PLUS,
-  '-': Operations.MINUS,
-  '*': Operations.TIMES,
-  '/': Operations.DIVIDE,
-  '%': Operations.MODULUS,
-  '=': Operations.EQUAL,
-  '<': Operations.LESSTHAN,
-  '>': Operations.GREATERTHAN,
-  '==': Operations.EQUALEQUAL,
-  '!=': Operations.NOTEQUAL,
-  '<=': Operations.LESSTHANOREQUAL,
-  '>=': Operations.GREATERTHANOREQUAL,
-  'and': Operations.AND,
-  'or': Operations.OR,
-}
 
 # Values
 def t_NAME(t):
@@ -119,8 +102,6 @@ scope_dict = {}
 global_scope = ScopeTree(global_scope_counter_list, -1)
 scope_dict[global_scope.ref] = global_scope
 current_scope_ref = global_scope.ref
-print(f" verificar {global_scope_counter_list[0]} == 1")
-
 
 start = 'program'
 
@@ -158,8 +139,8 @@ def p_n_name(p):
 POper = []
 PilaO = []
 PTypes = []
-quad_counter = 1
 temps_counter = 1
+quad_list = []
 
 # Puntos neuralgico s para procesar expresiones arithmeticas/matematicas
 def p_n_math_expression_1_int(p):
@@ -200,38 +181,13 @@ def p_n_math_expression_3(p):
 
 def p_n_math_expression_4(p):
     'n_math_expression_4 : '
-    n_math_expression_4_punto_5([Operations.PLUS, Operations.MINUS])
+    n_math_expression_gen_quad([Operations.PLUS, Operations.MINUS])
     pass
 
 def p_n_math_expression_5(p):
     'n_math_expression_5 : '
-    n_math_expression_4_punto_5([Operations.TIMES, Operations.DIVIDE])
+    n_math_expression_gen_quad([Operations.TIMES, Operations.DIVIDE])
     pass
-
-def n_math_expression_4_punto_5(operadores):
-    if len(POper) == 0:
-        pass
-    elif POper[-1] in operadores:
-        right_operand = PilaO.pop()
-        right_type = PTypes.pop()
-        left_operand = PilaO.pop()
-        left_type = PTypes.pop()
-        operator = POper.pop()
-        result_type = semantic_cube[left_type][right_type][operator]
-        # print("result_type: " + str(result_type))
-        # print(f"{left_type} {right_type} {operator}")
-        if result_type:
-            global temps_counter
-            result = f"t{temps_counter}"
-            temps_counter += 1
-            global quad_counter
-            print(f"{quad_counter} {operator}, {left_operand}, {right_operand}, {result}")
-            quad_counter += 1
-            PilaO.append(result)
-            PTypes.append(result_type)
-            # TODO si algun operand es temparal(t#) entonces regresarla a "AVAILABLE", se puede volver a usar
-        else:
-            raise Exception("Type Mismatch")
 
 def p_n_math_expression_6(p):
     'n_math_expression_6 : '
@@ -251,7 +207,7 @@ def p_n_math_expression_8(p):
 def p_n_math_expression_9(p):
     'n_math_expression_9 : '
     # procesar operadores relacionales
-    n_math_expression_4_punto_5([
+    n_math_expression_gen_quad([
         Operations.LESSTHAN,
         Operations.GREATERTHAN,
         Operations.EQUALEQUAL,
@@ -270,14 +226,37 @@ def p_n_math_expression_10(p):
 def p_n_math_expression_11(p):
     'n_math_expression_11 : '
     # procesar operadores and
-    n_math_expression_4_punto_5([Operations.AND])
+    n_math_expression_gen_quad([Operations.AND])
     pass
 
 def p_n_math_expression_12(p):
     'n_math_expression_12 : '
     # procesar operadores or
-    n_math_expression_4_punto_5([Operations.OR])
+    n_math_expression_gen_quad([Operations.OR])
     pass
+
+def n_math_expression_gen_quad(operadores):
+    if len(POper) == 0:
+        pass
+    elif POper[-1] in operadores:
+        right_operand = PilaO.pop()
+        right_type = PTypes.pop()
+        left_operand = PilaO.pop()
+        left_type = PTypes.pop()
+        operator = POper.pop()
+        result_type = semantic_cube[left_type][right_type][operator]
+        if result_type:
+            global temps_counter
+            result = f"t{temps_counter}"
+            temps_counter += 1
+            global quad_counter
+            temp_quad = Quad(operator, left_operand, right_operand, result)
+            quad_list.append(temp_quad)
+            PilaO.append(result)
+            PTypes.append(result_type)
+            # TODO si algun operand es temparal(t#) entonces regresarla a "AVAILABLE", se puede volver a usar
+        else:
+            raise Exception("Type Mismatch")
 
 # Gramatica
 
@@ -568,7 +547,7 @@ elif user_input == 3:
 elif user_input == 4:
     data = '''
             OwO
-            int suma = A + B and C < D or B;
+            int suma = A + B and C >= D or B;
             '''
 
 # Read input in lexer
@@ -586,7 +565,13 @@ result = parser.parse(data)
 def print_variable_scopes():
     print("--Variable scopes")
     [print(scope_dict[ref]) for ref in range(0, global_scope_counter_list[0])]
+
 def print_pilas():
     print(f"--PilaO: {PilaO}\n--PTypes: {PTypes}\n--POper: {POper}")
+
+def print_quads():
+    print("--Quads")
+    [print(f"{ref+1} {quad_list[ref]}") for ref in range(0, len(quad_list))]
 # print_variable_scopes()
 print_pilas()
+print_quads()
