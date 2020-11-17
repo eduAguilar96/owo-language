@@ -256,7 +256,6 @@ def n_math_expression_gen_quad(operadores):
             global temps_counter
             result = f"t{temps_counter}"
             temps_counter += 1
-            global quad_counter
             temp_quad = Quad(operator, left_operand, right_operand, result)
             quad_list.append(temp_quad)
             PilaO.append(result)
@@ -323,6 +322,28 @@ def p_n_pre_condition_loop_3(p):
     cont = len(quad_list)
     quad_list[end].target = cont
     pass
+
+def p_n_seen_equal_op(p):
+    'n_seen_equal_op : '
+    POper.append(operations_map[p[-1]])
+    pass
+
+def do_assign():
+    if len(POper) == 0:
+        pass
+    elif POper[-1] in [Operations.EQUAL]:
+        left_operand = PilaO.pop()
+        left_type = PTypes.pop()
+        right_operand = PilaO.pop()
+        right_type = PTypes.pop()
+        operator = POper.pop()
+        result_type = semantic_cube[left_type][right_type][operator]
+        if result_type:
+            temp_quad = Quad(operator, left_operand, target=right_operand)
+            quad_list.append(temp_quad)
+            # TODO si algun operand es temparal(t#) entonces regresarla a "AVAILABLE", se puede volver a usar
+        else:
+            raise Exception("Type Mismatch")
 
 # Gramatica
 
@@ -479,9 +500,10 @@ def p_value(p):
 
 def p_assign(p):
     '''
-    assign : type NAME n_name EQUAL expression
-    | NAME n_name EQUAL expression
+    assign : type NAME n_math_expression_1_name n_name EQUAL n_seen_equal_op expression
+    | NAME n_math_expression_1_name n_name EQUAL n_seen_equal_op expression
     '''
+    do_assign()
     pass
 
 def p_statement(p):
@@ -606,6 +628,7 @@ elif user_input == 5:
                 A = B + C * D;
             }
             '''
+
 elif user_input == 6:
     data = '''
     OwO
