@@ -1,7 +1,8 @@
 import sys
-from scope_tree import ScopeTree
 import lex
 import yacc
+from scope_tree import ScopeTree
+from utility.constants import *
 
 reserved = {
     # Types
@@ -41,6 +42,24 @@ tokens = [
     # Compound Comparators
     'EQUALEQUAL', 'NOTEQUAL', 'LESSTHANOREQUAL', 'GREATERTHANOREQUAL',
 ] + list(reserved.values())
+
+#Tokens to Enum
+operations_map = {
+  '+': Operations.PLUS,
+  '-': Operations.MINUS,
+  '*': Operations.TIMES,
+  '/': Operations.DIVIDE,
+  '%': Operations.MODULUS,
+  '=': Operations.EQUAL,
+  '<': Operations.LESSTHAN,
+  '>': Operations.GREATERTHAN,
+  '==': Operations.EQUALEQUAL,
+  '!=': Operations.NOTEQUAL,
+  '<=': Operations.LESSTHANOREQUAL,
+  '>=': Operations.GREATERTHANOREQUAL,
+  'and': Operations.AND,
+  'or': Operations.OR,
+}
 
 # Values
 def t_NAME(t):
@@ -136,49 +155,128 @@ def p_n_name(p):
     scope_dict[current_scope_ref].set_variable(p[-1], current_type)
     pass
 
-def p_n_math_expression_1(p):
-    'n_math_expression_1 : '
-    print("p_n_math_expression_1")
+POper = []
+PilaO = []
+PTypes = []
+quad_counter = 1
+temps_counter = 1
+
+# Puntos neuralgico s para procesar expresiones arithmeticas/matematicas
+def p_n_math_expression_1_int(p):
+    'n_math_expression_1_int : '
+    n_math_expression(p[-1], Types.INT_TYPE)
+    pass
+
+def p_n_math_expression_1_float(p):
+    'n_math_expression_1_float : '
+    n_math_expression(p[-1], Types.FLOAT_TYPE)
+    pass
+
+def p_n_math_expression_1_string(p):
+    'n_math_expression_1_string : '
+    n_math_expression(p[-1], Types.STRING_TYPE)
+    pass
+
+def p_n_math_expression_1_name(p):
+    'n_math_expression_1_name : '
+    # TODO mientras no tenemos la logica para que tipo es una variable, usar int
+    n_math_expression(p[-1], Types.INT_TYPE)
+    pass
+
+def n_math_expression(token, type):
+    PilaO.append(token)
+    PTypes.append(type)
     pass
 
 def p_n_math_expression_2(p):
     'n_math_expression_2 : '
-    print("p_n_math_expression_2")
+    POper.append(operations_map[p[-1]])
     pass
 
 def p_n_math_expression_3(p):
     'n_math_expression_3 : '
-    print("p_n_math_expression_3")
+    POper.append(operations_map[p[-1]])
     pass
 
 def p_n_math_expression_4(p):
     'n_math_expression_4 : '
-    print("p_n_math_expression_4")
+    n_math_expression_4_punto_5([Operations.PLUS, Operations.MINUS])
     pass
 
 def p_n_math_expression_5(p):
     'n_math_expression_5 : '
-    print("p_n_math_expression_5")
+    n_math_expression_4_punto_5([Operations.TIMES, Operations.DIVIDE])
     pass
+
+def n_math_expression_4_punto_5(operadores):
+    if len(POper) == 0:
+        pass
+    elif POper[-1] in operadores:
+        right_operand = PilaO.pop()
+        right_type = PTypes.pop()
+        left_operand = PilaO.pop()
+        left_type = PTypes.pop()
+        operator = POper.pop()
+        result_type = semantic_cube[left_type][right_type][operator]
+        # print("result_type: " + str(result_type))
+        # print(f"{left_type} {right_type} {operator}")
+        if result_type:
+            global temps_counter
+            result = f"t{temps_counter}"
+            temps_counter += 1
+            global quad_counter
+            print(f"{quad_counter} {operator}, {left_operand}, {right_operand}, {result}")
+            quad_counter += 1
+            PilaO.append(result)
+            PTypes.append(result_type)
+            # TODO si algun operand es temparal(t#) entonces regresarla a "AVAILABLE", se puede volver a usar
+        else:
+            raise Exception("Type Mismatch")
 
 def p_n_math_expression_6(p):
     'n_math_expression_6 : '
-    print("p_n_math_expression_6")
+    POper.append(p[-1])
     pass
 
 def p_n_math_expression_7(p):
     'n_math_expression_7 : '
-    print("p_n_math_expression_7")
+    POper.pop()
     pass
 
 def p_n_math_expression_8(p):
     'n_math_expression_8 : '
-    print("p_n_math_expression_8")
+    POper.append(operations_map[p[-1]])
     pass
 
 def p_n_math_expression_9(p):
     'n_math_expression_9 : '
-    print("p_n_math_expression_9")
+    # procesar operadores relacionales
+    n_math_expression_4_punto_5([
+        Operations.LESSTHAN,
+        Operations.GREATERTHAN,
+        Operations.EQUALEQUAL,
+        Operations.NOTEQUAL,
+        Operations.LESSTHANOREQUAL,
+        Operations.GREATERTHANOREQUAL,
+    ])
+    pass
+
+def p_n_math_expression_10(p):
+    'n_math_expression_10 : '
+    # pushear operadores logicos
+    POper.append(operations_map[p[-1]])
+    pass
+
+def p_n_math_expression_11(p):
+    'n_math_expression_11 : '
+    # procesar operadores and
+    n_math_expression_4_punto_5([Operations.AND])
+    pass
+
+def p_n_math_expression_12(p):
+    'n_math_expression_12 : '
+    # procesar operadores or
+    n_math_expression_4_punto_5([Operations.OR])
     pass
 
 # Gramatica
@@ -229,29 +327,29 @@ def p_relational_operator(p):
     pass
 
 # TODO todavia no implementamos el not
-def p_logical_operator(p):
-    '''
-    logical_operator : AND
-    | OR
-    | NOT
-    '''
-    pass
+# def p_logical_operator(p):
+#     '''
+#     logical_operator : AND n_math_expression_10
+#     | OR n_math_expression_10
+#     | NOT n_math_expression_10
+#     '''
+#     pass
 
-def p_arithmetic_operator(p):
-    '''
-    arithmetic_operator : PLUS
-    | MINUS
-    | TIMES
-    | DIVIDE
-    | MODULUS
-    '''
-    pass
+# def p_arithmetic_operator(p):
+#     '''
+#     arithmetic_operator : PLUS
+#     | MINUS
+#     | TIMES
+#     | DIVIDE
+#     | MODULUS
+#     '''
+#     pass
 
 def p_literal(p):
     '''
-    literal : FLOAT n_math_expression_1
-    | INT n_math_expression_1
-    | STRING n_math_expression_1
+    literal : FLOAT n_math_expression_1_float
+    | INT n_math_expression_1_int
+    | STRING n_math_expression_1_string
     '''
     pass
 
@@ -294,7 +392,7 @@ def p_parameter(p):
 def p_expression(p):
     '''
     expression : expression_or
-    | expression_or AND expression
+    | expression_or AND n_math_expression_10 expression n_math_expression_11
     '''
     pass
 
@@ -303,7 +401,7 @@ def p_expression(p):
 def p_expression_or(p):
     '''
     expression_or : expression_rel
-    | expression_rel OR expression_or
+    | expression_rel OR n_math_expression_10 expression_or n_math_expression_12
     '''
     pass
 
@@ -331,6 +429,7 @@ def p_termino(p):
     termino : factor n_math_expression_5
     | factor n_math_expression_5 TIMES n_math_expression_3 termino
     | factor n_math_expression_5 DIVIDE n_math_expression_3 termino
+    | factor n_math_expression_5 MODULUS n_math_expression_3 termino
     '''
     pass
 
@@ -348,7 +447,7 @@ def p_value(p):
     '''
     value : function_call
     | literal
-    | NAME n_math_expression_1
+    | NAME n_math_expression_1_name
     '''
     pass
 
@@ -466,6 +565,12 @@ elif user_input == 3:
     else:
         print("404: File not found")
 
+elif user_input == 4:
+    data = '''
+            OwO
+            int suma = A + B and C < D or B;
+            '''
+
 # Read input in lexer
 lexer.input(data)
 
@@ -478,4 +583,10 @@ while True:
 
 result = parser.parse(data)
 # print(result)
-[print(scope_dict[ref]) for ref in range(0, global_scope_counter_list[0])]
+def print_variable_scopes():
+    print("--Variable scopes")
+    [print(scope_dict[ref]) for ref in range(0, global_scope_counter_list[0])]
+def print_pilas():
+    print(f"--PilaO: {PilaO}\n--PTypes: {PTypes}\n--POper: {POper}")
+# print_variable_scopes()
+print_pilas()

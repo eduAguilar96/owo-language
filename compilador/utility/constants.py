@@ -4,7 +4,7 @@ from enum import Enum, IntEnum, auto
 # MEMORY RANGES
 # TODO: Add this before moving on?
 
-# DATA TYPES 
+# DATA TYPES
 class Types(Enum):
   INT_TYPE = 'int'
   FLOAT_TYPE = 'float'
@@ -12,28 +12,28 @@ class Types(Enum):
   STRING_TYPE = 'string'
   VOID = 'void'
 
-class Operations(IntEnum):
+class Operations(Enum):
   # OPERATORS
-  PLUS    = 1
-  MINUS   = 2
-  TIMES   = 3 
-  DIVIDE  = 4
-  MODULUS = 5 # deprecated
+  PLUS    = '+'
+  MINUS   = '-'
+  TIMES   = '*'
+  DIVIDE  = '/'
+  MODULUS = '%' #TODO add to sematic cube
   # Logical Operators
-  AND = 6
-  OR = 7
-  NOT = 8
+  AND = 'and'
+  OR = 'or'
+  NOT = 'not'
   # Relational Operators
-  EQUAL = 9
-  LESSTHAN = 10
-  GREATERTHAN = 11
-  EQUALEQUAL = 12
-  NOTEQUAL = 13
-  LESSTHANOREQUAL = 14
-  GREATERTHANOREQUAL = 15
+  EQUAL = '='
+  LESSTHAN = '<'
+  GREATERTHAN = '>'
+  EQUALEQUAL = '=='
+  NOTEQUAL = '!='
+  LESSTHANOREQUAL = '<='
+  GREATERTHANOREQUAL = '>='
   # MISC
-  PLUSUNARY = 16
-  MINUSUNARY = 17
+  PLUSUNARY = '+'
+  MINUSUNARY = '-'
 
 semantic_cube = defaultdict(
   lambda: defaultdict(lambda: defaultdict(lambda: None)))
@@ -49,6 +49,7 @@ semantic_cube[Types.INT_TYPE][Types.INT_TYPE][Operations.PLUS] = Types.INT_TYPE
 semantic_cube[Types.INT_TYPE][Types.INT_TYPE][Operations.MINUS] = Types.INT_TYPE
 semantic_cube[Types.INT_TYPE][Types.INT_TYPE][Operations.TIMES] = Types.INT_TYPE
 semantic_cube[Types.INT_TYPE][Types.INT_TYPE][Operations.DIVIDE] = Types.INT_TYPE
+semantic_cube[Types.INT_TYPE][Types.INT_TYPE][Operations.MODULUS] = Types.INT_TYPE
 semantic_cube[Types.INT_TYPE][Types.INT_TYPE][Operations.EQUAL] = Types.INT_TYPE
 semantic_cube[Types.INT_TYPE][Operations.PLUSUNARY] = Types.INT_TYPE
 semantic_cube[Types.INT_TYPE][Operations.MINUSUNARY] = Types.INT_TYPE
@@ -65,6 +66,7 @@ semantic_cube[Types.FLOAT_TYPE][Types.FLOAT_TYPE][Operations.PLUS] = Types.FLOAT
 semantic_cube[Types.FLOAT_TYPE][Types.FLOAT_TYPE][Operations.MINUS] = Types.FLOAT_TYPE
 semantic_cube[Types.FLOAT_TYPE][Types.FLOAT_TYPE][Operations.TIMES] = Types.FLOAT_TYPE
 semantic_cube[Types.FLOAT_TYPE][Types.FLOAT_TYPE][Operations.DIVIDE] = Types.FLOAT_TYPE
+semantic_cube[Types.FLOAT_TYPE][Types.FLOAT_TYPE][Operations.MODULUS] = Types.FLOAT_TYPE
 semantic_cube[Types.FLOAT_TYPE][Types.FLOAT_TYPE][Operations.EQUAL] = Types.FLOAT_TYPE
 semantic_cube[Types.FLOAT_TYPE][Operations.PLUSUNARY] = Types.FLOAT_TYPE
 semantic_cube[Types.FLOAT_TYPE][Operations.MINUSUNARY] = Types.FLOAT_TYPE
@@ -97,6 +99,7 @@ semantic_cube[Types.INT_TYPE][Types.FLOAT_TYPE][Operations.PLUS] = semantic_cube
 semantic_cube[Types.INT_TYPE][Types.FLOAT_TYPE][Operations.MINUS] = semantic_cube[Types.FLOAT_TYPE][Types.INT_TYPE][Operations.MINUS] = Types.FLOAT_TYPE
 semantic_cube[Types.INT_TYPE][Types.FLOAT_TYPE][Operations.TIMES] = semantic_cube[Types.FLOAT_TYPE][Types.INT_TYPE][Operations.TIMES] = Types.FLOAT_TYPE
 semantic_cube[Types.INT_TYPE][Types.FLOAT_TYPE][Operations.DIVIDE] = semantic_cube[Types.FLOAT_TYPE][Types.INT_TYPE][Operations.DIVIDE] = Types.FLOAT_TYPE
+semantic_cube[Types.INT_TYPE][Types.FLOAT_TYPE][Operations.MODULUS] = semantic_cube[Types.FLOAT_TYPE][Types.INT_TYPE][Operations.MODULUS] = Types.FLOAT_TYPE
 semantic_cube[Types.INT_TYPE][Types.FLOAT_TYPE][Operations.EQUAL] = Types.INT_TYPE
 semantic_cube[Types.FLOAT_TYPE][Types.INT_TYPE][Operations.EQUAL] = Types.FLOAT_TYPE
 
