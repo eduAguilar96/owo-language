@@ -136,11 +136,18 @@ def p_n_name(p):
     scope_dict[current_scope_ref].set_variable(p[-1], current_type)
     pass
 
+# Pending Operators
 POper = []
+# Pending Operands
 PilaO = []
+# Coresponding types
 PTypes = []
+# Pending Jumps
+PJumps = []
+# Counter for used temporary variables
 temps_counter = 1
-quad_list = []
+# List of quadruples
+quad_list = [Quad(Operations.START)]
 
 # Puntos neuralgico s para procesar expresiones arithmeticas/matematicas
 def p_n_math_expression_1_int(p):
@@ -257,6 +264,36 @@ def n_math_expression_gen_quad(operadores):
             # TODO si algun operand es temparal(t#) entonces regresarla a "AVAILABLE", se puede volver a usar
         else:
             raise Exception("Type Mismatch")
+
+def p_n_two_way_conditional_1(p):
+    'n_two_way_conditional_1 : '
+    exp_type = PTypes.pop()
+    if(exp_type != Types.BOOL_TYPE):
+        raise Exception("Type Mismatch")
+    else:
+        result = PilaO.pop()
+        temp_quad = Quad(Operations.GOTOF, result)
+        quad_list.append(temp_quad)
+        cont = len(quad_list)
+        PJumps.append(cont-1)
+    pass
+
+def p_n_two_way_conditional_2(p):
+    'n_two_way_conditional_2 : '
+    end = PJumps.pop()
+    cont = len(quad_list)
+    quad_list[end].target = cont
+    pass
+
+def p_n_two_way_conditional_3(p):
+    'n_two_way_conditional_3 : '
+    temp_quad = Quad(Operations.GOTO)
+    quad_list.append(temp_quad)
+    jump_false = PJumps.pop()
+    cont = len(quad_list)
+    PJumps.append(cont-1)
+    quad_list[jump_false].target = cont
+    pass
 
 # Gramatica
 
@@ -469,13 +506,13 @@ def p_forloop(p):
 
 def p_condition_if(p):
     '''
-    condition_if : IF LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope condition_else
+    condition_if : IF LPARENTHESIS expression RPARENTHESIS LCURLY n_two_way_conditional_1 n_open_new_scope codeblock RCURLY n_close_scope condition_else n_two_way_conditional_2
     '''
     pass
 
 def p_condition_else(p):
     '''
-    condition_else : ELSE LCURLY n_open_new_scope codeblock RCURLY n_close_scope
+    condition_else : ELSE n_two_way_conditional_3 LCURLY n_open_new_scope codeblock RCURLY n_close_scope
     | empty
     '''
     pass
@@ -531,6 +568,16 @@ elif user_input == 4:
             int suma = A + B and C >= D or B;
             '''
 
+elif user_input == 5:
+    data = '''
+            OwO
+            if (A + B < C) {
+                A = B + C;
+            } else {
+                A = B + C * D;
+            }
+            '''
+
 # Read input in lexer
 lexer.input(data)
 
@@ -552,7 +599,7 @@ def print_pilas():
 
 def print_quads():
     print("--Quads")
-    [print(f"{ref+1} {quad_list[ref]}") for ref in range(0, len(quad_list))]
+    [print(f"{ref} {quad_list[ref]}") for ref in range(0, len(quad_list))]
 
 # print_variable_scopes()
 print_pilas()
