@@ -101,7 +101,40 @@ print(f" verificar {global_scope_counter_list[0]} == 1")
 
 start = 'program'
 
-# Track line numbers
+## Puntos Neuralgicos
+
+# Cada ves que se lee un tipo de variable, no el literal (Ej. int, bool, float)
+def p_n_seen_type(p):
+    'n_seen_type : '
+    global current_type
+    # print(current_type)
+    current_type = p[-1]
+
+# Cuando se abre un {} y se inicia un nuevo contexto.
+def p_n_open_new_scope(p):
+    'n_open_new_scope : '
+    global current_scope_ref
+    new_scope = ScopeTree(global_scope_counter_list, scope_dict[current_scope_ref].ref)
+    scope_dict[new_scope.ref] = new_scope
+    current_scope_ref = new_scope.ref
+    pass
+
+# Cuando se cierra un {} y se cierra un contexto
+def p_n_close_scope(p):
+    'n_close_scope : '
+    global current_scope_ref
+    current_scope_ref = scope_dict[current_scope_ref].parent_ref
+    pass
+
+# Cada vez que se lee un NAME
+def p_n_name(p):
+    'n_name : '
+    scope_dict[current_scope_ref].set_variable(p[-1], current_type)
+    pass
+
+# Gramatica
+
+## Track line numbers
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
@@ -124,12 +157,6 @@ def p_program_aux(p):
     | OWO
     '''
     pass
-
-def p_n_seen_type(p):
-    'n_seen_type : '
-    global current_type
-    # print(current_type)
-    current_type = p[-1]
 
 def p_type(p):
     '''
@@ -188,20 +215,6 @@ def p_function_type(p):
     '''
     pass
 
-def p_n_open_new_scope(p):
-    'n_open_new_scope : '
-    global current_scope_ref
-    new_scope = ScopeTree(global_scope_counter_list, scope_dict[current_scope_ref].ref)
-    scope_dict[new_scope.ref] = new_scope
-    current_scope_ref = new_scope.ref
-    pass
-
-def p_n_close_scope(p):
-    'n_close_scope : '
-    global current_scope_ref
-    current_scope_ref = scope_dict[current_scope_ref].parent_ref
-    pass
-
 def p_function_definition(p):
     '''
     function_definition : FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope
@@ -224,7 +237,7 @@ def p_parameter_list(p):
 
 def p_parameter(p):
     '''
-    parameter : type NAME n_name_assign
+    parameter : type NAME n_name
     | assign
     '''
     pass
@@ -271,14 +284,9 @@ def p_value(p):
 
 def p_assign(p):
     '''
-    assign : type NAME n_name_assign EQUAL expression
-    | NAME n_name_assign EQUAL expression
+    assign : type NAME n_name EQUAL expression
+    | NAME n_name EQUAL expression
     '''
-    pass
-
-def p_n_name_assign(p):
-    'n_name_assign : '
-    scope_dict[current_scope_ref].set_variable(p[-1], current_type)
     pass
 
 def p_statement(p):
