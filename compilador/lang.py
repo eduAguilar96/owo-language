@@ -305,25 +305,6 @@ def p_relational_operator(p):
     '''
     pass
 
-# TODO todavia no implementamos el not
-# def p_logical_operator(p):
-#     '''
-#     logical_operator : AND n_math_expression_10
-#     | OR n_math_expression_10
-#     | NOT n_math_expression_10
-#     '''
-#     pass
-
-# def p_arithmetic_operator(p):
-#     '''
-#     arithmetic_operator : PLUS
-#     | MINUS
-#     | TIMES
-#     | DIVIDE
-#     | MODULUS
-#     '''
-#     pass
-
 def p_literal(p):
     '''
     literal : FLOAT n_math_expression_1_float
@@ -561,7 +542,7 @@ while True:
     # print(tok)
 
 result = parser.parse(data)
-# print(result)
+
 def print_variable_scopes():
     print("--Variable scopes")
     [print(scope_dict[ref]) for ref in range(0, global_scope_counter_list[0])]
@@ -572,6 +553,7 @@ def print_pilas():
 def print_quads():
     print("--Quads")
     [print(f"{ref+1} {quad_list[ref]}") for ref in range(0, len(quad_list))]
+
 # print_variable_scopes()
 print_pilas()
 print_quads()
