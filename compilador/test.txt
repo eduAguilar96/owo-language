@@ -17,7 +17,7 @@ if(a < 10) {
   }
 }
 # paslkdjfl;jasdl;fjasdf][]\\\\[][[][]]
-while (false) {
+while (A > B) {
 
 }
 

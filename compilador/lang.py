@@ -295,6 +295,35 @@ def p_n_two_way_conditional_3(p):
     quad_list[jump_false].target = cont
     pass
 
+def p_n_pre_condition_loop_1(p):
+    'p_n_pre_condition_loop_1 : '
+    cont = len(quad_list)
+    PJumps.append(cont)
+    pass
+
+def p_n_pre_condition_loop_2(p):
+    'p_n_pre_condition_loop_2 : '
+    exp_type = PTypes.pop()
+    if(exp_type != Types.BOOL_TYPE):
+        raise Exception("Type Mismatch")
+    else:
+        result = PilaO.pop()
+        temp_quad = Quad(Operations.GOTOF, result)
+        quad_list.append(temp_quad)
+        cont = len(quad_list)
+        PJumps.append(cont-1)
+    pass
+
+def p_n_pre_condition_loop_3(p):
+    'p_n_pre_condition_loop_3 : '
+    end = PJumps.pop()
+    return_jump = PJumps.pop()
+    temp_quad = Quad(Operations.GOTO, target=return_jump)
+    quad_list.append(temp_quad)
+    cont = len(quad_list)
+    quad_list[end].target = cont
+    pass
+
 # Gramatica
 
 ## Track line numbers
@@ -494,7 +523,7 @@ def p_loop(p):
 
 def p_whileloop(p):
     '''
-    whileloop : WHILE LPARENTHESIS expression RPARENTHESIS LCURLY n_open_new_scope codeblock RCURLY n_close_scope
+    whileloop : WHILE p_n_pre_condition_loop_1 LPARENTHESIS expression RPARENTHESIS p_n_pre_condition_loop_2 LCURLY n_open_new_scope codeblock RCURLY p_n_pre_condition_loop_3 n_close_scope
     '''
     pass
 
@@ -577,6 +606,14 @@ elif user_input == 5:
                 A = B + C * D;
             }
             '''
+elif user_input == 6:
+    data = '''
+    OwO
+    while (A > B * C) {
+        A = A - D;
+    }
+    B = C + A;
+    '''
 
 # Read input in lexer
 lexer.input(data)
