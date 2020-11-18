@@ -32,5 +32,5 @@ function masUno int x : int {
   return x + 1;
 }
 
-int var = masUno(4, 4);
+int var = masUno(4);
 aaron_ve_hentai(4, B+5);

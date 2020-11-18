@@ -10,7 +10,7 @@ class Quad:
 
     def __str__(self):
         spacing = 25
-        return f" Quad {self.opcode} {(spacing-len(str(self.opcode)))*' '}"\
+        return f" Quad {self.opcode.value} {(spacing-len(str(self.opcode.value)))*' '}"\
             f" {self.left}{(spacing-len(str(self.left)))*' '}"\
             f" {self.right}{(spacing-len(str(self.right)))*' '}"\
-            f" {self.target}{(spacing-len(str(self.target)))*' '}"
+            f" {self.target}"
