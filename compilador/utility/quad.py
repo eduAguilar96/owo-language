@@ -9,6 +9,8 @@ class Quad:
         self.target = target
 
     def __str__(self):
-        return f" Quad {self.opcode}"\
-            f"{(len('Operations.GREATERTHANOREQUAL')-len(str(self.opcode))+1)*' '}"\
-            f"{self.left} {self.right} {self.target}"
+        spacing = 25
+        return f" Quad {self.opcode} {(spacing-len(str(self.opcode)))*' '}"\
+            f" {self.left}{(spacing-len(str(self.left)))*' '}"\
+            f" {self.right}{(spacing-len(str(self.right)))*' '}"\
+            f" {self.target}{(spacing-len(str(self.target)))*' '}"
