@@ -28,4 +28,9 @@ function aaron_ve_hentai int x, int j : void {
   int a = 4-789*8*(9--7);
 }
 
+function masUno int x : int {
+  return x + 1;
+}
+
+int var = masUno(4, 4);
 aaron_ve_hentai(4, B+5);

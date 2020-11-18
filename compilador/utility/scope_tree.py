@@ -7,18 +7,24 @@ class Scope:
         self.functions = {}
         self.func_name = None
         self.quad_start = None
+        self.return_type = None
+        self.params = []
+        self.return_value = None
 
-    def set_variable(self, name, type, is_param=False):
+    def set_variable(self, name, type):
         self.vars[name] = {
-            'type': type,
-            'is_param': is_param
+            'type': type
         }
+
+    def add_parameter(self, name):
+        self.params.append(name)
 
     def __str__(self):
         str_vars = f"vars: {self.vars}\n" if self.vars else ""
+        str_params = f"params: {self.params}\n" if self.func_name else ""
         str_functions = f"functions: {self.functions}\n" if self.functions else ""
-        return f"ref: {self.ref} {self.func_name + ' : ' + str(self.quad_start) if self.func_name else ''} \n" \
-            f"parent_ref: {self.parent_ref}\n" + str_vars + str_functions
+        return f"ref: {self.ref} {self.func_name + ' : ' + str(self.return_type) + ' - ' + str(self.quad_start) if self.func_name else ''} \n" \
+            f"parent_ref: {self.parent_ref}\n" + str_vars + str_params + str_functions
 
 class ScopeTree:
     def __init__(self):

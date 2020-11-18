@@ -15,6 +15,7 @@ reserved = {
     'void': 'VOID',
     # Program
     'function': 'FUNCTION',
+    'return': 'RETURN',
     'OwO': 'OWO',
     'CHIEF/AARON': 'IDK',
     # Flow
@@ -128,7 +129,7 @@ def p_n_seen_type(p):
     'n_seen_type : '
     global current_type
     # print(current_type)
-    current_type = get_last_t(p)
+    current_type = types_map[get_last_t(p)]
 
 # Cuando se abre un {} y se inicia un nuevo contexto.
 def p_n_open_new_scope(p):
@@ -190,7 +191,8 @@ def p_n_variable_instantiate(p):
 def p_n_variable_instantiate_param(p):
     'n_variable_instantiate_param : '
     var_name = get_last_t(p)
-    scope_tree.dict[current_scope_ref].set_variable(var_name, current_type, True)
+    scope_tree.dict[current_scope_ref].set_variable(var_name, current_type)
+    scope_tree.dict[current_scope_ref].add_parameter(var_name)
 
 # Puntos neuralgico s para procesar expresiones arithmeticas/matematicas
 def p_n_math_expression_1_int(p):
@@ -211,7 +213,7 @@ def p_n_math_expression_1_string(p):
 def p_n_math_expression_1_name(p):
     'n_math_expression_1_name : '
     var_name = get_last_t(p)
-    n_math_expression(var_name, types_map[current_type])
+    n_math_expression(var_name, current_type)
     pass
 
 def n_math_expression(token, type):
@@ -273,23 +275,23 @@ def p_n_math_expression_9(p):
         e_error(e, p)
     pass
 
+# pushear operadores logicos
 def p_n_math_expression_10(p):
     'n_math_expression_10 : '
-    # pushear operadores logicos
     POper.append(operations_map[get_last_t(p)])
     pass
 
+# procesar operadores and
 def p_n_math_expression_11(p):
     'n_math_expression_11 : '
-    # procesar operadores and
     e = n_math_expression_gen_quad([Operations.AND])
     if e:
         e_error(e, p)
     pass
 
+# procesar operadores or
 def p_n_math_expression_12(p):
     'n_math_expression_12 : '
-    # procesar operadores or
     e = n_math_expression_gen_quad([Operations.OR])
     if e:
         e_error(e, p)
@@ -306,9 +308,7 @@ def n_math_expression_gen_quad(operadores):
         operator = POper.pop()
         result_type = semantic_cube[left_type][right_type][operator]
         if result_type:
-            global temps_counter
-            result = f"t{temps_counter}"
-            temps_counter += 1
+            result = gen_temp_var()
             temp_quad = Quad(operator, left_operand, right_operand, result)
             quad_list.append(temp_quad)
             PilaO.append(result)
@@ -421,6 +421,99 @@ def p_n_function_block_end(p):
     quad_list[function_start].target = len(quad_list)
     pass
 
+def p_n_function_type(p):
+    'n_function_type : '
+    type = types_map[get_last_t(p)]
+    scope_tree.dict[current_scope_ref].return_type = type
+    pass
+
+# Verify that function exists and do the ERA quad
+last_function_call = []
+def p_n_function_call_1(p):
+    'n_function_call_1 : '
+    func_name = get_last_t(p)
+    global last_function_call
+    last_function_call.append(func_name)
+    aux_scope_ref = current_scope_ref
+    while(aux_scope_ref > -1):
+        if func_name in scope_tree.dict[aux_scope_ref].functions:
+            func_ref = scope_tree.dict[current_scope_ref].functions[func_name]
+            # Se pasa una referencia a Que es scope es func_name con func_ref, esto en relacion al scope_tree
+            quad_list.append(Quad(Operations.ERA, left=func_name, right=func_ref))
+            return
+        aux_scope_ref = scope_tree.dict[aux_scope_ref].parent_ref
+    e_error(f"Function {func_name} called before instantiated", p)
+    pass
+
+argument_counter = []
+def p_n_function_call_2(p):
+    'n_function_call_2 : '
+    global argument_counter
+    argument_counter.append(0)
+    pass
+
+# Verify Argument vs Parameter
+def p_n_function_call_3(p):
+    'n_function_call_3 : '
+    global argument_counter
+    argument_value = PilaO.pop()
+    argument_type = PTypes.pop()
+    function_name = last_function_call[-1]
+    function_ref = scope_tree.dict[current_scope_ref].functions[function_name]
+    params_list = scope_tree.dict[function_ref].params
+    if (argument_counter[-1] >= len(params_list)):
+        e_error(f"Argument mismatch for function ({function_name}) call, args({argument_counter[-1]+1}), params({len(params_list)})", p)
+
+    param_type = scope_tree.dict[function_ref].vars[params_list[argument_counter[-1]]]['type']
+    if (argument_type != param_type):
+        e_error(f"Type Mismatch for argument({params_list[argument_counter[-1]]}) in function ({function_name}) call", p)
+
+    argument_temp = f"param{argument_counter[-1]+1}"
+    quad_list.append(Quad(Operations.PARAM, left=argument_value, target=argument_temp))
+    pass
+
+def p_n_function_call_4(p):
+    'n_function_call_4 : '
+    global argument_counter
+    argument_counter[-1] += 1
+    pass
+
+def p_n_function_call_5(p):
+    'n_function_call_5 : '
+    function_name = last_function_call[-1]
+    function_ref = scope_tree.dict[current_scope_ref].functions[function_name]
+    params_list = scope_tree.dict[function_ref].params
+    if(argument_counter[-1] != len(params_list)-1):
+        e_error(f"Argument mismatch for function ({function_name}) call, args({argument_counter[-1]+1}), params({len(params_list)})", p)
+    pass
+
+def p_n_function_call_6(p):
+    'n_function_call_6 : '
+    function_name = last_function_call[-1]
+    function_ref = scope_tree.dict[current_scope_ref].functions[function_name]
+    params_list = scope_tree.dict[function_ref].params
+    # Se pasa una referencia a Que es scope es func_name con func_ref, esto en relacion al scope_tree
+    quad_list.append(Quad(Operations.GOSUB, left=f"{function_name}_return_value", right=function_ref))
+    # Handle return_value
+    temp_var = gen_temp_var()
+    PilaO.append(temp_var)
+    PTypes.append(scope_tree.dict[function_ref].return_type)
+    quad_list.append(Quad(Operations.EQUAL, left=f"{function_name}_return_value", target=temp_var))
+    last_function_call.pop()
+    argument_counter.pop()
+    pass
+
+def p_n_end(p):
+    'n_end : '
+    quad_list.append(Quad(Operations.END))
+    pass
+
+def gen_temp_var():
+    global temps_counter
+    result = f"t{temps_counter}"
+    temps_counter += 1
+    return result
+
 # Gramatica
 
 ## Track line numbers
@@ -436,7 +529,7 @@ def p_empty(p):
 
 def p_program(p):
     '''
-    program : program_aux codeblock
+    program : program_aux codeblock n_end
     '''
     pass
 
@@ -449,11 +542,11 @@ def p_program_aux(p):
 
 def p_type(p):
     '''
-    type : INT_TYPE n_seen_type
-    | STRING_TYPE n_seen_type
-    | DOUBLE_TYPE n_seen_type
-    | FLOAT_TYPE n_seen_type
-    | BOOL_TYPE n_seen_type
+    type : INT_TYPE n_seen_type n_function_type
+    | STRING_TYPE n_seen_type n_function_type
+    | DOUBLE_TYPE n_seen_type n_function_type
+    | FLOAT_TYPE n_seen_type n_function_type
+    | BOOL_TYPE n_seen_type n_function_type
     '''
     pass
 
@@ -479,19 +572,45 @@ def p_literal(p):
 def p_function_type(p):
     '''
     function_type : type
-    | VOID
+    | VOID n_function_type
     '''
+    pass
+
+def p_n_return(p):
+    'n_return : '
+    func_ref = current_scope_ref
+    func_name = scope_tree.dict[func_ref].func_name
+    func_return_type = scope_tree.dict[func_ref].return_type
+    if(func_return_type == Types.VOID):
+        e_error(f"Void function ({func_name}) cannot have a return value", p)
+    return_value = PilaO.pop()
+    return_type = PTypes.pop()
+    if return_type != func_return_type:
+        e_error(f"Wrong return type for ({func_name}), return type is ({return_type.value}), must be ({func_return_type.value})", p)
+    quad_list.append(Quad(Operations.RETURN, target=return_value))
+    pass
+
+def p_n_return_void(p):
+    'n_return_void : '
     pass
 
 def p_function_definition(p):
     '''
-    function_definition : n_before_function_definition FUNCTION NAME n_open_new_scope_function parameter_list DOUBLEDOT function_type LCURLY n_function_block_start codeblock RCURLY n_close_scope n_function_block_end
+    function_definition : n_before_function_definition FUNCTION NAME n_open_new_scope_function parameter_list DOUBLEDOT function_type LCURLY n_function_block_start codeblock return RCURLY n_close_scope n_function_block_end
+    '''
+    pass
+
+def p_return(p):
+    '''
+    return : RETURN expression n_return SEMICOLON
+    | RETURN n_return_void SEMICOLON
+    | empty n_return_void
     '''
     pass
 
 def p_function_call(p):
     '''
-    function_call : NAME LPARENTHESIS arg_list RPARENTHESIS
+    function_call : NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
     '''
     pass
 
@@ -499,7 +618,7 @@ def p_arg_list(p):
     '''
     arg_list : empty
     | arg
-    | arg COMMA arg_list
+    | arg COMMA n_function_call_4 arg_list
     '''
     pass
 
@@ -513,7 +632,7 @@ def p_parameter_list(p):
 
 def p_arg(p):
     '''
-    arg : expression
+    arg : expression n_function_call_3
     '''
     pass
 
@@ -579,6 +698,7 @@ def p_value(p):
     '''
     pass
 
+# TODO agregar soporte para instantiate varibale sin un assign
 def p_assign(p):
     '''
     assign : type NAME n_variable_instantiate n_math_expression_1_name EQUAL n_seen_equal_op expression
@@ -670,7 +790,7 @@ def print_quads():
 
 # Error handling for semantic exceptions
 def e_error(e, p):
-    raise Exception(f"{e} in line: {p.lineno(-1)}")
+    raise Exception(f"OwO: {e} in line: {p.lineno(-1)}")
 
 # Error handling lexer
 def t_error(t):
@@ -697,7 +817,9 @@ user_input = int(
     \n3.Documento Mock\
     \n4.Complex variable\
     \n5.If Else\
-    \n6.While\n"))
+    \n6.While\
+    \n7.Nested Function calls\
+    \ninput:"))
 
 data = ""
 
@@ -740,11 +862,36 @@ elif user_input == 6:
     data = '''
     OwO
     int A = 4;
+    int B = 3;
+    int C = 5;
+    int D = 7;
 
     while (A > B * C) {
-        A = A - D;
+        A = A + D;
     }
     B = C + A;
+    '''
+
+elif user_input == 7:
+    data = '''
+    OwO
+
+    function masUno int x : int {
+        return x + 1;
+    }
+
+    function masDos int x : int {
+        return x + 2;
+    }
+
+    function process int x, int y, int z : void {
+        int a = 0;
+    }
+
+    #string hola = "hola";
+    #int a = masUno(5);
+    int b = 5;
+    int c = process(1,masUno(5), 3);
     '''
 
 # Read input in lexer

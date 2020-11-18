@@ -50,6 +50,9 @@ class Operations(Enum):
   ERA = 'era'
   ENDFUNC = 'endFunc'
   START = 'start'
+  END = 'end'
+  PARAM = 'param'
+  RETURN = 'return'
 
 #Tokens to Enum
 operations_map = {
@@ -75,6 +78,9 @@ operations_map = {
   'era': Operations.ERA,
   'endFunc': Operations.ENDFUNC,
   'start': Operations.START,
+  'end': Operations.END,
+  'param': Operations.PARAM,
+  'return': Operations.RETURN,
 }
 
 semantic_cube = defaultdict(
