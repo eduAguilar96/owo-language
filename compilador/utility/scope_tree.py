@@ -7,9 +7,10 @@ class Scope:
         self.functions = {}
         self.func_name = None
 
-    def set_variable(self, name, type):
+    def set_variable(self, name, type, is_param=False):
         self.vars[name] = {
-            'type': type
+            'type': type,
+            'is_param': is_param
         }
 
     def __str__(self):

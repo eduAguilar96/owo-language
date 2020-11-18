@@ -466,7 +466,15 @@ def p_function_definition(p):
 
 def p_function_call(p):
     '''
-    function_call : NAME LPARENTHESIS parameter_list RPARENTHESIS
+    function_call : NAME LPARENTHESIS arg_list RPARENTHESIS
+    '''
+    pass
+
+def p_arg_list(p):
+    '''
+    arg_list : empty
+    | arg
+    | arg COMMA arg_list
     '''
     pass
 
@@ -475,6 +483,12 @@ def p_parameter_list(p):
     parameter_list : empty
     | parameter
     | parameter COMMA parameter_list
+    '''
+    pass
+
+def p_arg(p):
+    '''
+    arg : expression
     '''
     pass
 
