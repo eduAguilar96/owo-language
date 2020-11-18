@@ -178,12 +178,19 @@ def p_n_variable_reference(p):
     e_error(f"Variable {var_name} referenced before instantiated", p)
     pass
 
-# Cada vez que se lee un Name y se esta creando una variable, esto tambien
-# aplica en los parametros de las funciones
+# Cada vez que se lee un Name y se esta creando una variable, no aplica para
+# los parametros de las funciones
 def p_n_variable_instantiate(p):
     'n_variable_instantiate : '
     var_name = get_last_t(p)
     scope_tree.dict[current_scope_ref].set_variable(var_name, current_type)
+
+# Cada vez que se lee un Name y se esta creando una variable en los parametros
+# de una funcion
+def p_n_variable_instantiate_param(p):
+    'n_variable_instantiate_param : '
+    var_name = get_last_t(p)
+    scope_tree.dict[current_scope_ref].set_variable(var_name, current_type, True)
 
 # Puntos neuralgico s para procesar expresiones arithmeticas/matematicas
 def p_n_math_expression_1_int(p):
@@ -396,6 +403,24 @@ def do_assign():
                 f" right[type: {right_type}, op: {right_operand}]"
     pass
 
+def p_n_before_function_definition(p):
+    'n_before_function_definition : '
+    PJumps.append(len(quad_list))
+    quad_list.append(Quad(Operations.GOTO))
+    pass
+
+def p_n_function_block_start(p):
+    'n_function_block_start : '
+    scope_tree.dict[current_scope_ref].quad_start = len(quad_list)
+    pass
+
+def p_n_function_block_end(p):
+    'n_function_block_end : '
+    quad_list.append(Quad(Operations.ENDFUNC))
+    function_start = PJumps.pop()
+    quad_list[function_start].target = len(quad_list)
+    pass
+
 # Gramatica
 
 ## Track line numbers
@@ -460,7 +485,7 @@ def p_function_type(p):
 
 def p_function_definition(p):
     '''
-    function_definition : FUNCTION NAME n_open_new_scope_function parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope
+    function_definition : n_before_function_definition FUNCTION NAME n_open_new_scope_function parameter_list DOUBLEDOT function_type LCURLY n_function_block_start codeblock RCURLY n_close_scope n_function_block_end
     '''
     pass
 
@@ -494,7 +519,7 @@ def p_arg(p):
 
 def p_parameter(p):
     '''
-    parameter : type NAME n_variable_instantiate
+    parameter : type NAME n_variable_instantiate_param
     '''
     pass
 

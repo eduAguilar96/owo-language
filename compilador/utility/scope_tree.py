@@ -6,6 +6,7 @@ class Scope:
         self.vars = {}
         self.functions = {}
         self.func_name = None
+        self.quad_start = None
 
     def set_variable(self, name, type, is_param=False):
         self.vars[name] = {
@@ -16,7 +17,7 @@ class Scope:
     def __str__(self):
         str_vars = f"vars: {self.vars}\n" if self.vars else ""
         str_functions = f"functions: {self.functions}\n" if self.functions else ""
-        return f"ref: {self.ref} {self.func_name if self.func_name else ''} \n" \
+        return f"ref: {self.ref} {self.func_name + ' : ' + str(self.quad_start) if self.func_name else ''} \n" \
             f"parent_ref: {self.parent_ref}\n" + str_vars + str_functions
 
 class ScopeTree:

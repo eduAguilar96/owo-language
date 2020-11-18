@@ -27,3 +27,5 @@ function aaron_ve_hentai int x, int j : void {
   float f3 = 1234.0;
   int a = 4-789*8*(9--7);
 }
+
+aaron_ve_hentai(4, B+5);
