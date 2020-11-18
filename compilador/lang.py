@@ -1,7 +1,7 @@
 import sys
 import lex
 import yacc
-from utility.scope_tree import ScopeTree
+from utility.scope_tree import *
 from utility.quad import *
 from utility.constants import *
 
@@ -51,8 +51,8 @@ def t_NAME(t):
     t.type = reserved.get(t.value, 'NAME')
     return t
 
-t_FLOAT = r'([0-9]*\.[0-9]*)'
-t_INT = r'([1-9][0-9]*)'
+t_FLOAT = r'((0|[1-9][0-9]*)\.[0-9][0-9]*)'
+t_INT = r'(0|[1-9][0-9]*)'
 t_STRING = r'\".*\"'
 
 # Arithmetic operators
@@ -96,45 +96,15 @@ t_ignore_COMMENT = r'\#.*'
 # dictionary of names (for storing variables)
 current_type = None
 
-global_scope_counter_list = [0]
-# current_scope_counter = lambda global_scope_counter_list : global_scope_counter_list[0]
-scope_dict = {}
-global_scope = ScopeTree(global_scope_counter_list, -1)
-scope_dict[global_scope.ref] = global_scope
-current_scope_ref = global_scope.ref
+# global_scope_counter_list = [0]
+# # current_scope_counter = lambda global_scope_counter_list : global_scope_counter_list[0]
+# scope_dict = {}
+# global_scope = Scope(-1)
+# scope_tree.dict[global_scope.ref] = global_scope
+scope_tree = ScopeTree()
+current_scope_ref = 0
 
 start = 'program'
-
-## Puntos Neuralgicos
-
-# Cada ves que se lee un tipo de variable, no el literal (Ej. int, bool, float)
-def p_n_seen_type(p):
-    'n_seen_type : '
-    global current_type
-    # print(current_type)
-    current_type = p[-1]
-
-# Cuando se abre un {} y se inicia un nuevo contexto.
-def p_n_open_new_scope(p):
-    'n_open_new_scope : '
-    global current_scope_ref
-    new_scope = ScopeTree(global_scope_counter_list, scope_dict[current_scope_ref].ref)
-    scope_dict[new_scope.ref] = new_scope
-    current_scope_ref = new_scope.ref
-    pass
-
-# Cuando se cierra un {} y se cierra un contexto
-def p_n_close_scope(p):
-    'n_close_scope : '
-    global current_scope_ref
-    current_scope_ref = scope_dict[current_scope_ref].parent_ref
-    pass
-
-# Cada vez que se lee un NAME
-def p_n_name(p):
-    'n_name : '
-    scope_dict[current_scope_ref].set_variable(p[-1], current_type)
-    pass
 
 # Pending Operators
 POper = []
@@ -149,26 +119,81 @@ temps_counter = 1
 # List of quadruples
 quad_list = [Quad(Operations.START)]
 
+## Puntos Neuralgicos
+
+def get_last_t(p):
+    token = None
+    n = 1
+    while not token:
+        token = p[-n]
+        n += 1
+    return token
+
+# Cada ves que se lee un tipo de variable, no el literal (Ej. int, bool, float)
+def p_n_seen_type(p):
+    'n_seen_type : '
+    global current_type
+    # print(current_type)
+    current_type = get_last_t(p)
+
+# Cuando se abre un {} y se inicia un nuevo contexto.
+def p_n_open_new_scope(p):
+    'n_open_new_scope : '
+    global current_scope_ref
+    new_scope = Scope(scope_tree.dict[current_scope_ref].ref)
+    scope_tree.add_scope(new_scope)
+    current_scope_ref = new_scope.ref
+    pass
+
+# Cuando se cierra un {} y se cierra un contexto
+def p_n_close_scope(p):
+    'n_close_scope : '
+    global current_scope_ref
+    current_scope_ref = scope_tree.dict[current_scope_ref].parent_ref
+    pass
+
+# Cada vez que se lee un NAME y No se esta creando una variable nueva
+def p_n_variable_reference(p):
+    'n_variable_reference : '
+    #look for var in variable tree
+    var_name = get_last_t(p)
+    aux_scope_ref = current_scope_ref
+    while(aux_scope_ref > -1):
+        if var_name in scope_tree.dict[aux_scope_ref].vars:
+            global current_type
+            current_type = scope_tree.dict[aux_scope_ref].vars[var_name]['type']
+            return
+        aux_scope_ref = scope_tree.dict[aux_scope_ref].parent_ref
+    e_error(f"Variable {var_name} referenced before instantiated", p)
+    pass
+
+# Cada vez que se lee un Name y se esta creando una variable, esto tambien
+# aplica en los parametros de las funciones
+def p_n_variable_instantiate(p):
+    'n_variable_instantiate : '
+    var_name = get_last_t(p)
+    scope_tree.dict[current_scope_ref].set_variable(var_name, current_type)
+
 # Puntos neuralgico s para procesar expresiones arithmeticas/matematicas
 def p_n_math_expression_1_int(p):
     'n_math_expression_1_int : '
-    n_math_expression(p[-1], Types.INT_TYPE)
+    n_math_expression(get_last_t(p), Types.INT_TYPE)
     pass
 
 def p_n_math_expression_1_float(p):
     'n_math_expression_1_float : '
-    n_math_expression(p[-1], Types.FLOAT_TYPE)
+    n_math_expression(get_last_t(p), Types.FLOAT_TYPE)
     pass
 
 def p_n_math_expression_1_string(p):
     'n_math_expression_1_string : '
-    n_math_expression(p[-1], Types.STRING_TYPE)
+    n_math_expression(get_last_t(p), Types.STRING_TYPE)
     pass
 
 def p_n_math_expression_1_name(p):
     'n_math_expression_1_name : '
-    # TODO mientras no tenemos la logica para que tipo es una variable, usar int
-    n_math_expression(p[-1], Types.INT_TYPE)
+    var_name = get_last_t(p)
+    n_math_expression(var_name, types_map[current_type])
     pass
 
 def n_math_expression(token, type):
@@ -178,12 +203,12 @@ def n_math_expression(token, type):
 
 def p_n_math_expression_2(p):
     'n_math_expression_2 : '
-    POper.append(operations_map[p[-1]])
+    POper.append(operations_map[get_last_t(p)])
     pass
 
 def p_n_math_expression_3(p):
     'n_math_expression_3 : '
-    POper.append(operations_map[p[-1]])
+    POper.append(operations_map[get_last_t(p)])
     pass
 
 def p_n_math_expression_4(p):
@@ -202,7 +227,7 @@ def p_n_math_expression_5(p):
 
 def p_n_math_expression_6(p):
     'n_math_expression_6 : '
-    POper.append(p[-1])
+    POper.append(get_last_t(p))
     pass
 
 def p_n_math_expression_7(p):
@@ -212,7 +237,7 @@ def p_n_math_expression_7(p):
 
 def p_n_math_expression_8(p):
     'n_math_expression_8 : '
-    POper.append(operations_map[p[-1]])
+    POper.append(operations_map[get_last_t(p)])
     pass
 
 def p_n_math_expression_9(p):
@@ -233,7 +258,7 @@ def p_n_math_expression_9(p):
 def p_n_math_expression_10(p):
     'n_math_expression_10 : '
     # pushear operadores logicos
-    POper.append(operations_map[p[-1]])
+    POper.append(operations_map[get_last_t(p)])
     pass
 
 def p_n_math_expression_11(p):
@@ -272,14 +297,15 @@ def n_math_expression_gen_quad(operadores):
             PTypes.append(result_type)
             # TODO si algun operand es temparal(t#) entonces regresarla a "AVAILABLE", se puede volver a usar
         else:
-            return "Type Mismatch"
-
+            return f"Type Mismatch: left[type: {left_type}, op: {left_operand}]"\
+                f" operator[{operator}]"\
+                f" right[type: {right_type}, op: {right_operand}]"
 
 def p_n_two_way_conditional_1(p):
     'n_two_way_conditional_1 : '
     exp_type = PTypes.pop()
     if(exp_type != Types.BOOL_TYPE):
-        e_error("Type Mismatch", p)
+        e_error("Type Mismatch in two way conditional", p)
     else:
         result = PilaO.pop()
         temp_quad = Quad(Operations.GOTOF, result)
@@ -315,7 +341,7 @@ def p_n_pre_condition_loop_2(p):
     'p_n_pre_condition_loop_2 : '
     exp_type = PTypes.pop()
     if(exp_type != Types.BOOL_TYPE):
-        e_error("Type Mismatch", p)
+        e_error("Type Mismatch in pre condition loop", p)
     else:
         result = PilaO.pop()
         temp_quad = Quad(Operations.GOTOF, result)
@@ -336,7 +362,7 @@ def p_n_pre_condition_loop_3(p):
 
 def p_n_seen_equal_op(p):
     'n_seen_equal_op : '
-    POper.append(operations_map[p[-1]])
+    POper.append(operations_map[get_last_t(p)])
     pass
 
 def do_assign():
@@ -349,14 +375,14 @@ def do_assign():
         right_type = PTypes.pop()
         operator = POper.pop()
         result_type = semantic_cube[left_type][right_type][operator]
-        print(f"{left_type} {right_type} {operator}")
-        print(f"{left_operand} {right_operand}")
         if result_type:
             temp_quad = Quad(operator, left_operand, target=right_operand)
             quad_list.append(temp_quad)
             # TODO si algun operand es temparal(t#) entonces regresarla a "AVAILABLE", se puede volver a usar
         else:
-            return "Type Mismatch"
+            return f"Type Mismatch: left[type: {left_type}, op: {left_operand}]"\
+                f" operator[{operator}]"\
+                f" right[type: {right_type}, op: {right_operand}]"
     pass
 
 # Gramatica
@@ -443,13 +469,10 @@ def p_parameter_list(p):
 
 def p_parameter(p):
     '''
-    parameter : type NAME n_name
-    | assign
+    parameter : type NAME n_variable_instantiate
     '''
     pass
 
-# TODO borrar comentario
-# p_expression
 def p_expression(p):
     '''
     expression : expression_or
@@ -457,8 +480,6 @@ def p_expression(p):
     '''
     pass
 
-# TODO borrar comentario
-# p_exp
 def p_expression_or(p):
     '''
     expression_or : expression_rel
@@ -466,8 +487,6 @@ def p_expression_or(p):
     '''
     pass
 
-# TODO borrar comentario
-# p_xp
 def p_expression_rel(p):
     '''
     expression_rel : exp
@@ -475,8 +494,6 @@ def p_expression_rel(p):
     '''
     pass
 
-# TODO borrar comentario
-# p_x
 def p_exp(p):
     '''
     exp : termino n_math_expression_4
@@ -508,14 +525,14 @@ def p_value(p):
     '''
     value : function_call
     | literal
-    | NAME n_math_expression_1_name
+    | NAME n_variable_reference n_math_expression_1_name
     '''
     pass
 
 def p_assign(p):
     '''
-    assign : type NAME n_math_expression_1_name n_name EQUAL n_seen_equal_op expression
-    | NAME n_math_expression_1_name n_name EQUAL n_seen_equal_op expression
+    assign : type NAME n_variable_instantiate n_math_expression_1_name EQUAL n_seen_equal_op expression
+    | NAME n_variable_reference n_math_expression_1_name EQUAL n_seen_equal_op expression
     '''
     e = do_assign()
     if e:
@@ -586,9 +603,13 @@ def p_condition_else(p):
 
 ## Utility
 
+def print_scope_tree():
+    print("--Scope Tree")
+    print(scope_tree)
+
 def print_variable_scopes():
     print("--Variable scopes")
-    [print(scope_dict[ref]) for ref in range(0, global_scope_counter_list[0])]
+    [print(scope_tree.dict[ref]) for ref in range(0, scope_tree.counter)]
 
 def print_pilas():
     print(f"--PilaO: {PilaO}\n--PTypes: {PTypes}\n--POper: {POper}")
@@ -599,7 +620,7 @@ def print_quads():
 
 # Error handling for semantic exceptions
 def e_error(e, p):
-    raise Exception(f"{e} in {p.lineno(-1)}")
+    raise Exception(f"{e} in line: {p.lineno(-1)}")
 
 # Error handling lexer
 def t_error(t):
@@ -621,7 +642,12 @@ lexer = lex.lex()
 parser = yacc.yacc()
 
 user_input = int(
-    input("1.Programa valido\n2.Programa no valido\n3.Documento Mock\n"))
+    input("1.Programa valido\
+    \n2.Programa no valido\
+    \n3.Documento Mock\
+    \n4.Complex variable\
+    \n5.If Else\
+    \n6.While\n"))
 
 data = ""
 
@@ -663,6 +689,8 @@ elif user_input == 5:
 elif user_input == 6:
     data = '''
     OwO
+    int A = 4;
+
     while (A > B * C) {
         A = A - D;
     }
@@ -679,9 +707,9 @@ while True:
         break
     # print(tok)
 
-result = parser.parse(data, tracking=True)
+result = parser.parse(data)
 
 
-# print_variable_scopes()
-print_pilas()
+print_variable_scopes()
+# print_pilas()
 print_quads()

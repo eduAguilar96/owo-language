@@ -12,6 +12,14 @@ class Types(Enum):
   STRING_TYPE = 'string'
   VOID = 'void'
 
+types_map = {
+  'int': Types.INT_TYPE,
+  'float': Types.FLOAT_TYPE,
+  'bool': Types.BOOL_TYPE,
+  'string': Types.STRING_TYPE,
+  'void': Types.VOID,
+}
+
 class Operations(Enum):
   # OPERATORS
   PLUS    = '+'
@@ -170,3 +178,6 @@ semantic_cube[Types.FLOAT_TYPE][Types.BOOL_TYPE][Operations.TIMES] = semantic_cu
 semantic_cube[Types.FLOAT_TYPE][Types.BOOL_TYPE][Operations.DIVIDE] = semantic_cube[Types.BOOL_TYPE][Types.FLOAT_TYPE][Operations.DIVIDE] = Types.FLOAT_TYPE
 semantic_cube[Types.FLOAT_TYPE][Types.BOOL_TYPE][Operations.EQUAL] = Types.FLOAT_TYPE
 semantic_cube[Types.BOOL_TYPE][Types.FLOAT_TYPE][Operations.EQUAL] = Types.BOOL_TYPE
+
+semantic_cube[Types.STRING_TYPE][Types.STRING_TYPE][Operations.EQUAL] = Types.STRING_TYPE
+semantic_cube[Types.STRING_TYPE][Types.STRING_TYPE][Operations.EQUAL] = Types.BOOL_TYPE

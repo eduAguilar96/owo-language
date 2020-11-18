@@ -3,11 +3,8 @@ OwO
 int a = 1;
 float ack = 0.314;
 string mi_nombre = "Jaimito";
-
-for (int uno = -1: dos < 10: tres = cuatro + 1) {
-  a = a + 1;
-  b = b - 1;
-}
+float f = 0;
+int b = 0;
 
 if(a < 10) {
   if(ack < 10) {
@@ -17,13 +14,16 @@ if(a < 10) {
   }
 }
 # paslkdjfl;jasdl;fjasdf][]\\\\[][[][]]
-while (A > B) {
 
+int A = 1;
+int B = 4;
+while (A > B) {
+  B = B - 1;
 }
 
 function aaron_ve_hentai int x, int j : void {
   float f = 0.01111111;
   float f2 = -0.0;
-  float f3 = 1234.;
+  float f3 = 1234.0;
   int a = 4-789*8*(9--7);
 }
