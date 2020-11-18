@@ -503,6 +503,27 @@ def p_n_function_call_6(p):
     argument_counter.pop()
     pass
 
+def p_n_return(p):
+    'n_return : '
+    func_ref = current_scope_ref
+    func_name = scope_tree.dict[func_ref].func_name
+    func_return_type = scope_tree.dict[func_ref].return_type
+    if(func_return_type == Types.VOID):
+        e_error(f"Void function ({func_name}) cannot have a return value", p)
+    return_value = PilaO.pop()
+    return_type = PTypes.pop()
+    if return_type != func_return_type:
+        e_error(f"Wrong return type for ({func_name}), return type is ({return_type.value}), must be ({func_return_type.value})", p)
+    quad_list.append(Quad(Operations.RETURN, target=return_value))
+    pass
+
+def p_n_return_void(p):
+    'n_return_void : '
+    func_ref = current_scope_ref
+    func_name = scope_tree.dict[func_ref].func_name
+    e_error(f"Void function({func_name}) should not have a return", p)
+    pass
+
 def p_n_end(p):
     'n_end : '
     quad_list.append(Quad(Operations.END))
@@ -576,24 +597,6 @@ def p_function_type(p):
     '''
     pass
 
-def p_n_return(p):
-    'n_return : '
-    func_ref = current_scope_ref
-    func_name = scope_tree.dict[func_ref].func_name
-    func_return_type = scope_tree.dict[func_ref].return_type
-    if(func_return_type == Types.VOID):
-        e_error(f"Void function ({func_name}) cannot have a return value", p)
-    return_value = PilaO.pop()
-    return_type = PTypes.pop()
-    if return_type != func_return_type:
-        e_error(f"Wrong return type for ({func_name}), return type is ({return_type.value}), must be ({func_return_type.value})", p)
-    quad_list.append(Quad(Operations.RETURN, target=return_value))
-    pass
-
-def p_n_return_void(p):
-    'n_return_void : '
-    pass
-
 def p_function_definition(p):
     '''
     function_definition : n_before_function_definition FUNCTION NAME n_open_new_scope_function parameter_list DOUBLEDOT function_type LCURLY n_function_block_start codeblock return RCURLY n_close_scope n_function_block_end
@@ -604,7 +607,7 @@ def p_return(p):
     '''
     return : RETURN expression n_return SEMICOLON
     | RETURN n_return_void SEMICOLON
-    | empty n_return_void
+    | empty
     '''
     pass
 

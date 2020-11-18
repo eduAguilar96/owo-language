@@ -49,33 +49,33 @@ Rule 36    n_function_call_3 -> <empty>
 Rule 37    n_function_call_4 -> <empty>
 Rule 38    n_function_call_5 -> <empty>
 Rule 39    n_function_call_6 -> <empty>
-Rule 40    n_end -> <empty>
-Rule 41    empty -> <empty>
-Rule 42    program -> program_aux codeblock n_end
-Rule 43    program_aux -> IDK
-Rule 44    program_aux -> OWO
-Rule 45    type -> INT_TYPE n_seen_type n_function_type
-Rule 46    type -> STRING_TYPE n_seen_type n_function_type
-Rule 47    type -> DOUBLE_TYPE n_seen_type n_function_type
-Rule 48    type -> FLOAT_TYPE n_seen_type n_function_type
-Rule 49    type -> BOOL_TYPE n_seen_type n_function_type
-Rule 50    relational_operator -> GREATERTHAN n_math_expression_8
-Rule 51    relational_operator -> LESSTHAN n_math_expression_8
-Rule 52    relational_operator -> EQUALEQUAL n_math_expression_8
-Rule 53    relational_operator -> LESSTHANOREQUAL n_math_expression_8
-Rule 54    relational_operator -> GREATERTHANOREQUAL n_math_expression_8
-Rule 55    relational_operator -> NOTEQUAL n_math_expression_8
-Rule 56    literal -> FLOAT n_math_expression_1_float
-Rule 57    literal -> INT n_math_expression_1_int
-Rule 58    literal -> STRING n_math_expression_1_string
-Rule 59    function_type -> type
-Rule 60    function_type -> VOID n_function_type
-Rule 61    n_return -> <empty>
-Rule 62    n_return_void -> <empty>
+Rule 40    n_return -> <empty>
+Rule 41    n_return_void -> <empty>
+Rule 42    n_end -> <empty>
+Rule 43    empty -> <empty>
+Rule 44    program -> program_aux codeblock n_end
+Rule 45    program_aux -> IDK
+Rule 46    program_aux -> OWO
+Rule 47    type -> INT_TYPE n_seen_type n_function_type
+Rule 48    type -> STRING_TYPE n_seen_type n_function_type
+Rule 49    type -> DOUBLE_TYPE n_seen_type n_function_type
+Rule 50    type -> FLOAT_TYPE n_seen_type n_function_type
+Rule 51    type -> BOOL_TYPE n_seen_type n_function_type
+Rule 52    relational_operator -> GREATERTHAN n_math_expression_8
+Rule 53    relational_operator -> LESSTHAN n_math_expression_8
+Rule 54    relational_operator -> EQUALEQUAL n_math_expression_8
+Rule 55    relational_operator -> LESSTHANOREQUAL n_math_expression_8
+Rule 56    relational_operator -> GREATERTHANOREQUAL n_math_expression_8
+Rule 57    relational_operator -> NOTEQUAL n_math_expression_8
+Rule 58    literal -> FLOAT n_math_expression_1_float
+Rule 59    literal -> INT n_math_expression_1_int
+Rule 60    literal -> STRING n_math_expression_1_string
+Rule 61    function_type -> type
+Rule 62    function_type -> VOID n_function_type
 Rule 63    function_definition -> n_before_function_definition FUNCTION NAME n_open_new_scope_function parameter_list DOUBLEDOT function_type LCURLY n_function_block_start codeblock return RCURLY n_close_scope n_function_block_end
 Rule 64    return -> RETURN expression n_return SEMICOLON
 Rule 65    return -> RETURN n_return_void SEMICOLON
-Rule 66    return -> empty n_return_void
+Rule 66    return -> empty
 Rule 67    function_call -> NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
 Rule 68    arg_list -> empty
 Rule 69    arg_list -> arg
@@ -127,47 +127,47 @@ Rule 113   condition_else -> empty
 Terminals, with rules where they appear
 
 AND                  : 77
-BOOL_TYPE            : 49
+BOOL_TYPE            : 51
 COMMA                : 70 73
 DIVIDE               : 87
 DOT                  : 
 DOUBLEDOT            : 63 110 110
-DOUBLE_TYPE          : 47
+DOUBLE_TYPE          : 49
 ELSE                 : 112
 EQUAL                : 96 97
-EQUALEQUAL           : 52
-FLOAT                : 56
-FLOAT_TYPE           : 48
+EQUALEQUAL           : 54
+FLOAT                : 58
+FLOAT_TYPE           : 50
 FOR                  : 110
 FUNCTION             : 63
-GREATERTHAN          : 50
-GREATERTHANOREQUAL   : 54
-IDK                  : 43
+GREATERTHAN          : 52
+GREATERTHANOREQUAL   : 56
+IDK                  : 45
 IF                   : 111
-INT                  : 57
-INT_TYPE             : 45
+INT                  : 59
+INT_TYPE             : 47
 LBRACKET             : 
 LCURLY               : 63 109 110 111 112
-LESSTHAN             : 51
-LESSTHANOREQUAL      : 53
+LESSTHAN             : 53
+LESSTHANOREQUAL      : 55
 LPARENTHESIS         : 67 89 109 110 111
 MINUS                : 84 91
 MODULUS              : 88
 NAME                 : 63 67 75 95 96 97
 NOT                  : 
-NOTEQUAL             : 55
+NOTEQUAL             : 57
 OR                   : 79
-OWO                  : 44
+OWO                  : 46
 PLUS                 : 83 90
 RBRACKET             : 
 RCURLY               : 63 109 110 111 112
 RETURN               : 64 65
 RPARENTHESIS         : 67 89 109 110 111
 SEMICOLON            : 64 65 98
-STRING               : 58
-STRING_TYPE          : 46
+STRING               : 60
+STRING_TYPE          : 48
 TIMES                : 86
-VOID                 : 60
+VOID                 : 62
 WHILE                : 109
 error                : 
 
@@ -176,7 +176,7 @@ Nonterminals, with rules where they appear
 arg                  : 69 70
 arg_list             : 67 70
 assign               : 99 110 110
-codeblock            : 42 63 102 109 110 111 112
+codeblock            : 44 63 102 109 110 111 112
 codeblock_aux        : 102
 condition_else       : 111
 condition_if         : 105
@@ -194,7 +194,7 @@ literal              : 94
 loop                 : 106
 n_before_function_definition : 63
 n_close_scope        : 63 109 110 111 112
-n_end                : 42
+n_end                : 44
 n_function_block_end : 63
 n_function_block_start : 63
 n_function_call_1    : 67
@@ -203,28 +203,28 @@ n_function_call_3    : 74
 n_function_call_4    : 70
 n_function_call_5    : 67
 n_function_call_6    : 67
-n_function_type      : 45 46 47 48 49 60
+n_function_type      : 47 48 49 50 51 62
 n_math_expression_10 : 77 79
 n_math_expression_11 : 77
 n_math_expression_12 : 79
-n_math_expression_1_float : 56
-n_math_expression_1_int : 57
+n_math_expression_1_float : 58
+n_math_expression_1_int : 59
 n_math_expression_1_name : 95 96 97
-n_math_expression_1_string : 58
+n_math_expression_1_string : 60
 n_math_expression_2  : 83 84
 n_math_expression_3  : 86 87 88
 n_math_expression_4  : 82 83 84
 n_math_expression_5  : 85 86 87 88
 n_math_expression_6  : 89
 n_math_expression_7  : 89
-n_math_expression_8  : 50 51 52 53 54 55
+n_math_expression_8  : 52 53 54 55 56 57
 n_math_expression_9  : 81
 n_open_new_scope     : 109 110 111 112
 n_open_new_scope_function : 63
 n_return             : 64
-n_return_void        : 65 66
+n_return_void        : 65
 n_seen_equal_op      : 96 97
-n_seen_type          : 45 46 47 48 49
+n_seen_type          : 47 48 49 50 51
 n_two_way_conditional_1 : 111
 n_two_way_conditional_2 : 111
 n_two_way_conditional_3 : 112
@@ -237,13 +237,13 @@ p_n_pre_condition_loop_3 : 109
 parameter            : 72 73
 parameter_list       : 63 73
 program              : 0
-program_aux          : 42
+program_aux          : 44
 relational_operator  : 81
 return               : 63
 statement            : 103
 statement_aux        : 98
 termino              : 82 83 84 86 87 88
-type                 : 59 75 96
+type                 : 61 75 96
 value                : 90 91 92
 whileloop            : 108
 
@@ -252,9 +252,9 @@ Parsing method: LALR
 state 0
 
     (0) S' -> . program
-    (42) program -> . program_aux codeblock n_end
-    (43) program_aux -> . IDK
-    (44) program_aux -> . OWO
+    (44) program -> . program_aux codeblock n_end
+    (45) program_aux -> . IDK
+    (46) program_aux -> . OWO
 
     IDK             shift and go to state 3
     OWO             shift and go to state 4
@@ -270,10 +270,10 @@ state 1
 
 state 2
 
-    (42) program -> program_aux . codeblock n_end
+    (44) program -> program_aux . codeblock n_end
     (101) codeblock -> . empty
     (102) codeblock -> . codeblock_aux codeblock
-    (41) empty -> .
+    (43) empty -> .
     (103) codeblock_aux -> . statement
     (104) codeblock_aux -> . function_definition
     (105) codeblock_aux -> . condition_if
@@ -291,13 +291,13 @@ state 2
     (96) assign -> . type NAME n_variable_instantiate n_math_expression_1_name EQUAL n_seen_equal_op expression
     (97) assign -> . NAME n_variable_reference n_math_expression_1_name EQUAL n_seen_equal_op expression
     (67) function_call -> . NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
-    (45) type -> . INT_TYPE n_seen_type n_function_type
-    (46) type -> . STRING_TYPE n_seen_type n_function_type
-    (47) type -> . DOUBLE_TYPE n_seen_type n_function_type
-    (48) type -> . FLOAT_TYPE n_seen_type n_function_type
-    (49) type -> . BOOL_TYPE n_seen_type n_function_type
+    (47) type -> . INT_TYPE n_seen_type n_function_type
+    (48) type -> . STRING_TYPE n_seen_type n_function_type
+    (49) type -> . DOUBLE_TYPE n_seen_type n_function_type
+    (50) type -> . FLOAT_TYPE n_seen_type n_function_type
+    (51) type -> . BOOL_TYPE n_seen_type n_function_type
 
-    $end            reduce using rule 41 (empty -> .)
+    $end            reduce using rule 43 (empty -> .)
     IF              shift and go to state 15
     FUNCTION        reduce using rule 30 (n_before_function_definition -> .)
     FOR             shift and go to state 20
@@ -326,44 +326,44 @@ state 2
 
 state 3
 
-    (43) program_aux -> IDK .
+    (45) program_aux -> IDK .
 
-    IF              reduce using rule 43 (program_aux -> IDK .)
-    FOR             reduce using rule 43 (program_aux -> IDK .)
-    WHILE           reduce using rule 43 (program_aux -> IDK .)
-    NAME            reduce using rule 43 (program_aux -> IDK .)
-    INT_TYPE        reduce using rule 43 (program_aux -> IDK .)
-    STRING_TYPE     reduce using rule 43 (program_aux -> IDK .)
-    DOUBLE_TYPE     reduce using rule 43 (program_aux -> IDK .)
-    FLOAT_TYPE      reduce using rule 43 (program_aux -> IDK .)
-    BOOL_TYPE       reduce using rule 43 (program_aux -> IDK .)
-    FUNCTION        reduce using rule 43 (program_aux -> IDK .)
-    $end            reduce using rule 43 (program_aux -> IDK .)
+    IF              reduce using rule 45 (program_aux -> IDK .)
+    FOR             reduce using rule 45 (program_aux -> IDK .)
+    WHILE           reduce using rule 45 (program_aux -> IDK .)
+    NAME            reduce using rule 45 (program_aux -> IDK .)
+    INT_TYPE        reduce using rule 45 (program_aux -> IDK .)
+    STRING_TYPE     reduce using rule 45 (program_aux -> IDK .)
+    DOUBLE_TYPE     reduce using rule 45 (program_aux -> IDK .)
+    FLOAT_TYPE      reduce using rule 45 (program_aux -> IDK .)
+    BOOL_TYPE       reduce using rule 45 (program_aux -> IDK .)
+    FUNCTION        reduce using rule 45 (program_aux -> IDK .)
+    $end            reduce using rule 45 (program_aux -> IDK .)
 
 
 state 4
 
-    (44) program_aux -> OWO .
+    (46) program_aux -> OWO .
 
-    IF              reduce using rule 44 (program_aux -> OWO .)
-    FOR             reduce using rule 44 (program_aux -> OWO .)
-    WHILE           reduce using rule 44 (program_aux -> OWO .)
-    NAME            reduce using rule 44 (program_aux -> OWO .)
-    INT_TYPE        reduce using rule 44 (program_aux -> OWO .)
-    STRING_TYPE     reduce using rule 44 (program_aux -> OWO .)
-    DOUBLE_TYPE     reduce using rule 44 (program_aux -> OWO .)
-    FLOAT_TYPE      reduce using rule 44 (program_aux -> OWO .)
-    BOOL_TYPE       reduce using rule 44 (program_aux -> OWO .)
-    FUNCTION        reduce using rule 44 (program_aux -> OWO .)
-    $end            reduce using rule 44 (program_aux -> OWO .)
+    IF              reduce using rule 46 (program_aux -> OWO .)
+    FOR             reduce using rule 46 (program_aux -> OWO .)
+    WHILE           reduce using rule 46 (program_aux -> OWO .)
+    NAME            reduce using rule 46 (program_aux -> OWO .)
+    INT_TYPE        reduce using rule 46 (program_aux -> OWO .)
+    STRING_TYPE     reduce using rule 46 (program_aux -> OWO .)
+    DOUBLE_TYPE     reduce using rule 46 (program_aux -> OWO .)
+    FLOAT_TYPE      reduce using rule 46 (program_aux -> OWO .)
+    BOOL_TYPE       reduce using rule 46 (program_aux -> OWO .)
+    FUNCTION        reduce using rule 46 (program_aux -> OWO .)
+    $end            reduce using rule 46 (program_aux -> OWO .)
 
 
 state 5
 
-    (42) program -> program_aux codeblock . n_end
-    (40) n_end -> .
+    (44) program -> program_aux codeblock . n_end
+    (42) n_end -> .
 
-    $end            reduce using rule 40 (n_end -> .)
+    $end            reduce using rule 42 (n_end -> .)
 
     n_end                          shift and go to state 28
 
@@ -381,7 +381,7 @@ state 7
     (102) codeblock -> codeblock_aux . codeblock
     (101) codeblock -> . empty
     (102) codeblock -> . codeblock_aux codeblock
-    (41) empty -> .
+    (43) empty -> .
     (103) codeblock_aux -> . statement
     (104) codeblock_aux -> . function_definition
     (105) codeblock_aux -> . condition_if
@@ -399,15 +399,15 @@ state 7
     (96) assign -> . type NAME n_variable_instantiate n_math_expression_1_name EQUAL n_seen_equal_op expression
     (97) assign -> . NAME n_variable_reference n_math_expression_1_name EQUAL n_seen_equal_op expression
     (67) function_call -> . NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
-    (45) type -> . INT_TYPE n_seen_type n_function_type
-    (46) type -> . STRING_TYPE n_seen_type n_function_type
-    (47) type -> . DOUBLE_TYPE n_seen_type n_function_type
-    (48) type -> . FLOAT_TYPE n_seen_type n_function_type
-    (49) type -> . BOOL_TYPE n_seen_type n_function_type
+    (47) type -> . INT_TYPE n_seen_type n_function_type
+    (48) type -> . STRING_TYPE n_seen_type n_function_type
+    (49) type -> . DOUBLE_TYPE n_seen_type n_function_type
+    (50) type -> . FLOAT_TYPE n_seen_type n_function_type
+    (51) type -> . BOOL_TYPE n_seen_type n_function_type
 
-    $end            reduce using rule 41 (empty -> .)
-    RCURLY          reduce using rule 41 (empty -> .)
-    RETURN          reduce using rule 41 (empty -> .)
+    $end            reduce using rule 43 (empty -> .)
+    RCURLY          reduce using rule 43 (empty -> .)
+    RETURN          reduce using rule 43 (empty -> .)
     IF              shift and go to state 15
     FUNCTION        reduce using rule 30 (n_before_function_definition -> .)
     FOR             shift and go to state 20
@@ -621,7 +621,7 @@ state 22
 
 state 23
 
-    (45) type -> INT_TYPE . n_seen_type n_function_type
+    (47) type -> INT_TYPE . n_seen_type n_function_type
     (1) n_seen_type -> .
 
     NAME            reduce using rule 1 (n_seen_type -> .)
@@ -631,7 +631,7 @@ state 23
 
 state 24
 
-    (46) type -> STRING_TYPE . n_seen_type n_function_type
+    (48) type -> STRING_TYPE . n_seen_type n_function_type
     (1) n_seen_type -> .
 
     NAME            reduce using rule 1 (n_seen_type -> .)
@@ -641,7 +641,7 @@ state 24
 
 state 25
 
-    (47) type -> DOUBLE_TYPE . n_seen_type n_function_type
+    (49) type -> DOUBLE_TYPE . n_seen_type n_function_type
     (1) n_seen_type -> .
 
     NAME            reduce using rule 1 (n_seen_type -> .)
@@ -651,7 +651,7 @@ state 25
 
 state 26
 
-    (48) type -> FLOAT_TYPE . n_seen_type n_function_type
+    (50) type -> FLOAT_TYPE . n_seen_type n_function_type
     (1) n_seen_type -> .
 
     NAME            reduce using rule 1 (n_seen_type -> .)
@@ -661,7 +661,7 @@ state 26
 
 state 27
 
-    (49) type -> BOOL_TYPE . n_seen_type n_function_type
+    (51) type -> BOOL_TYPE . n_seen_type n_function_type
     (1) n_seen_type -> .
 
     NAME            reduce using rule 1 (n_seen_type -> .)
@@ -671,9 +671,9 @@ state 27
 
 state 28
 
-    (42) program -> program_aux codeblock n_end .
+    (44) program -> program_aux codeblock n_end .
 
-    $end            reduce using rule 42 (program -> program_aux codeblock n_end .)
+    $end            reduce using rule 44 (program -> program_aux codeblock n_end .)
 
 
 state 29
@@ -751,9 +751,9 @@ state 34
     (94) value -> . literal
     (95) value -> . NAME n_variable_reference n_math_expression_1_name
     (67) function_call -> . NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
-    (56) literal -> . FLOAT n_math_expression_1_float
-    (57) literal -> . INT n_math_expression_1_int
-    (58) literal -> . STRING n_math_expression_1_string
+    (58) literal -> . FLOAT n_math_expression_1_float
+    (59) literal -> . INT n_math_expression_1_int
+    (60) literal -> . STRING n_math_expression_1_string
 
     LPARENTHESIS    shift and go to state 46
     PLUS            shift and go to state 52
@@ -805,7 +805,7 @@ state 37
 
 state 38
 
-    (45) type -> INT_TYPE n_seen_type . n_function_type
+    (47) type -> INT_TYPE n_seen_type . n_function_type
     (33) n_function_type -> .
 
     NAME            reduce using rule 33 (n_function_type -> .)
@@ -815,7 +815,7 @@ state 38
 
 state 39
 
-    (46) type -> STRING_TYPE n_seen_type . n_function_type
+    (48) type -> STRING_TYPE n_seen_type . n_function_type
     (33) n_function_type -> .
 
     NAME            reduce using rule 33 (n_function_type -> .)
@@ -825,7 +825,7 @@ state 39
 
 state 40
 
-    (47) type -> DOUBLE_TYPE n_seen_type . n_function_type
+    (49) type -> DOUBLE_TYPE n_seen_type . n_function_type
     (33) n_function_type -> .
 
     NAME            reduce using rule 33 (n_function_type -> .)
@@ -835,7 +835,7 @@ state 40
 
 state 41
 
-    (48) type -> FLOAT_TYPE n_seen_type . n_function_type
+    (50) type -> FLOAT_TYPE n_seen_type . n_function_type
     (33) n_function_type -> .
 
     NAME            reduce using rule 33 (n_function_type -> .)
@@ -845,7 +845,7 @@ state 41
 
 state 42
 
-    (49) type -> BOOL_TYPE n_seen_type . n_function_type
+    (51) type -> BOOL_TYPE n_seen_type . n_function_type
     (33) n_function_type -> .
 
     NAME            reduce using rule 33 (n_function_type -> .)
@@ -941,12 +941,12 @@ state 50
 
     (80) expression_rel -> exp .
     (81) expression_rel -> exp . relational_operator exp n_math_expression_9
-    (50) relational_operator -> . GREATERTHAN n_math_expression_8
-    (51) relational_operator -> . LESSTHAN n_math_expression_8
-    (52) relational_operator -> . EQUALEQUAL n_math_expression_8
-    (53) relational_operator -> . LESSTHANOREQUAL n_math_expression_8
-    (54) relational_operator -> . GREATERTHANOREQUAL n_math_expression_8
-    (55) relational_operator -> . NOTEQUAL n_math_expression_8
+    (52) relational_operator -> . GREATERTHAN n_math_expression_8
+    (53) relational_operator -> . LESSTHAN n_math_expression_8
+    (54) relational_operator -> . EQUALEQUAL n_math_expression_8
+    (55) relational_operator -> . LESSTHANOREQUAL n_math_expression_8
+    (56) relational_operator -> . GREATERTHANOREQUAL n_math_expression_8
+    (57) relational_operator -> . NOTEQUAL n_math_expression_8
 
     OR              reduce using rule 80 (expression_rel -> exp .)
     AND             reduce using rule 80 (expression_rel -> exp .)
@@ -994,9 +994,9 @@ state 52
     (94) value -> . literal
     (95) value -> . NAME n_variable_reference n_math_expression_1_name
     (67) function_call -> . NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
-    (56) literal -> . FLOAT n_math_expression_1_float
-    (57) literal -> . INT n_math_expression_1_int
-    (58) literal -> . STRING n_math_expression_1_string
+    (58) literal -> . FLOAT n_math_expression_1_float
+    (59) literal -> . INT n_math_expression_1_int
+    (60) literal -> . STRING n_math_expression_1_string
 
     NAME            shift and go to state 58
     FLOAT           shift and go to state 59
@@ -1014,9 +1014,9 @@ state 53
     (94) value -> . literal
     (95) value -> . NAME n_variable_reference n_math_expression_1_name
     (67) function_call -> . NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
-    (56) literal -> . FLOAT n_math_expression_1_float
-    (57) literal -> . INT n_math_expression_1_int
-    (58) literal -> . STRING n_math_expression_1_string
+    (58) literal -> . FLOAT n_math_expression_1_float
+    (59) literal -> . INT n_math_expression_1_int
+    (60) literal -> . STRING n_math_expression_1_string
 
     NAME            shift and go to state 58
     FLOAT           shift and go to state 59
@@ -1155,7 +1155,7 @@ state 58
 
 state 59
 
-    (56) literal -> FLOAT . n_math_expression_1_float
+    (58) literal -> FLOAT . n_math_expression_1_float
     (9) n_math_expression_1_float -> .
 
     TIMES           reduce using rule 9 (n_math_expression_1_float -> .)
@@ -1180,7 +1180,7 @@ state 59
 
 state 60
 
-    (57) literal -> INT . n_math_expression_1_int
+    (59) literal -> INT . n_math_expression_1_int
     (8) n_math_expression_1_int -> .
 
     TIMES           reduce using rule 8 (n_math_expression_1_int -> .)
@@ -1205,7 +1205,7 @@ state 60
 
 state 61
 
-    (58) literal -> STRING . n_math_expression_1_string
+    (60) literal -> STRING . n_math_expression_1_string
     (10) n_math_expression_1_string -> .
 
     TIMES           reduce using rule 10 (n_math_expression_1_string -> .)
@@ -1233,11 +1233,11 @@ state 62
     (110) forloop -> FOR LPARENTHESIS n_open_new_scope . assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope
     (96) assign -> . type NAME n_variable_instantiate n_math_expression_1_name EQUAL n_seen_equal_op expression
     (97) assign -> . NAME n_variable_reference n_math_expression_1_name EQUAL n_seen_equal_op expression
-    (45) type -> . INT_TYPE n_seen_type n_function_type
-    (46) type -> . STRING_TYPE n_seen_type n_function_type
-    (47) type -> . DOUBLE_TYPE n_seen_type n_function_type
-    (48) type -> . FLOAT_TYPE n_seen_type n_function_type
-    (49) type -> . BOOL_TYPE n_seen_type n_function_type
+    (47) type -> . INT_TYPE n_seen_type n_function_type
+    (48) type -> . STRING_TYPE n_seen_type n_function_type
+    (49) type -> . DOUBLE_TYPE n_seen_type n_function_type
+    (50) type -> . FLOAT_TYPE n_seen_type n_function_type
+    (51) type -> . BOOL_TYPE n_seen_type n_function_type
 
     NAME            shift and go to state 93
     INT_TYPE        shift and go to state 23
@@ -1273,9 +1273,9 @@ state 63
     (94) value -> . literal
     (95) value -> . NAME n_variable_reference n_math_expression_1_name
     (67) function_call -> . NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
-    (56) literal -> . FLOAT n_math_expression_1_float
-    (57) literal -> . INT n_math_expression_1_int
-    (58) literal -> . STRING n_math_expression_1_string
+    (58) literal -> . FLOAT n_math_expression_1_float
+    (59) literal -> . INT n_math_expression_1_int
+    (60) literal -> . STRING n_math_expression_1_string
 
     LPARENTHESIS    shift and go to state 46
     PLUS            shift and go to state 52
@@ -1306,42 +1306,42 @@ state 64
 
 state 65
 
-    (45) type -> INT_TYPE n_seen_type n_function_type .
+    (47) type -> INT_TYPE n_seen_type n_function_type .
 
-    NAME            reduce using rule 45 (type -> INT_TYPE n_seen_type n_function_type .)
-    LCURLY          reduce using rule 45 (type -> INT_TYPE n_seen_type n_function_type .)
+    NAME            reduce using rule 47 (type -> INT_TYPE n_seen_type n_function_type .)
+    LCURLY          reduce using rule 47 (type -> INT_TYPE n_seen_type n_function_type .)
 
 
 state 66
 
-    (46) type -> STRING_TYPE n_seen_type n_function_type .
+    (48) type -> STRING_TYPE n_seen_type n_function_type .
 
-    NAME            reduce using rule 46 (type -> STRING_TYPE n_seen_type n_function_type .)
-    LCURLY          reduce using rule 46 (type -> STRING_TYPE n_seen_type n_function_type .)
+    NAME            reduce using rule 48 (type -> STRING_TYPE n_seen_type n_function_type .)
+    LCURLY          reduce using rule 48 (type -> STRING_TYPE n_seen_type n_function_type .)
 
 
 state 67
 
-    (47) type -> DOUBLE_TYPE n_seen_type n_function_type .
+    (49) type -> DOUBLE_TYPE n_seen_type n_function_type .
 
-    NAME            reduce using rule 47 (type -> DOUBLE_TYPE n_seen_type n_function_type .)
-    LCURLY          reduce using rule 47 (type -> DOUBLE_TYPE n_seen_type n_function_type .)
+    NAME            reduce using rule 49 (type -> DOUBLE_TYPE n_seen_type n_function_type .)
+    LCURLY          reduce using rule 49 (type -> DOUBLE_TYPE n_seen_type n_function_type .)
 
 
 state 68
 
-    (48) type -> FLOAT_TYPE n_seen_type n_function_type .
+    (50) type -> FLOAT_TYPE n_seen_type n_function_type .
 
-    NAME            reduce using rule 48 (type -> FLOAT_TYPE n_seen_type n_function_type .)
-    LCURLY          reduce using rule 48 (type -> FLOAT_TYPE n_seen_type n_function_type .)
+    NAME            reduce using rule 50 (type -> FLOAT_TYPE n_seen_type n_function_type .)
+    LCURLY          reduce using rule 50 (type -> FLOAT_TYPE n_seen_type n_function_type .)
 
 
 state 69
 
-    (49) type -> BOOL_TYPE n_seen_type n_function_type .
+    (51) type -> BOOL_TYPE n_seen_type n_function_type .
 
-    NAME            reduce using rule 49 (type -> BOOL_TYPE n_seen_type n_function_type .)
-    LCURLY          reduce using rule 49 (type -> BOOL_TYPE n_seen_type n_function_type .)
+    NAME            reduce using rule 51 (type -> BOOL_TYPE n_seen_type n_function_type .)
+    LCURLY          reduce using rule 51 (type -> BOOL_TYPE n_seen_type n_function_type .)
 
 
 state 70
@@ -1350,15 +1350,15 @@ state 70
     (71) parameter_list -> . empty
     (72) parameter_list -> . parameter
     (73) parameter_list -> . parameter COMMA parameter_list
-    (41) empty -> .
+    (43) empty -> .
     (75) parameter -> . type NAME n_variable_instantiate_param
-    (45) type -> . INT_TYPE n_seen_type n_function_type
-    (46) type -> . STRING_TYPE n_seen_type n_function_type
-    (47) type -> . DOUBLE_TYPE n_seen_type n_function_type
-    (48) type -> . FLOAT_TYPE n_seen_type n_function_type
-    (49) type -> . BOOL_TYPE n_seen_type n_function_type
+    (47) type -> . INT_TYPE n_seen_type n_function_type
+    (48) type -> . STRING_TYPE n_seen_type n_function_type
+    (49) type -> . DOUBLE_TYPE n_seen_type n_function_type
+    (50) type -> . FLOAT_TYPE n_seen_type n_function_type
+    (51) type -> . BOOL_TYPE n_seen_type n_function_type
 
-    DOUBLEDOT       reduce using rule 41 (empty -> .)
+    DOUBLEDOT       reduce using rule 43 (empty -> .)
     INT_TYPE        shift and go to state 23
     STRING_TYPE     shift and go to state 24
     DOUBLE_TYPE     shift and go to state 25
@@ -1391,7 +1391,7 @@ state 72
     (68) arg_list -> . empty
     (69) arg_list -> . arg
     (70) arg_list -> . arg COMMA n_function_call_4 arg_list
-    (41) empty -> .
+    (43) empty -> .
     (74) arg -> . expression n_function_call_3
     (76) expression -> . expression_or
     (77) expression -> . expression_or AND n_math_expression_10 expression n_math_expression_11
@@ -1414,11 +1414,11 @@ state 72
     (94) value -> . literal
     (95) value -> . NAME n_variable_reference n_math_expression_1_name
     (67) function_call -> . NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
-    (56) literal -> . FLOAT n_math_expression_1_float
-    (57) literal -> . INT n_math_expression_1_int
-    (58) literal -> . STRING n_math_expression_1_string
+    (58) literal -> . FLOAT n_math_expression_1_float
+    (59) literal -> . INT n_math_expression_1_int
+    (60) literal -> . STRING n_math_expression_1_string
 
-    RPARENTHESIS    reduce using rule 41 (empty -> .)
+    RPARENTHESIS    reduce using rule 43 (empty -> .)
     LPARENTHESIS    shift and go to state 46
     PLUS            shift and go to state 52
     MINUS           shift and go to state 53
@@ -1464,9 +1464,9 @@ state 73
     (94) value -> . literal
     (95) value -> . NAME n_variable_reference n_math_expression_1_name
     (67) function_call -> . NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
-    (56) literal -> . FLOAT n_math_expression_1_float
-    (57) literal -> . INT n_math_expression_1_int
-    (58) literal -> . STRING n_math_expression_1_string
+    (58) literal -> . FLOAT n_math_expression_1_float
+    (59) literal -> . INT n_math_expression_1_int
+    (60) literal -> . STRING n_math_expression_1_string
 
     LPARENTHESIS    shift and go to state 46
     PLUS            shift and go to state 52
@@ -1541,9 +1541,9 @@ state 77
     (94) value -> . literal
     (95) value -> . NAME n_variable_reference n_math_expression_1_name
     (67) function_call -> . NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
-    (56) literal -> . FLOAT n_math_expression_1_float
-    (57) literal -> . INT n_math_expression_1_int
-    (58) literal -> . STRING n_math_expression_1_string
+    (58) literal -> . FLOAT n_math_expression_1_float
+    (59) literal -> . INT n_math_expression_1_int
+    (60) literal -> . STRING n_math_expression_1_string
 
     LPARENTHESIS    shift and go to state 46
     PLUS            shift and go to state 52
@@ -1562,7 +1562,7 @@ state 77
 
 state 78
 
-    (50) relational_operator -> GREATERTHAN . n_math_expression_8
+    (52) relational_operator -> GREATERTHAN . n_math_expression_8
     (18) n_math_expression_8 -> .
 
     LPARENTHESIS    reduce using rule 18 (n_math_expression_8 -> .)
@@ -1577,7 +1577,7 @@ state 78
 
 state 79
 
-    (51) relational_operator -> LESSTHAN . n_math_expression_8
+    (53) relational_operator -> LESSTHAN . n_math_expression_8
     (18) n_math_expression_8 -> .
 
     LPARENTHESIS    reduce using rule 18 (n_math_expression_8 -> .)
@@ -1592,7 +1592,7 @@ state 79
 
 state 80
 
-    (52) relational_operator -> EQUALEQUAL . n_math_expression_8
+    (54) relational_operator -> EQUALEQUAL . n_math_expression_8
     (18) n_math_expression_8 -> .
 
     LPARENTHESIS    reduce using rule 18 (n_math_expression_8 -> .)
@@ -1607,7 +1607,7 @@ state 80
 
 state 81
 
-    (53) relational_operator -> LESSTHANOREQUAL . n_math_expression_8
+    (55) relational_operator -> LESSTHANOREQUAL . n_math_expression_8
     (18) n_math_expression_8 -> .
 
     LPARENTHESIS    reduce using rule 18 (n_math_expression_8 -> .)
@@ -1622,7 +1622,7 @@ state 81
 
 state 82
 
-    (54) relational_operator -> GREATERTHANOREQUAL . n_math_expression_8
+    (56) relational_operator -> GREATERTHANOREQUAL . n_math_expression_8
     (18) n_math_expression_8 -> .
 
     LPARENTHESIS    reduce using rule 18 (n_math_expression_8 -> .)
@@ -1637,7 +1637,7 @@ state 82
 
 state 83
 
-    (55) relational_operator -> NOTEQUAL . n_math_expression_8
+    (57) relational_operator -> NOTEQUAL . n_math_expression_8
     (18) n_math_expression_8 -> .
 
     LPARENTHESIS    reduce using rule 18 (n_math_expression_8 -> .)
@@ -1771,71 +1771,71 @@ state 88
 
 state 89
 
-    (56) literal -> FLOAT n_math_expression_1_float .
+    (58) literal -> FLOAT n_math_expression_1_float .
 
-    TIMES           reduce using rule 56 (literal -> FLOAT n_math_expression_1_float .)
-    DIVIDE          reduce using rule 56 (literal -> FLOAT n_math_expression_1_float .)
-    MODULUS         reduce using rule 56 (literal -> FLOAT n_math_expression_1_float .)
-    PLUS            reduce using rule 56 (literal -> FLOAT n_math_expression_1_float .)
-    MINUS           reduce using rule 56 (literal -> FLOAT n_math_expression_1_float .)
-    GREATERTHAN     reduce using rule 56 (literal -> FLOAT n_math_expression_1_float .)
-    LESSTHAN        reduce using rule 56 (literal -> FLOAT n_math_expression_1_float .)
-    EQUALEQUAL      reduce using rule 56 (literal -> FLOAT n_math_expression_1_float .)
-    LESSTHANOREQUAL reduce using rule 56 (literal -> FLOAT n_math_expression_1_float .)
-    GREATERTHANOREQUAL reduce using rule 56 (literal -> FLOAT n_math_expression_1_float .)
-    NOTEQUAL        reduce using rule 56 (literal -> FLOAT n_math_expression_1_float .)
-    OR              reduce using rule 56 (literal -> FLOAT n_math_expression_1_float .)
-    AND             reduce using rule 56 (literal -> FLOAT n_math_expression_1_float .)
-    RPARENTHESIS    reduce using rule 56 (literal -> FLOAT n_math_expression_1_float .)
-    COMMA           reduce using rule 56 (literal -> FLOAT n_math_expression_1_float .)
-    SEMICOLON       reduce using rule 56 (literal -> FLOAT n_math_expression_1_float .)
-    DOUBLEDOT       reduce using rule 56 (literal -> FLOAT n_math_expression_1_float .)
+    TIMES           reduce using rule 58 (literal -> FLOAT n_math_expression_1_float .)
+    DIVIDE          reduce using rule 58 (literal -> FLOAT n_math_expression_1_float .)
+    MODULUS         reduce using rule 58 (literal -> FLOAT n_math_expression_1_float .)
+    PLUS            reduce using rule 58 (literal -> FLOAT n_math_expression_1_float .)
+    MINUS           reduce using rule 58 (literal -> FLOAT n_math_expression_1_float .)
+    GREATERTHAN     reduce using rule 58 (literal -> FLOAT n_math_expression_1_float .)
+    LESSTHAN        reduce using rule 58 (literal -> FLOAT n_math_expression_1_float .)
+    EQUALEQUAL      reduce using rule 58 (literal -> FLOAT n_math_expression_1_float .)
+    LESSTHANOREQUAL reduce using rule 58 (literal -> FLOAT n_math_expression_1_float .)
+    GREATERTHANOREQUAL reduce using rule 58 (literal -> FLOAT n_math_expression_1_float .)
+    NOTEQUAL        reduce using rule 58 (literal -> FLOAT n_math_expression_1_float .)
+    OR              reduce using rule 58 (literal -> FLOAT n_math_expression_1_float .)
+    AND             reduce using rule 58 (literal -> FLOAT n_math_expression_1_float .)
+    RPARENTHESIS    reduce using rule 58 (literal -> FLOAT n_math_expression_1_float .)
+    COMMA           reduce using rule 58 (literal -> FLOAT n_math_expression_1_float .)
+    SEMICOLON       reduce using rule 58 (literal -> FLOAT n_math_expression_1_float .)
+    DOUBLEDOT       reduce using rule 58 (literal -> FLOAT n_math_expression_1_float .)
 
 
 state 90
 
-    (57) literal -> INT n_math_expression_1_int .
+    (59) literal -> INT n_math_expression_1_int .
 
-    TIMES           reduce using rule 57 (literal -> INT n_math_expression_1_int .)
-    DIVIDE          reduce using rule 57 (literal -> INT n_math_expression_1_int .)
-    MODULUS         reduce using rule 57 (literal -> INT n_math_expression_1_int .)
-    PLUS            reduce using rule 57 (literal -> INT n_math_expression_1_int .)
-    MINUS           reduce using rule 57 (literal -> INT n_math_expression_1_int .)
-    GREATERTHAN     reduce using rule 57 (literal -> INT n_math_expression_1_int .)
-    LESSTHAN        reduce using rule 57 (literal -> INT n_math_expression_1_int .)
-    EQUALEQUAL      reduce using rule 57 (literal -> INT n_math_expression_1_int .)
-    LESSTHANOREQUAL reduce using rule 57 (literal -> INT n_math_expression_1_int .)
-    GREATERTHANOREQUAL reduce using rule 57 (literal -> INT n_math_expression_1_int .)
-    NOTEQUAL        reduce using rule 57 (literal -> INT n_math_expression_1_int .)
-    OR              reduce using rule 57 (literal -> INT n_math_expression_1_int .)
-    AND             reduce using rule 57 (literal -> INT n_math_expression_1_int .)
-    RPARENTHESIS    reduce using rule 57 (literal -> INT n_math_expression_1_int .)
-    COMMA           reduce using rule 57 (literal -> INT n_math_expression_1_int .)
-    SEMICOLON       reduce using rule 57 (literal -> INT n_math_expression_1_int .)
-    DOUBLEDOT       reduce using rule 57 (literal -> INT n_math_expression_1_int .)
+    TIMES           reduce using rule 59 (literal -> INT n_math_expression_1_int .)
+    DIVIDE          reduce using rule 59 (literal -> INT n_math_expression_1_int .)
+    MODULUS         reduce using rule 59 (literal -> INT n_math_expression_1_int .)
+    PLUS            reduce using rule 59 (literal -> INT n_math_expression_1_int .)
+    MINUS           reduce using rule 59 (literal -> INT n_math_expression_1_int .)
+    GREATERTHAN     reduce using rule 59 (literal -> INT n_math_expression_1_int .)
+    LESSTHAN        reduce using rule 59 (literal -> INT n_math_expression_1_int .)
+    EQUALEQUAL      reduce using rule 59 (literal -> INT n_math_expression_1_int .)
+    LESSTHANOREQUAL reduce using rule 59 (literal -> INT n_math_expression_1_int .)
+    GREATERTHANOREQUAL reduce using rule 59 (literal -> INT n_math_expression_1_int .)
+    NOTEQUAL        reduce using rule 59 (literal -> INT n_math_expression_1_int .)
+    OR              reduce using rule 59 (literal -> INT n_math_expression_1_int .)
+    AND             reduce using rule 59 (literal -> INT n_math_expression_1_int .)
+    RPARENTHESIS    reduce using rule 59 (literal -> INT n_math_expression_1_int .)
+    COMMA           reduce using rule 59 (literal -> INT n_math_expression_1_int .)
+    SEMICOLON       reduce using rule 59 (literal -> INT n_math_expression_1_int .)
+    DOUBLEDOT       reduce using rule 59 (literal -> INT n_math_expression_1_int .)
 
 
 state 91
 
-    (58) literal -> STRING n_math_expression_1_string .
+    (60) literal -> STRING n_math_expression_1_string .
 
-    TIMES           reduce using rule 58 (literal -> STRING n_math_expression_1_string .)
-    DIVIDE          reduce using rule 58 (literal -> STRING n_math_expression_1_string .)
-    MODULUS         reduce using rule 58 (literal -> STRING n_math_expression_1_string .)
-    PLUS            reduce using rule 58 (literal -> STRING n_math_expression_1_string .)
-    MINUS           reduce using rule 58 (literal -> STRING n_math_expression_1_string .)
-    GREATERTHAN     reduce using rule 58 (literal -> STRING n_math_expression_1_string .)
-    LESSTHAN        reduce using rule 58 (literal -> STRING n_math_expression_1_string .)
-    EQUALEQUAL      reduce using rule 58 (literal -> STRING n_math_expression_1_string .)
-    LESSTHANOREQUAL reduce using rule 58 (literal -> STRING n_math_expression_1_string .)
-    GREATERTHANOREQUAL reduce using rule 58 (literal -> STRING n_math_expression_1_string .)
-    NOTEQUAL        reduce using rule 58 (literal -> STRING n_math_expression_1_string .)
-    OR              reduce using rule 58 (literal -> STRING n_math_expression_1_string .)
-    AND             reduce using rule 58 (literal -> STRING n_math_expression_1_string .)
-    RPARENTHESIS    reduce using rule 58 (literal -> STRING n_math_expression_1_string .)
-    COMMA           reduce using rule 58 (literal -> STRING n_math_expression_1_string .)
-    SEMICOLON       reduce using rule 58 (literal -> STRING n_math_expression_1_string .)
-    DOUBLEDOT       reduce using rule 58 (literal -> STRING n_math_expression_1_string .)
+    TIMES           reduce using rule 60 (literal -> STRING n_math_expression_1_string .)
+    DIVIDE          reduce using rule 60 (literal -> STRING n_math_expression_1_string .)
+    MODULUS         reduce using rule 60 (literal -> STRING n_math_expression_1_string .)
+    PLUS            reduce using rule 60 (literal -> STRING n_math_expression_1_string .)
+    MINUS           reduce using rule 60 (literal -> STRING n_math_expression_1_string .)
+    GREATERTHAN     reduce using rule 60 (literal -> STRING n_math_expression_1_string .)
+    LESSTHAN        reduce using rule 60 (literal -> STRING n_math_expression_1_string .)
+    EQUALEQUAL      reduce using rule 60 (literal -> STRING n_math_expression_1_string .)
+    LESSTHANOREQUAL reduce using rule 60 (literal -> STRING n_math_expression_1_string .)
+    GREATERTHANOREQUAL reduce using rule 60 (literal -> STRING n_math_expression_1_string .)
+    NOTEQUAL        reduce using rule 60 (literal -> STRING n_math_expression_1_string .)
+    OR              reduce using rule 60 (literal -> STRING n_math_expression_1_string .)
+    AND             reduce using rule 60 (literal -> STRING n_math_expression_1_string .)
+    RPARENTHESIS    reduce using rule 60 (literal -> STRING n_math_expression_1_string .)
+    COMMA           reduce using rule 60 (literal -> STRING n_math_expression_1_string .)
+    SEMICOLON       reduce using rule 60 (literal -> STRING n_math_expression_1_string .)
+    DOUBLEDOT       reduce using rule 60 (literal -> STRING n_math_expression_1_string .)
 
 
 state 92
@@ -1922,9 +1922,9 @@ state 100
     (94) value -> . literal
     (95) value -> . NAME n_variable_reference n_math_expression_1_name
     (67) function_call -> . NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
-    (56) literal -> . FLOAT n_math_expression_1_float
-    (57) literal -> . INT n_math_expression_1_int
-    (58) literal -> . STRING n_math_expression_1_string
+    (58) literal -> . FLOAT n_math_expression_1_float
+    (59) literal -> . INT n_math_expression_1_int
+    (60) literal -> . STRING n_math_expression_1_string
 
     LPARENTHESIS    shift and go to state 46
     PLUS            shift and go to state 52
@@ -2027,9 +2027,9 @@ state 107
     (94) value -> . literal
     (95) value -> . NAME n_variable_reference n_math_expression_1_name
     (67) function_call -> . NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
-    (56) literal -> . FLOAT n_math_expression_1_float
-    (57) literal -> . INT n_math_expression_1_int
-    (58) literal -> . STRING n_math_expression_1_string
+    (58) literal -> . FLOAT n_math_expression_1_float
+    (59) literal -> . INT n_math_expression_1_int
+    (60) literal -> . STRING n_math_expression_1_string
 
     LPARENTHESIS    shift and go to state 46
     PLUS            shift and go to state 52
@@ -2071,9 +2071,9 @@ state 108
     (94) value -> . literal
     (95) value -> . NAME n_variable_reference n_math_expression_1_name
     (67) function_call -> . NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
-    (56) literal -> . FLOAT n_math_expression_1_float
-    (57) literal -> . INT n_math_expression_1_int
-    (58) literal -> . STRING n_math_expression_1_string
+    (58) literal -> . FLOAT n_math_expression_1_float
+    (59) literal -> . INT n_math_expression_1_int
+    (60) literal -> . STRING n_math_expression_1_string
 
     LPARENTHESIS    shift and go to state 46
     PLUS            shift and go to state 52
@@ -2108,80 +2108,80 @@ state 109
 
 state 110
 
-    (50) relational_operator -> GREATERTHAN n_math_expression_8 .
+    (52) relational_operator -> GREATERTHAN n_math_expression_8 .
 
-    LPARENTHESIS    reduce using rule 50 (relational_operator -> GREATERTHAN n_math_expression_8 .)
-    PLUS            reduce using rule 50 (relational_operator -> GREATERTHAN n_math_expression_8 .)
-    MINUS           reduce using rule 50 (relational_operator -> GREATERTHAN n_math_expression_8 .)
-    NAME            reduce using rule 50 (relational_operator -> GREATERTHAN n_math_expression_8 .)
-    FLOAT           reduce using rule 50 (relational_operator -> GREATERTHAN n_math_expression_8 .)
-    INT             reduce using rule 50 (relational_operator -> GREATERTHAN n_math_expression_8 .)
-    STRING          reduce using rule 50 (relational_operator -> GREATERTHAN n_math_expression_8 .)
+    LPARENTHESIS    reduce using rule 52 (relational_operator -> GREATERTHAN n_math_expression_8 .)
+    PLUS            reduce using rule 52 (relational_operator -> GREATERTHAN n_math_expression_8 .)
+    MINUS           reduce using rule 52 (relational_operator -> GREATERTHAN n_math_expression_8 .)
+    NAME            reduce using rule 52 (relational_operator -> GREATERTHAN n_math_expression_8 .)
+    FLOAT           reduce using rule 52 (relational_operator -> GREATERTHAN n_math_expression_8 .)
+    INT             reduce using rule 52 (relational_operator -> GREATERTHAN n_math_expression_8 .)
+    STRING          reduce using rule 52 (relational_operator -> GREATERTHAN n_math_expression_8 .)
 
 
 state 111
 
-    (51) relational_operator -> LESSTHAN n_math_expression_8 .
+    (53) relational_operator -> LESSTHAN n_math_expression_8 .
 
-    LPARENTHESIS    reduce using rule 51 (relational_operator -> LESSTHAN n_math_expression_8 .)
-    PLUS            reduce using rule 51 (relational_operator -> LESSTHAN n_math_expression_8 .)
-    MINUS           reduce using rule 51 (relational_operator -> LESSTHAN n_math_expression_8 .)
-    NAME            reduce using rule 51 (relational_operator -> LESSTHAN n_math_expression_8 .)
-    FLOAT           reduce using rule 51 (relational_operator -> LESSTHAN n_math_expression_8 .)
-    INT             reduce using rule 51 (relational_operator -> LESSTHAN n_math_expression_8 .)
-    STRING          reduce using rule 51 (relational_operator -> LESSTHAN n_math_expression_8 .)
+    LPARENTHESIS    reduce using rule 53 (relational_operator -> LESSTHAN n_math_expression_8 .)
+    PLUS            reduce using rule 53 (relational_operator -> LESSTHAN n_math_expression_8 .)
+    MINUS           reduce using rule 53 (relational_operator -> LESSTHAN n_math_expression_8 .)
+    NAME            reduce using rule 53 (relational_operator -> LESSTHAN n_math_expression_8 .)
+    FLOAT           reduce using rule 53 (relational_operator -> LESSTHAN n_math_expression_8 .)
+    INT             reduce using rule 53 (relational_operator -> LESSTHAN n_math_expression_8 .)
+    STRING          reduce using rule 53 (relational_operator -> LESSTHAN n_math_expression_8 .)
 
 
 state 112
 
-    (52) relational_operator -> EQUALEQUAL n_math_expression_8 .
+    (54) relational_operator -> EQUALEQUAL n_math_expression_8 .
 
-    LPARENTHESIS    reduce using rule 52 (relational_operator -> EQUALEQUAL n_math_expression_8 .)
-    PLUS            reduce using rule 52 (relational_operator -> EQUALEQUAL n_math_expression_8 .)
-    MINUS           reduce using rule 52 (relational_operator -> EQUALEQUAL n_math_expression_8 .)
-    NAME            reduce using rule 52 (relational_operator -> EQUALEQUAL n_math_expression_8 .)
-    FLOAT           reduce using rule 52 (relational_operator -> EQUALEQUAL n_math_expression_8 .)
-    INT             reduce using rule 52 (relational_operator -> EQUALEQUAL n_math_expression_8 .)
-    STRING          reduce using rule 52 (relational_operator -> EQUALEQUAL n_math_expression_8 .)
+    LPARENTHESIS    reduce using rule 54 (relational_operator -> EQUALEQUAL n_math_expression_8 .)
+    PLUS            reduce using rule 54 (relational_operator -> EQUALEQUAL n_math_expression_8 .)
+    MINUS           reduce using rule 54 (relational_operator -> EQUALEQUAL n_math_expression_8 .)
+    NAME            reduce using rule 54 (relational_operator -> EQUALEQUAL n_math_expression_8 .)
+    FLOAT           reduce using rule 54 (relational_operator -> EQUALEQUAL n_math_expression_8 .)
+    INT             reduce using rule 54 (relational_operator -> EQUALEQUAL n_math_expression_8 .)
+    STRING          reduce using rule 54 (relational_operator -> EQUALEQUAL n_math_expression_8 .)
 
 
 state 113
 
-    (53) relational_operator -> LESSTHANOREQUAL n_math_expression_8 .
+    (55) relational_operator -> LESSTHANOREQUAL n_math_expression_8 .
 
-    LPARENTHESIS    reduce using rule 53 (relational_operator -> LESSTHANOREQUAL n_math_expression_8 .)
-    PLUS            reduce using rule 53 (relational_operator -> LESSTHANOREQUAL n_math_expression_8 .)
-    MINUS           reduce using rule 53 (relational_operator -> LESSTHANOREQUAL n_math_expression_8 .)
-    NAME            reduce using rule 53 (relational_operator -> LESSTHANOREQUAL n_math_expression_8 .)
-    FLOAT           reduce using rule 53 (relational_operator -> LESSTHANOREQUAL n_math_expression_8 .)
-    INT             reduce using rule 53 (relational_operator -> LESSTHANOREQUAL n_math_expression_8 .)
-    STRING          reduce using rule 53 (relational_operator -> LESSTHANOREQUAL n_math_expression_8 .)
+    LPARENTHESIS    reduce using rule 55 (relational_operator -> LESSTHANOREQUAL n_math_expression_8 .)
+    PLUS            reduce using rule 55 (relational_operator -> LESSTHANOREQUAL n_math_expression_8 .)
+    MINUS           reduce using rule 55 (relational_operator -> LESSTHANOREQUAL n_math_expression_8 .)
+    NAME            reduce using rule 55 (relational_operator -> LESSTHANOREQUAL n_math_expression_8 .)
+    FLOAT           reduce using rule 55 (relational_operator -> LESSTHANOREQUAL n_math_expression_8 .)
+    INT             reduce using rule 55 (relational_operator -> LESSTHANOREQUAL n_math_expression_8 .)
+    STRING          reduce using rule 55 (relational_operator -> LESSTHANOREQUAL n_math_expression_8 .)
 
 
 state 114
 
-    (54) relational_operator -> GREATERTHANOREQUAL n_math_expression_8 .
+    (56) relational_operator -> GREATERTHANOREQUAL n_math_expression_8 .
 
-    LPARENTHESIS    reduce using rule 54 (relational_operator -> GREATERTHANOREQUAL n_math_expression_8 .)
-    PLUS            reduce using rule 54 (relational_operator -> GREATERTHANOREQUAL n_math_expression_8 .)
-    MINUS           reduce using rule 54 (relational_operator -> GREATERTHANOREQUAL n_math_expression_8 .)
-    NAME            reduce using rule 54 (relational_operator -> GREATERTHANOREQUAL n_math_expression_8 .)
-    FLOAT           reduce using rule 54 (relational_operator -> GREATERTHANOREQUAL n_math_expression_8 .)
-    INT             reduce using rule 54 (relational_operator -> GREATERTHANOREQUAL n_math_expression_8 .)
-    STRING          reduce using rule 54 (relational_operator -> GREATERTHANOREQUAL n_math_expression_8 .)
+    LPARENTHESIS    reduce using rule 56 (relational_operator -> GREATERTHANOREQUAL n_math_expression_8 .)
+    PLUS            reduce using rule 56 (relational_operator -> GREATERTHANOREQUAL n_math_expression_8 .)
+    MINUS           reduce using rule 56 (relational_operator -> GREATERTHANOREQUAL n_math_expression_8 .)
+    NAME            reduce using rule 56 (relational_operator -> GREATERTHANOREQUAL n_math_expression_8 .)
+    FLOAT           reduce using rule 56 (relational_operator -> GREATERTHANOREQUAL n_math_expression_8 .)
+    INT             reduce using rule 56 (relational_operator -> GREATERTHANOREQUAL n_math_expression_8 .)
+    STRING          reduce using rule 56 (relational_operator -> GREATERTHANOREQUAL n_math_expression_8 .)
 
 
 state 115
 
-    (55) relational_operator -> NOTEQUAL n_math_expression_8 .
+    (57) relational_operator -> NOTEQUAL n_math_expression_8 .
 
-    LPARENTHESIS    reduce using rule 55 (relational_operator -> NOTEQUAL n_math_expression_8 .)
-    PLUS            reduce using rule 55 (relational_operator -> NOTEQUAL n_math_expression_8 .)
-    MINUS           reduce using rule 55 (relational_operator -> NOTEQUAL n_math_expression_8 .)
-    NAME            reduce using rule 55 (relational_operator -> NOTEQUAL n_math_expression_8 .)
-    FLOAT           reduce using rule 55 (relational_operator -> NOTEQUAL n_math_expression_8 .)
-    INT             reduce using rule 55 (relational_operator -> NOTEQUAL n_math_expression_8 .)
-    STRING          reduce using rule 55 (relational_operator -> NOTEQUAL n_math_expression_8 .)
+    LPARENTHESIS    reduce using rule 57 (relational_operator -> NOTEQUAL n_math_expression_8 .)
+    PLUS            reduce using rule 57 (relational_operator -> NOTEQUAL n_math_expression_8 .)
+    MINUS           reduce using rule 57 (relational_operator -> NOTEQUAL n_math_expression_8 .)
+    NAME            reduce using rule 57 (relational_operator -> NOTEQUAL n_math_expression_8 .)
+    FLOAT           reduce using rule 57 (relational_operator -> NOTEQUAL n_math_expression_8 .)
+    INT             reduce using rule 57 (relational_operator -> NOTEQUAL n_math_expression_8 .)
+    STRING          reduce using rule 57 (relational_operator -> NOTEQUAL n_math_expression_8 .)
 
 
 state 116
@@ -2306,9 +2306,9 @@ state 122
     (94) value -> . literal
     (95) value -> . NAME n_variable_reference n_math_expression_1_name
     (67) function_call -> . NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
-    (56) literal -> . FLOAT n_math_expression_1_float
-    (57) literal -> . INT n_math_expression_1_int
-    (58) literal -> . STRING n_math_expression_1_string
+    (58) literal -> . FLOAT n_math_expression_1_float
+    (59) literal -> . INT n_math_expression_1_int
+    (60) literal -> . STRING n_math_expression_1_string
 
     LPARENTHESIS    shift and go to state 46
     PLUS            shift and go to state 52
@@ -2355,13 +2355,13 @@ state 124
 state 125
 
     (63) function_definition -> n_before_function_definition FUNCTION NAME n_open_new_scope_function parameter_list DOUBLEDOT . function_type LCURLY n_function_block_start codeblock return RCURLY n_close_scope n_function_block_end
-    (59) function_type -> . type
-    (60) function_type -> . VOID n_function_type
-    (45) type -> . INT_TYPE n_seen_type n_function_type
-    (46) type -> . STRING_TYPE n_seen_type n_function_type
-    (47) type -> . DOUBLE_TYPE n_seen_type n_function_type
-    (48) type -> . FLOAT_TYPE n_seen_type n_function_type
-    (49) type -> . BOOL_TYPE n_seen_type n_function_type
+    (61) function_type -> . type
+    (62) function_type -> . VOID n_function_type
+    (47) type -> . INT_TYPE n_seen_type n_function_type
+    (48) type -> . STRING_TYPE n_seen_type n_function_type
+    (49) type -> . DOUBLE_TYPE n_seen_type n_function_type
+    (50) type -> . FLOAT_TYPE n_seen_type n_function_type
+    (51) type -> . BOOL_TYPE n_seen_type n_function_type
 
     VOID            shift and go to state 147
     INT_TYPE        shift and go to state 23
@@ -2379,15 +2379,15 @@ state 126
     (71) parameter_list -> . empty
     (72) parameter_list -> . parameter
     (73) parameter_list -> . parameter COMMA parameter_list
-    (41) empty -> .
+    (43) empty -> .
     (75) parameter -> . type NAME n_variable_instantiate_param
-    (45) type -> . INT_TYPE n_seen_type n_function_type
-    (46) type -> . STRING_TYPE n_seen_type n_function_type
-    (47) type -> . DOUBLE_TYPE n_seen_type n_function_type
-    (48) type -> . FLOAT_TYPE n_seen_type n_function_type
-    (49) type -> . BOOL_TYPE n_seen_type n_function_type
+    (47) type -> . INT_TYPE n_seen_type n_function_type
+    (48) type -> . STRING_TYPE n_seen_type n_function_type
+    (49) type -> . DOUBLE_TYPE n_seen_type n_function_type
+    (50) type -> . FLOAT_TYPE n_seen_type n_function_type
+    (51) type -> . BOOL_TYPE n_seen_type n_function_type
 
-    DOUBLEDOT       reduce using rule 41 (empty -> .)
+    DOUBLEDOT       reduce using rule 43 (empty -> .)
     INT_TYPE        shift and go to state 23
     STRING_TYPE     shift and go to state 24
     DOUBLE_TYPE     shift and go to state 25
@@ -2566,9 +2566,9 @@ state 137
     (94) value -> . literal
     (95) value -> . NAME n_variable_reference n_math_expression_1_name
     (67) function_call -> . NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
-    (56) literal -> . FLOAT n_math_expression_1_float
-    (57) literal -> . INT n_math_expression_1_int
-    (58) literal -> . STRING n_math_expression_1_string
+    (58) literal -> . FLOAT n_math_expression_1_float
+    (59) literal -> . INT n_math_expression_1_int
+    (60) literal -> . STRING n_math_expression_1_string
 
     LPARENTHESIS    shift and go to state 46
     PLUS            shift and go to state 52
@@ -2603,9 +2603,9 @@ state 138
     (94) value -> . literal
     (95) value -> . NAME n_variable_reference n_math_expression_1_name
     (67) function_call -> . NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
-    (56) literal -> . FLOAT n_math_expression_1_float
-    (57) literal -> . INT n_math_expression_1_int
-    (58) literal -> . STRING n_math_expression_1_string
+    (58) literal -> . FLOAT n_math_expression_1_float
+    (59) literal -> . INT n_math_expression_1_int
+    (60) literal -> . STRING n_math_expression_1_string
 
     LPARENTHESIS    shift and go to state 46
     PLUS            shift and go to state 52
@@ -2637,9 +2637,9 @@ state 139
     (94) value -> . literal
     (95) value -> . NAME n_variable_reference n_math_expression_1_name
     (67) function_call -> . NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
-    (56) literal -> . FLOAT n_math_expression_1_float
-    (57) literal -> . INT n_math_expression_1_int
-    (58) literal -> . STRING n_math_expression_1_string
+    (58) literal -> . FLOAT n_math_expression_1_float
+    (59) literal -> . INT n_math_expression_1_int
+    (60) literal -> . STRING n_math_expression_1_string
 
     LPARENTHESIS    shift and go to state 46
     PLUS            shift and go to state 52
@@ -2670,9 +2670,9 @@ state 140
     (94) value -> . literal
     (95) value -> . NAME n_variable_reference n_math_expression_1_name
     (67) function_call -> . NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
-    (56) literal -> . FLOAT n_math_expression_1_float
-    (57) literal -> . INT n_math_expression_1_int
-    (58) literal -> . STRING n_math_expression_1_string
+    (58) literal -> . FLOAT n_math_expression_1_float
+    (59) literal -> . INT n_math_expression_1_int
+    (60) literal -> . STRING n_math_expression_1_string
 
     LPARENTHESIS    shift and go to state 46
     PLUS            shift and go to state 52
@@ -2703,9 +2703,9 @@ state 141
     (94) value -> . literal
     (95) value -> . NAME n_variable_reference n_math_expression_1_name
     (67) function_call -> . NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
-    (56) literal -> . FLOAT n_math_expression_1_float
-    (57) literal -> . INT n_math_expression_1_int
-    (58) literal -> . STRING n_math_expression_1_string
+    (58) literal -> . FLOAT n_math_expression_1_float
+    (59) literal -> . INT n_math_expression_1_int
+    (60) literal -> . STRING n_math_expression_1_string
 
     LPARENTHESIS    shift and go to state 46
     PLUS            shift and go to state 52
@@ -2759,9 +2759,9 @@ state 144
     (94) value -> . literal
     (95) value -> . NAME n_variable_reference n_math_expression_1_name
     (67) function_call -> . NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
-    (56) literal -> . FLOAT n_math_expression_1_float
-    (57) literal -> . INT n_math_expression_1_int
-    (58) literal -> . STRING n_math_expression_1_string
+    (58) literal -> . FLOAT n_math_expression_1_float
+    (59) literal -> . INT n_math_expression_1_int
+    (60) literal -> . STRING n_math_expression_1_string
 
     LPARENTHESIS    shift and go to state 46
     PLUS            shift and go to state 52
@@ -2790,14 +2790,14 @@ state 145
 
 state 146
 
-    (59) function_type -> type .
+    (61) function_type -> type .
 
-    LCURLY          reduce using rule 59 (function_type -> type .)
+    LCURLY          reduce using rule 61 (function_type -> type .)
 
 
 state 147
 
-    (60) function_type -> VOID . n_function_type
+    (62) function_type -> VOID . n_function_type
     (33) n_function_type -> .
 
     LCURLY          reduce using rule 33 (n_function_type -> .)
@@ -2850,7 +2850,7 @@ state 151
     (68) arg_list -> . empty
     (69) arg_list -> . arg
     (70) arg_list -> . arg COMMA n_function_call_4 arg_list
-    (41) empty -> .
+    (43) empty -> .
     (74) arg -> . expression n_function_call_3
     (76) expression -> . expression_or
     (77) expression -> . expression_or AND n_math_expression_10 expression n_math_expression_11
@@ -2873,11 +2873,11 @@ state 151
     (94) value -> . literal
     (95) value -> . NAME n_variable_reference n_math_expression_1_name
     (67) function_call -> . NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
-    (56) literal -> . FLOAT n_math_expression_1_float
-    (57) literal -> . INT n_math_expression_1_int
-    (58) literal -> . STRING n_math_expression_1_string
+    (58) literal -> . FLOAT n_math_expression_1_float
+    (59) literal -> . INT n_math_expression_1_int
+    (60) literal -> . STRING n_math_expression_1_string
 
-    RPARENTHESIS    reduce using rule 41 (empty -> .)
+    RPARENTHESIS    reduce using rule 43 (empty -> .)
     LPARENTHESIS    shift and go to state 46
     PLUS            shift and go to state 52
     MINUS           shift and go to state 53
@@ -2927,7 +2927,7 @@ state 153
     (111) condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY n_two_way_conditional_1 n_open_new_scope . codeblock RCURLY n_close_scope condition_else n_two_way_conditional_2
     (101) codeblock -> . empty
     (102) codeblock -> . codeblock_aux codeblock
-    (41) empty -> .
+    (43) empty -> .
     (103) codeblock_aux -> . statement
     (104) codeblock_aux -> . function_definition
     (105) codeblock_aux -> . condition_if
@@ -2945,13 +2945,13 @@ state 153
     (96) assign -> . type NAME n_variable_instantiate n_math_expression_1_name EQUAL n_seen_equal_op expression
     (97) assign -> . NAME n_variable_reference n_math_expression_1_name EQUAL n_seen_equal_op expression
     (67) function_call -> . NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
-    (45) type -> . INT_TYPE n_seen_type n_function_type
-    (46) type -> . STRING_TYPE n_seen_type n_function_type
-    (47) type -> . DOUBLE_TYPE n_seen_type n_function_type
-    (48) type -> . FLOAT_TYPE n_seen_type n_function_type
-    (49) type -> . BOOL_TYPE n_seen_type n_function_type
+    (47) type -> . INT_TYPE n_seen_type n_function_type
+    (48) type -> . STRING_TYPE n_seen_type n_function_type
+    (49) type -> . DOUBLE_TYPE n_seen_type n_function_type
+    (50) type -> . FLOAT_TYPE n_seen_type n_function_type
+    (51) type -> . BOOL_TYPE n_seen_type n_function_type
 
-    RCURLY          reduce using rule 41 (empty -> .)
+    RCURLY          reduce using rule 43 (empty -> .)
     IF              shift and go to state 15
     FUNCTION        reduce using rule 30 (n_before_function_definition -> .)
     FOR             shift and go to state 20
@@ -3100,11 +3100,11 @@ state 161
     (110) forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT . assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope
     (96) assign -> . type NAME n_variable_instantiate n_math_expression_1_name EQUAL n_seen_equal_op expression
     (97) assign -> . NAME n_variable_reference n_math_expression_1_name EQUAL n_seen_equal_op expression
-    (45) type -> . INT_TYPE n_seen_type n_function_type
-    (46) type -> . STRING_TYPE n_seen_type n_function_type
-    (47) type -> . DOUBLE_TYPE n_seen_type n_function_type
-    (48) type -> . FLOAT_TYPE n_seen_type n_function_type
-    (49) type -> . BOOL_TYPE n_seen_type n_function_type
+    (47) type -> . INT_TYPE n_seen_type n_function_type
+    (48) type -> . STRING_TYPE n_seen_type n_function_type
+    (49) type -> . DOUBLE_TYPE n_seen_type n_function_type
+    (50) type -> . FLOAT_TYPE n_seen_type n_function_type
+    (51) type -> . BOOL_TYPE n_seen_type n_function_type
 
     NAME            shift and go to state 93
     INT_TYPE        shift and go to state 23
@@ -3166,9 +3166,9 @@ state 164
 
 state 165
 
-    (60) function_type -> VOID n_function_type .
+    (62) function_type -> VOID n_function_type .
 
-    LCURLY          reduce using rule 60 (function_type -> VOID n_function_type .)
+    LCURLY          reduce using rule 62 (function_type -> VOID n_function_type .)
 
 
 state 166
@@ -3220,7 +3220,7 @@ state 170
     (109) whileloop -> WHILE p_n_pre_condition_loop_1 LPARENTHESIS expression RPARENTHESIS p_n_pre_condition_loop_2 LCURLY n_open_new_scope . codeblock RCURLY p_n_pre_condition_loop_3 n_close_scope
     (101) codeblock -> . empty
     (102) codeblock -> . codeblock_aux codeblock
-    (41) empty -> .
+    (43) empty -> .
     (103) codeblock_aux -> . statement
     (104) codeblock_aux -> . function_definition
     (105) codeblock_aux -> . condition_if
@@ -3238,13 +3238,13 @@ state 170
     (96) assign -> . type NAME n_variable_instantiate n_math_expression_1_name EQUAL n_seen_equal_op expression
     (97) assign -> . NAME n_variable_reference n_math_expression_1_name EQUAL n_seen_equal_op expression
     (67) function_call -> . NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
-    (45) type -> . INT_TYPE n_seen_type n_function_type
-    (46) type -> . STRING_TYPE n_seen_type n_function_type
-    (47) type -> . DOUBLE_TYPE n_seen_type n_function_type
-    (48) type -> . FLOAT_TYPE n_seen_type n_function_type
-    (49) type -> . BOOL_TYPE n_seen_type n_function_type
+    (47) type -> . INT_TYPE n_seen_type n_function_type
+    (48) type -> . STRING_TYPE n_seen_type n_function_type
+    (49) type -> . DOUBLE_TYPE n_seen_type n_function_type
+    (50) type -> . FLOAT_TYPE n_seen_type n_function_type
+    (51) type -> . BOOL_TYPE n_seen_type n_function_type
 
-    RCURLY          reduce using rule 41 (empty -> .)
+    RCURLY          reduce using rule 43 (empty -> .)
     IF              shift and go to state 15
     FUNCTION        reduce using rule 30 (n_before_function_definition -> .)
     FOR             shift and go to state 20
@@ -3276,7 +3276,7 @@ state 171
     (63) function_definition -> n_before_function_definition FUNCTION NAME n_open_new_scope_function parameter_list DOUBLEDOT function_type LCURLY n_function_block_start . codeblock return RCURLY n_close_scope n_function_block_end
     (101) codeblock -> . empty
     (102) codeblock -> . codeblock_aux codeblock
-    (41) empty -> .
+    (43) empty -> .
     (103) codeblock_aux -> . statement
     (104) codeblock_aux -> . function_definition
     (105) codeblock_aux -> . condition_if
@@ -3294,14 +3294,14 @@ state 171
     (96) assign -> . type NAME n_variable_instantiate n_math_expression_1_name EQUAL n_seen_equal_op expression
     (97) assign -> . NAME n_variable_reference n_math_expression_1_name EQUAL n_seen_equal_op expression
     (67) function_call -> . NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
-    (45) type -> . INT_TYPE n_seen_type n_function_type
-    (46) type -> . STRING_TYPE n_seen_type n_function_type
-    (47) type -> . DOUBLE_TYPE n_seen_type n_function_type
-    (48) type -> . FLOAT_TYPE n_seen_type n_function_type
-    (49) type -> . BOOL_TYPE n_seen_type n_function_type
+    (47) type -> . INT_TYPE n_seen_type n_function_type
+    (48) type -> . STRING_TYPE n_seen_type n_function_type
+    (49) type -> . DOUBLE_TYPE n_seen_type n_function_type
+    (50) type -> . FLOAT_TYPE n_seen_type n_function_type
+    (51) type -> . BOOL_TYPE n_seen_type n_function_type
 
-    RETURN          reduce using rule 41 (empty -> .)
-    RCURLY          reduce using rule 41 (empty -> .)
+    RETURN          reduce using rule 43 (empty -> .)
+    RCURLY          reduce using rule 43 (empty -> .)
     IF              shift and go to state 15
     FUNCTION        reduce using rule 30 (n_before_function_definition -> .)
     FOR             shift and go to state 20
@@ -3369,11 +3369,11 @@ state 175
     (63) function_definition -> n_before_function_definition FUNCTION NAME n_open_new_scope_function parameter_list DOUBLEDOT function_type LCURLY n_function_block_start codeblock . return RCURLY n_close_scope n_function_block_end
     (64) return -> . RETURN expression n_return SEMICOLON
     (65) return -> . RETURN n_return_void SEMICOLON
-    (66) return -> . empty n_return_void
-    (41) empty -> .
+    (66) return -> . empty
+    (43) empty -> .
 
     RETURN          shift and go to state 180
-    RCURLY          reduce using rule 41 (empty -> .)
+    RCURLY          reduce using rule 43 (empty -> .)
 
     return                         shift and go to state 179
     empty                          shift and go to state 181
@@ -3383,22 +3383,22 @@ state 176
     (111) condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY n_two_way_conditional_1 n_open_new_scope codeblock RCURLY n_close_scope . condition_else n_two_way_conditional_2
     (112) condition_else -> . ELSE n_two_way_conditional_3 LCURLY n_open_new_scope codeblock RCURLY n_close_scope
     (113) condition_else -> . empty
-    (41) empty -> .
+    (43) empty -> .
 
     ELSE            shift and go to state 183
-    IF              reduce using rule 41 (empty -> .)
-    FOR             reduce using rule 41 (empty -> .)
-    WHILE           reduce using rule 41 (empty -> .)
-    NAME            reduce using rule 41 (empty -> .)
-    INT_TYPE        reduce using rule 41 (empty -> .)
-    STRING_TYPE     reduce using rule 41 (empty -> .)
-    DOUBLE_TYPE     reduce using rule 41 (empty -> .)
-    FLOAT_TYPE      reduce using rule 41 (empty -> .)
-    BOOL_TYPE       reduce using rule 41 (empty -> .)
-    FUNCTION        reduce using rule 41 (empty -> .)
-    $end            reduce using rule 41 (empty -> .)
-    RCURLY          reduce using rule 41 (empty -> .)
-    RETURN          reduce using rule 41 (empty -> .)
+    IF              reduce using rule 43 (empty -> .)
+    FOR             reduce using rule 43 (empty -> .)
+    WHILE           reduce using rule 43 (empty -> .)
+    NAME            reduce using rule 43 (empty -> .)
+    INT_TYPE        reduce using rule 43 (empty -> .)
+    STRING_TYPE     reduce using rule 43 (empty -> .)
+    DOUBLE_TYPE     reduce using rule 43 (empty -> .)
+    FLOAT_TYPE      reduce using rule 43 (empty -> .)
+    BOOL_TYPE       reduce using rule 43 (empty -> .)
+    FUNCTION        reduce using rule 43 (empty -> .)
+    $end            reduce using rule 43 (empty -> .)
+    RCURLY          reduce using rule 43 (empty -> .)
+    RETURN          reduce using rule 43 (empty -> .)
 
     condition_else                 shift and go to state 182
     empty                          shift and go to state 184
@@ -3408,7 +3408,7 @@ state 177
     (110) forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY . codeblock RCURLY n_close_scope
     (101) codeblock -> . empty
     (102) codeblock -> . codeblock_aux codeblock
-    (41) empty -> .
+    (43) empty -> .
     (103) codeblock_aux -> . statement
     (104) codeblock_aux -> . function_definition
     (105) codeblock_aux -> . condition_if
@@ -3426,13 +3426,13 @@ state 177
     (96) assign -> . type NAME n_variable_instantiate n_math_expression_1_name EQUAL n_seen_equal_op expression
     (97) assign -> . NAME n_variable_reference n_math_expression_1_name EQUAL n_seen_equal_op expression
     (67) function_call -> . NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
-    (45) type -> . INT_TYPE n_seen_type n_function_type
-    (46) type -> . STRING_TYPE n_seen_type n_function_type
-    (47) type -> . DOUBLE_TYPE n_seen_type n_function_type
-    (48) type -> . FLOAT_TYPE n_seen_type n_function_type
-    (49) type -> . BOOL_TYPE n_seen_type n_function_type
+    (47) type -> . INT_TYPE n_seen_type n_function_type
+    (48) type -> . STRING_TYPE n_seen_type n_function_type
+    (49) type -> . DOUBLE_TYPE n_seen_type n_function_type
+    (50) type -> . FLOAT_TYPE n_seen_type n_function_type
+    (51) type -> . BOOL_TYPE n_seen_type n_function_type
 
-    RCURLY          reduce using rule 41 (empty -> .)
+    RCURLY          reduce using rule 43 (empty -> .)
     IF              shift and go to state 15
     FUNCTION        reduce using rule 30 (n_before_function_definition -> .)
     FOR             shift and go to state 20
@@ -3493,7 +3493,7 @@ state 180
     (65) return -> RETURN . n_return_void SEMICOLON
     (76) expression -> . expression_or
     (77) expression -> . expression_or AND n_math_expression_10 expression n_math_expression_11
-    (62) n_return_void -> .
+    (41) n_return_void -> .
     (78) expression_or -> . expression_rel
     (79) expression_or -> . expression_rel OR n_math_expression_10 expression_or n_math_expression_12
     (80) expression_rel -> . exp
@@ -3513,11 +3513,11 @@ state 180
     (94) value -> . literal
     (95) value -> . NAME n_variable_reference n_math_expression_1_name
     (67) function_call -> . NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
-    (56) literal -> . FLOAT n_math_expression_1_float
-    (57) literal -> . INT n_math_expression_1_int
-    (58) literal -> . STRING n_math_expression_1_string
+    (58) literal -> . FLOAT n_math_expression_1_float
+    (59) literal -> . INT n_math_expression_1_int
+    (60) literal -> . STRING n_math_expression_1_string
 
-    SEMICOLON       reduce using rule 62 (n_return_void -> .)
+    SEMICOLON       reduce using rule 41 (n_return_void -> .)
     LPARENTHESIS    shift and go to state 46
     PLUS            shift and go to state 52
     MINUS           shift and go to state 53
@@ -3539,12 +3539,10 @@ state 180
 
 state 181
 
-    (66) return -> empty . n_return_void
-    (62) n_return_void -> .
+    (66) return -> empty .
 
-    RCURLY          reduce using rule 62 (n_return_void -> .)
+    RCURLY          reduce using rule 66 (return -> empty .)
 
-    n_return_void                  shift and go to state 190
 
 state 182
 
@@ -3565,7 +3563,7 @@ state 182
     RCURLY          reduce using rule 24 (n_two_way_conditional_2 -> .)
     RETURN          reduce using rule 24 (n_two_way_conditional_2 -> .)
 
-    n_two_way_conditional_2        shift and go to state 191
+    n_two_way_conditional_2        shift and go to state 190
 
 state 183
 
@@ -3574,7 +3572,7 @@ state 183
 
     LCURLY          reduce using rule 25 (n_two_way_conditional_3 -> .)
 
-    n_two_way_conditional_3        shift and go to state 192
+    n_two_way_conditional_3        shift and go to state 191
 
 state 184
 
@@ -3599,7 +3597,7 @@ state 185
 
     (110) forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock . RCURLY n_close_scope
 
-    RCURLY          shift and go to state 193
+    RCURLY          shift and go to state 192
 
 
 state 186
@@ -3621,7 +3619,7 @@ state 186
     RCURLY          reduce using rule 4 (n_close_scope -> .)
     RETURN          reduce using rule 4 (n_close_scope -> .)
 
-    n_close_scope                  shift and go to state 194
+    n_close_scope                  shift and go to state 193
 
 state 187
 
@@ -3642,32 +3640,25 @@ state 187
     RCURLY          reduce using rule 4 (n_close_scope -> .)
     RETURN          reduce using rule 4 (n_close_scope -> .)
 
-    n_close_scope                  shift and go to state 195
+    n_close_scope                  shift and go to state 194
 
 state 188
 
     (64) return -> RETURN expression . n_return SEMICOLON
-    (61) n_return -> .
+    (40) n_return -> .
 
-    SEMICOLON       reduce using rule 61 (n_return -> .)
+    SEMICOLON       reduce using rule 40 (n_return -> .)
 
-    n_return                       shift and go to state 196
+    n_return                       shift and go to state 195
 
 state 189
 
     (65) return -> RETURN n_return_void . SEMICOLON
 
-    SEMICOLON       shift and go to state 197
+    SEMICOLON       shift and go to state 196
 
 
 state 190
-
-    (66) return -> empty n_return_void .
-
-    RCURLY          reduce using rule 66 (return -> empty n_return_void .)
-
-
-state 191
 
     (111) condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY n_two_way_conditional_1 n_open_new_scope codeblock RCURLY n_close_scope condition_else n_two_way_conditional_2 .
 
@@ -3686,14 +3677,14 @@ state 191
     RETURN          reduce using rule 111 (condition_if -> IF LPARENTHESIS expression RPARENTHESIS LCURLY n_two_way_conditional_1 n_open_new_scope codeblock RCURLY n_close_scope condition_else n_two_way_conditional_2 .)
 
 
-state 192
+state 191
 
     (112) condition_else -> ELSE n_two_way_conditional_3 . LCURLY n_open_new_scope codeblock RCURLY n_close_scope
 
-    LCURLY          shift and go to state 198
+    LCURLY          shift and go to state 197
 
 
-state 193
+state 192
 
     (110) forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY . n_close_scope
     (4) n_close_scope -> .
@@ -3712,9 +3703,9 @@ state 193
     RCURLY          reduce using rule 4 (n_close_scope -> .)
     RETURN          reduce using rule 4 (n_close_scope -> .)
 
-    n_close_scope                  shift and go to state 199
+    n_close_scope                  shift and go to state 198
 
-state 194
+state 193
 
     (109) whileloop -> WHILE p_n_pre_condition_loop_1 LPARENTHESIS expression RPARENTHESIS p_n_pre_condition_loop_2 LCURLY n_open_new_scope codeblock RCURLY p_n_pre_condition_loop_3 n_close_scope .
 
@@ -3733,7 +3724,7 @@ state 194
     RETURN          reduce using rule 109 (whileloop -> WHILE p_n_pre_condition_loop_1 LPARENTHESIS expression RPARENTHESIS p_n_pre_condition_loop_2 LCURLY n_open_new_scope codeblock RCURLY p_n_pre_condition_loop_3 n_close_scope .)
 
 
-state 195
+state 194
 
     (63) function_definition -> n_before_function_definition FUNCTION NAME n_open_new_scope_function parameter_list DOUBLEDOT function_type LCURLY n_function_block_start codeblock return RCURLY n_close_scope . n_function_block_end
     (32) n_function_block_end -> .
@@ -3752,23 +3743,23 @@ state 195
     RCURLY          reduce using rule 32 (n_function_block_end -> .)
     RETURN          reduce using rule 32 (n_function_block_end -> .)
 
-    n_function_block_end           shift and go to state 200
+    n_function_block_end           shift and go to state 199
 
-state 196
+state 195
 
     (64) return -> RETURN expression n_return . SEMICOLON
 
-    SEMICOLON       shift and go to state 201
+    SEMICOLON       shift and go to state 200
 
 
-state 197
+state 196
 
     (65) return -> RETURN n_return_void SEMICOLON .
 
     RCURLY          reduce using rule 65 (return -> RETURN n_return_void SEMICOLON .)
 
 
-state 198
+state 197
 
     (112) condition_else -> ELSE n_two_way_conditional_3 LCURLY . n_open_new_scope codeblock RCURLY n_close_scope
     (2) n_open_new_scope -> .
@@ -3785,9 +3776,9 @@ state 198
     RCURLY          reduce using rule 2 (n_open_new_scope -> .)
     FUNCTION        reduce using rule 2 (n_open_new_scope -> .)
 
-    n_open_new_scope               shift and go to state 202
+    n_open_new_scope               shift and go to state 201
 
-state 199
+state 198
 
     (110) forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope .
 
@@ -3806,7 +3797,7 @@ state 199
     RETURN          reduce using rule 110 (forloop -> FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope .)
 
 
-state 200
+state 199
 
     (63) function_definition -> n_before_function_definition FUNCTION NAME n_open_new_scope_function parameter_list DOUBLEDOT function_type LCURLY n_function_block_start codeblock return RCURLY n_close_scope n_function_block_end .
 
@@ -3825,19 +3816,19 @@ state 200
     RETURN          reduce using rule 63 (function_definition -> n_before_function_definition FUNCTION NAME n_open_new_scope_function parameter_list DOUBLEDOT function_type LCURLY n_function_block_start codeblock return RCURLY n_close_scope n_function_block_end .)
 
 
-state 201
+state 200
 
     (64) return -> RETURN expression n_return SEMICOLON .
 
     RCURLY          reduce using rule 64 (return -> RETURN expression n_return SEMICOLON .)
 
 
-state 202
+state 201
 
     (112) condition_else -> ELSE n_two_way_conditional_3 LCURLY n_open_new_scope . codeblock RCURLY n_close_scope
     (101) codeblock -> . empty
     (102) codeblock -> . codeblock_aux codeblock
-    (41) empty -> .
+    (43) empty -> .
     (103) codeblock_aux -> . statement
     (104) codeblock_aux -> . function_definition
     (105) codeblock_aux -> . condition_if
@@ -3855,13 +3846,13 @@ state 202
     (96) assign -> . type NAME n_variable_instantiate n_math_expression_1_name EQUAL n_seen_equal_op expression
     (97) assign -> . NAME n_variable_reference n_math_expression_1_name EQUAL n_seen_equal_op expression
     (67) function_call -> . NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
-    (45) type -> . INT_TYPE n_seen_type n_function_type
-    (46) type -> . STRING_TYPE n_seen_type n_function_type
-    (47) type -> . DOUBLE_TYPE n_seen_type n_function_type
-    (48) type -> . FLOAT_TYPE n_seen_type n_function_type
-    (49) type -> . BOOL_TYPE n_seen_type n_function_type
+    (47) type -> . INT_TYPE n_seen_type n_function_type
+    (48) type -> . STRING_TYPE n_seen_type n_function_type
+    (49) type -> . DOUBLE_TYPE n_seen_type n_function_type
+    (50) type -> . FLOAT_TYPE n_seen_type n_function_type
+    (51) type -> . BOOL_TYPE n_seen_type n_function_type
 
-    RCURLY          reduce using rule 41 (empty -> .)
+    RCURLY          reduce using rule 43 (empty -> .)
     IF              shift and go to state 15
     FUNCTION        reduce using rule 30 (n_before_function_definition -> .)
     FOR             shift and go to state 20
@@ -3873,7 +3864,7 @@ state 202
     FLOAT_TYPE      shift and go to state 26
     BOOL_TYPE       shift and go to state 27
 
-    codeblock                      shift and go to state 203
+    codeblock                      shift and go to state 202
     empty                          shift and go to state 6
     codeblock_aux                  shift and go to state 7
     statement                      shift and go to state 8
@@ -3888,14 +3879,14 @@ state 202
     function_call                  shift and go to state 19
     type                           shift and go to state 22
 
-state 203
+state 202
 
     (112) condition_else -> ELSE n_two_way_conditional_3 LCURLY n_open_new_scope codeblock . RCURLY n_close_scope
 
-    RCURLY          shift and go to state 204
+    RCURLY          shift and go to state 203
 
 
-state 204
+state 203
 
     (112) condition_else -> ELSE n_two_way_conditional_3 LCURLY n_open_new_scope codeblock RCURLY . n_close_scope
     (4) n_close_scope -> .
@@ -3914,9 +3905,9 @@ state 204
     RCURLY          reduce using rule 4 (n_close_scope -> .)
     RETURN          reduce using rule 4 (n_close_scope -> .)
 
-    n_close_scope                  shift and go to state 205
+    n_close_scope                  shift and go to state 204
 
-state 205
+state 204
 
     (112) condition_else -> ELSE n_two_way_conditional_3 LCURLY n_open_new_scope codeblock RCURLY n_close_scope .
 
