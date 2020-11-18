@@ -93,14 +93,8 @@ t_ignore = ' \t'
 # Comments
 t_ignore_COMMENT = r'\#.*'
 
-# dictionary of names (for storing variables)
 current_type = None
-
-# global_scope_counter_list = [0]
-# # current_scope_counter = lambda global_scope_counter_list : global_scope_counter_list[0]
-# scope_dict = {}
-# global_scope = Scope(-1)
-# scope_tree.dict[global_scope.ref] = global_scope
+# Scope tree for storing variables and functions
 scope_tree = ScopeTree()
 current_scope_ref = 0
 
@@ -143,6 +137,23 @@ def p_n_open_new_scope(p):
     new_scope = Scope(scope_tree.dict[current_scope_ref].ref)
     scope_tree.add_scope(new_scope)
     current_scope_ref = new_scope.ref
+    pass
+
+# Cuando se abre un {} y se inicia un nuevo contexto.
+def p_n_open_new_scope_function(p):
+    'n_open_new_scope_function : '
+    global current_scope_ref
+    func_name = get_last_t(p)
+    # Add function name to current scope
+    scope_tree.dict[current_scope_ref].functions[func_name] = -1
+    # Create new scope
+    new_scope = Scope(scope_tree.dict[current_scope_ref].ref)
+    new_scope.func_name = func_name
+    scope_tree.add_scope(new_scope)
+    current_scope_ref = new_scope.ref
+    # Add reference for new/current scope to scope parent.functions
+    parent_ref = scope_tree.dict[current_scope_ref].parent_ref
+    scope_tree.dict[parent_ref].functions[func_name] = current_scope_ref
     pass
 
 # Cuando se cierra un {} y se cierra un contexto
@@ -449,7 +460,7 @@ def p_function_type(p):
 
 def p_function_definition(p):
     '''
-    function_definition : FUNCTION NAME n_open_new_scope parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope
+    function_definition : FUNCTION NAME n_open_new_scope_function parameter_list DOUBLEDOT function_type LCURLY codeblock RCURLY n_close_scope
     '''
     pass
 
@@ -710,6 +721,7 @@ while True:
 result = parser.parse(data)
 
 
-print_variable_scopes()
+# print_variable_scopes()
 # print_pilas()
+print_scope_tree()
 print_quads()

@@ -4,6 +4,8 @@ class Scope:
         self.ref = -1
         self.parent_ref = parent_ref
         self.vars = {}
+        self.functions = {}
+        self.func_name = None
 
     def set_variable(self, name, type):
         self.vars[name] = {
@@ -11,10 +13,10 @@ class Scope:
         }
 
     def __str__(self):
-        return \
-        f"ref: {self.ref}\n" \
-        f"parent_ref: {self.parent_ref}\n" \
-        f"vars: {self.vars}"
+        str_vars = f"vars: {self.vars}\n" if self.vars else ""
+        str_functions = f"functions: {self.functions}\n" if self.functions else ""
+        return f"ref: {self.ref} {self.func_name if self.func_name else ''} \n" \
+            f"parent_ref: {self.parent_ref}\n" + str_vars + str_functions
 
 class ScopeTree:
     def __init__(self):
@@ -29,4 +31,5 @@ class ScopeTree:
         self.counter = self.counter + 1
 
     def __str__(self):
-        [print(self.dict[ref]) for ref in range(0, self.counter)]
+        lista = [str(self.dict[ref]) for ref in range(0, self.counter)]
+        return "\n".join(lista)
