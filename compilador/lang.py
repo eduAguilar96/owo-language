@@ -19,6 +19,7 @@ reserved = {
     'return': 'RETURN',
     'OwO': 'OWO',
     'CHIEF/AARON': 'IDK',
+    'print': 'PRINT',
     # Flow
     'if': 'IF',
     'else': 'ELSE',
@@ -525,6 +526,15 @@ def p_n_return_void(p):
     e_error(f"Void function({func_name}) should not have a return", p)
     pass
 
+def p_n_print(p):
+    'n_print : '
+    str = PilaO.pop()
+    str_type = PTypes.pop()
+    if str_type != Types.STRING_TYPE:
+        e_error("Cannot print non STRING value" ,p)
+    quad_list.append(Quad(Operations.PRINT, target=str))
+    pass
+
 def p_n_end(p):
     'n_end : '
     quad_list.append(Quad(Operations.END))
@@ -727,6 +737,12 @@ def p_assign(p):
         e_error(e, p)
     pass
 
+def p_print(p):
+    '''
+    print : PRINT LPARENTHESIS expression n_print RPARENTHESIS
+    '''
+    pass
+
 def p_statement(p):
     '''
     statement : statement_aux SEMICOLON
@@ -738,6 +754,7 @@ def p_statement_aux(p):
     statement_aux : assign
     | declare
     | function_call
+    | print
     '''
     # | PRINT
     pass

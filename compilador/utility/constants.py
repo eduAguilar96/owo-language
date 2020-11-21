@@ -53,6 +53,7 @@ class Operations(Enum):
   END = 'end'
   PARAM = 'param'
   RETURN = 'return'
+  PRINT = 'print'
 
 #Tokens to Enum
 operations_map = {

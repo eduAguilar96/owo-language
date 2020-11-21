@@ -128,6 +128,7 @@ data_examples.append(Example(
     'Print Function',
     '''
         OwO
+
         print("Hello World");
         string hola = "Hola mundo";
         print(hola);
