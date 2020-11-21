@@ -186,14 +186,14 @@ def p_n_variable_reference(p):
 def p_n_variable_instantiate(p):
     'n_variable_instantiate : '
     var_name = get_last_t(p)
-    scope_tree.dict[current_scope_ref].set_variable(var_name, current_type)
+    scope_tree.dict[current_scope_ref].add_variable(var_name, current_type)
 
 # Cada vez que se lee un Name y se esta creando una variable en los parametros
 # de una funcion
 def p_n_variable_instantiate_param(p):
     'n_variable_instantiate_param : '
     var_name = get_last_t(p)
-    scope_tree.dict[current_scope_ref].set_variable(var_name, current_type)
+    scope_tree.dict[current_scope_ref].add_variable(var_name, current_type)
     scope_tree.dict[current_scope_ref].add_parameter(var_name)
 
 # Puntos neuralgico s para procesar expresiones arithmeticas/matematicas
@@ -315,6 +315,8 @@ def n_math_expression_gen_quad(operadores):
             quad_list.append(temp_quad)
             PilaO.append(result)
             PTypes.append(result_type)
+            # Append variable temp a los scopes
+            scope_tree.dict[current_scope_ref].add_variable(result, result_type)
             # TODO si algun operand es temparal(t#) entonces regresarla a "AVAILABLE", se puede volver a usar
         else:
             return f"Type Mismatch: left[type: {left_type}, op: {left_operand}]"\
@@ -470,7 +472,7 @@ def p_n_function_call_3(p):
     if (argument_type != param_type):
         e_error(f"Type Mismatch for argument({params_list[argument_counter[-1]]}) in function ({function_name}) call", p)
 
-    argument_temp = f"param{argument_counter[-1]+1}"
+    argument_temp = f"$param{argument_counter[-1]+1}"
     quad_list.append(Quad(Operations.PARAM, left=argument_value, target=argument_temp))
     pass
 
@@ -496,12 +498,13 @@ def p_n_function_call_6(p):
     function_ref = scope_tree.dict[current_scope_ref].functions[function_name]
     params_list = scope_tree.dict[function_ref].params
     # Se pasa una referencia a Que es scope es func_name con func_ref, esto en relacion al scope_tree
-    quad_list.append(Quad(Operations.GOSUB, left=f"{function_name}_return_value", right=function_ref))
+    quad_list.append(Quad(Operations.GOSUB, left=f"${function_name}_return_value", right=function_ref))
     # Handle return_value
     temp_var = gen_temp_var()
     PilaO.append(temp_var)
     PTypes.append(scope_tree.dict[function_ref].return_type)
-    quad_list.append(Quad(Operations.EQUAL, left=f"{function_name}_return_value", target=temp_var))
+    scope_tree.dict[current_scope_ref].add_variable(temp_var, scope_tree.dict[function_ref].return_type)
+    quad_list.append(Quad(Operations.EQUAL, left=f"${function_name}_return_value", target=temp_var))
     last_function_call.pop()
     pass
 
@@ -542,7 +545,7 @@ def p_n_end(p):
 
 def gen_temp_var():
     global temps_counter
-    result = f"t{temps_counter}"
+    result = f"$t{temps_counter}"
     temps_counter += 1
     return result
 

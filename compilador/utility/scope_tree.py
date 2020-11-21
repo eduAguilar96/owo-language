@@ -11,7 +11,7 @@ class Scope:
         self.params = []
         self.return_value = None
 
-    def set_variable(self, name, type):
+    def add_variable(self, name, type):
         self.vars[name] = {
             'type': type
         }
