@@ -711,6 +711,12 @@ def p_value(p):
     pass
 
 # TODO agregar soporte para instantiate varibale sin un assign
+
+def p_declare(p):
+    '''
+    declare : type NAME n_variable_instantiate
+    '''
+
 def p_assign(p):
     '''
     assign : type NAME n_variable_instantiate n_math_expression_1_name EQUAL n_seen_equal_op expression
@@ -730,6 +736,7 @@ def p_statement(p):
 def p_statement_aux(p):
     '''
     statement_aux : assign
+    | declare
     | function_call
     '''
     # | PRINT

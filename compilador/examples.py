@@ -133,3 +133,12 @@ data_examples.append(Example(
         print(hola);
     '''
 ))
+
+data_examples.append(Example(
+    'Declare empty variables',
+    '''
+        OwO
+        int a;
+        a = 1;
+    '''
+))
