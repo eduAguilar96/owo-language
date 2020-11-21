@@ -484,8 +484,9 @@ def p_n_function_call_5(p):
     function_name = last_function_call[-1]
     function_ref = scope_tree.dict[current_scope_ref].functions[function_name]
     params_list = scope_tree.dict[function_ref].params
-    if(argument_counter[-1] != len(params_list)-1):
+    if (argument_counter[-1] != len(params_list)-1):
         e_error(f"Argument mismatch for function ({function_name}) call, args({argument_counter[-1]+1}), params({len(params_list)})", p)
+    argument_counter.pop()
     pass
 
 def p_n_function_call_6(p):
@@ -501,7 +502,6 @@ def p_n_function_call_6(p):
     PTypes.append(scope_tree.dict[function_ref].return_type)
     quad_list.append(Quad(Operations.EQUAL, left=f"{function_name}_return_value", target=temp_var))
     last_function_call.pop()
-    argument_counter.pop()
     pass
 
 def p_n_return(p):
@@ -614,14 +614,18 @@ def p_return(p):
 
 def p_function_call(p):
     '''
-    function_call : NAME n_function_call_1 LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS n_function_call_5 n_function_call_6
+    function_call : NAME n_function_call_1 \
+                  LPARENTHESIS n_function_call_2 arg_list RPARENTHESIS \
+                  n_function_call_5 n_function_call_6
+                  | NAME n_function_call_1 \
+                  LPARENTHESIS RPARENTHESIS \
+                  n_function_call_6
     '''
     pass
 
 def p_arg_list(p):
     '''
-    arg_list : empty
-    | arg
+    arg_list : arg
     | arg COMMA n_function_call_4 arg_list
     '''
     pass

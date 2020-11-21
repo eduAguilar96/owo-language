@@ -14,7 +14,7 @@ data_examples.append(Example(
     '''
         OwO
         int num = 12345;
-        string = "Juanito";
+        string nombre = "Juanito";
         float pi = 3.1416;
         bool nose = num > pi;
     '''
@@ -90,5 +90,37 @@ data_examples.append(Example(
         int b = 5;
         int c = process(1,masUno(5), 3);
     '''
+))
 
+data_examples.append(Example(
+    'Void Functions',
+    '''
+        OwO
+
+        function nada : void {
+            int x = 6;
+        }
+
+        function masUno int x : int {
+            return x + 1;
+        }
+
+        function cero : int {
+            return 0;
+        }
+
+        int zero = cero();
+        int x = masUno(x);
+        #nada();
+    '''
+))
+
+data_examples.append(Example(
+    'Print Function',
+    '''
+        OwO
+        print("Hello World");
+        string hola = "Hola mundo";
+        print(hola);
+    '''
 ))
