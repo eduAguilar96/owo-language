@@ -1,6 +1,7 @@
 import sys
 import lex
 import yacc
+from examples import *
 from utility.scope_tree import *
 from utility.quad import *
 from utility.constants import *
@@ -814,88 +815,12 @@ lexer = lex.lex()
 # Build the parser
 parser = yacc.yacc()
 
-user_input = int(
-    input("1.Programa valido\
-    \n2.Programa no valido\
-    \n3.Documento Mock\
-    \n4.Complex variable\
-    \n5.If Else\
-    \n6.While\
-    \n7.Nested Function calls\
-    \ninput:"))
-
-data = ""
-
-if user_input == 1:
-    data = '''
-            OwO
-            int nombre = 12345;
-            '''
-
-elif user_input == 2:
-    data = '''
-        OwO
-        int nombre = 12345;
-        estoEstaMal *()+`'''
-
-elif user_input == 3:
-    f = open("test.txt", "r")
-    if f.mode == 'r':
-        data = f.read()
-    else:
-        print("404: File not found")
-
-elif user_input == 4:
-    data = '''
-            OwO
-            int suma = A + B and C >= D or B;
-            '''
-
-elif user_input == 5:
-    data = '''
-            OwO
-            if (A + B < C) {
-                A = B + C;
-            } else {
-                A = B + C * D;
-            }
-            '''
-
-elif user_input == 6:
-    data = '''
-    OwO
-    int A = 4;
-    int B = 3;
-    int C = 5;
-    int D = 7;
-
-    while (A > B * C) {
-        A = A + D;
-    }
-    B = C + A;
-    '''
-
-elif user_input == 7:
-    data = '''
-    OwO
-
-    function masUno int x : int {
-        return x + 1;
-    }
-
-    function masDos int x : int {
-        return x + 2;
-    }
-
-    function process int x, int y, int z : void {
-        int a = 0;
-    }
-
-    #string hola = "hola";
-    #int a = masUno(5);
-    int b = 5;
-    int c = process(1,masUno(5), 3);
-    '''
+examples_output = [print(f"{i}. {str(data_examples[i])}") for i in range(0, len(data_examples))]
+user_input = int(input())
+if user_input in range(0, len(examples_output)):
+    data = data_examples[user_input].data
+else:
+    raise Exception("Invalid Code/Index for example")
 
 # Read input in lexer
 lexer.input(data)
