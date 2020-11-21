@@ -564,11 +564,11 @@ def p_program_aux(p):
 
 def p_type(p):
     '''
-    type : INT_TYPE n_seen_type n_function_type
-    | STRING_TYPE n_seen_type n_function_type
-    | DOUBLE_TYPE n_seen_type n_function_type
-    | FLOAT_TYPE n_seen_type n_function_type
-    | BOOL_TYPE n_seen_type n_function_type
+    type : INT_TYPE n_seen_type
+    | STRING_TYPE n_seen_type
+    | DOUBLE_TYPE n_seen_type
+    | FLOAT_TYPE n_seen_type
+    | BOOL_TYPE n_seen_type
     '''
     pass
 
@@ -593,8 +593,12 @@ def p_literal(p):
 
 def p_function_type(p):
     '''
-    function_type : type
-    | VOID n_function_type
+    function_type : VOID n_function_type
+    | INT_TYPE n_function_type
+    | STRING_TYPE n_function_type
+    | DOUBLE_TYPE n_function_type
+    | FLOAT_TYPE n_function_type
+    | BOOL_TYPE n_function_type
     '''
     pass
 

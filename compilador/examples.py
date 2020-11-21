@@ -81,14 +81,33 @@ data_examples.append(Example(
             return x + 2;
         }
 
-        function process int x, int y, int z : void {
+        function process int x, int y, int z : int {
             int a = 0;
+            return a;
         }
 
         #string hola = "hola";
         #int a = masUno(5);
         int b = 5;
         int c = process(1,masUno(5), 3);
+    '''
+))
+
+data_examples.append(Example(
+    'Paramterless Functions',
+    '''
+        OwO
+
+        function masUno int x : int {
+            return x + 1;
+        }
+
+        function cero : int {
+            return 0;
+        }
+
+        int zero = cero();
+        int x = masUno(x);
     '''
 ))
 
@@ -101,17 +120,7 @@ data_examples.append(Example(
             int x = 6;
         }
 
-        function masUno int x : int {
-            return x + 1;
-        }
-
-        function cero : int {
-            return 0;
-        }
-
-        int zero = cero();
-        int x = masUno(x);
-        #nada();
+        nada();
     '''
 ))
 
