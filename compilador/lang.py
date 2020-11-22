@@ -137,10 +137,12 @@ quad_list = [Quad(Operations.START)]
 
 start = 'program'
 
-def check_out_of_mem(last_addr, initial_addr):
-    if(last_addr >= DIR_SIZE + initial_addr):
+# Error check if there is no more memory for a memoery stack
+def check_out_of_mem(last_used_addr, initial_addr):
+    if(last_used_addr >= DIR_SIZE + initial_addr):
         raise Exception("OwO: Out of memory")
 
+# Get the address of a variable, return -1 if not found
 def get_var_addr(var, var_type):
     aux_scope_ref = current_scope_ref
     while aux_scope_ref > -1:
@@ -155,6 +157,7 @@ def get_var_addr(var, var_type):
 def is_constant(token):
     return token[0] == '"' or token[0].isdigit() or token == "True" or token == "False"
 
+# Get and/or generate the address for a variable or constant
 def get_addr(value, value_type):
     # print(f"Getting address for{value}, is_constant={is_constant}")
     if is_constant(value):
@@ -594,13 +597,15 @@ def p_n_function_call_1(p):
     aux_scope_ref = current_scope_ref
     while(aux_scope_ref > -1):
         # check if function is child context
+        print(scope_tree.dict[aux_scope_ref].functions)
         if func_name in scope_tree.dict[aux_scope_ref].functions:
-            func_ref = scope_tree.dict[current_scope_ref].functions[func_name]
+            func_ref = scope_tree.dict[aux_scope_ref].functions[func_name]
             # Se pasa una referencia a Que es scope es func_name con func_ref, esto en relacion al scope_tree
+            func_quad = scope_tree.dict[func_ref].quad_start
             # Debug quad list
-            quad_list.append(Quad(Operations.ERA, left=func_name, right=func_ref))
+            quad_list.append(Quad(Operations.ERA, left=func_name, right=func_ref, target=func_quad))
             # Addr quad list
-            quad_addr_list.append(Quad(Operations.ERA, left=func_name, right=func_ref))
+            quad_addr_list.append(Quad(Operations.ERA, left=func_name, right=func_ref, target=func_quad))
             return
         aux_scope_ref = scope_tree.dict[aux_scope_ref].parent_ref
     e_error(f"Function {func_name} called before instantiated", p)
@@ -620,7 +625,20 @@ def p_n_function_call_3(p):
     argument_value = PilaO.pop()
     argument_type = PTypes.pop()
     function_name = last_function_call[-1]
-    function_ref = scope_tree.dict[current_scope_ref].functions[function_name]
+    print_scope_tree()
+    print(f"current_scope_ref: {current_scope_ref}")
+    print(scope_tree.dict[current_scope_ref].functions)
+    # Get function ref by traversing up scope tree
+    aux_scope_ref = current_scope_ref
+    while aux_scope_ref > -1:
+        if function_name in scope_tree.dict[aux_scope_ref].functions:
+            function_ref = scope_tree.dict[aux_scope_ref].functions[function_name]
+            break
+        else:
+            aux_scope_ref = scope_tree.dict[aux_scope_ref].parent_ref
+    if aux_scope_ref == -1:
+        e_error("Function called before instantiated", p)
+    # Manage parms and args
     params_list = scope_tree.dict[function_ref].params
     if (argument_counter[-1] >= len(params_list)):
         e_error(f"Argument mismatch for function ({function_name}) call, args({argument_counter[-1]+1}), params({len(params_list)})", p)
@@ -645,7 +663,16 @@ def p_n_function_call_4(p):
 def p_n_function_call_5(p):
     'n_function_call_5 : '
     function_name = last_function_call[-1]
-    function_ref = scope_tree.dict[current_scope_ref].functions[function_name]
+    # Get function ref by traversing up scope tree
+    aux_scope_ref = current_scope_ref
+    while aux_scope_ref > -1:
+        if function_name in scope_tree.dict[aux_scope_ref].functions:
+            function_ref = scope_tree.dict[aux_scope_ref].functions[function_name]
+            break
+        else:
+            aux_scope_ref = scope_tree.dict[aux_scope_ref].parent_ref
+    if aux_scope_ref == -1:
+        e_error("Function called before instantiated", p)
     params_list = scope_tree.dict[function_ref].params
     if (argument_counter[-1] != len(params_list)-1):
         e_error(f"Argument mismatch for function ({function_name}) call, args({argument_counter[-1]+1}), params({len(params_list)})", p)
@@ -655,13 +682,26 @@ def p_n_function_call_5(p):
 def p_n_function_call_6(p):
     'n_function_call_6 : '
     function_name = last_function_call[-1]
-    function_ref = scope_tree.dict[current_scope_ref].functions[function_name]
+    # Get function ref by traversing up scope tree
+    aux_scope_ref = current_scope_ref
+    while aux_scope_ref > -1:
+        if function_name in scope_tree.dict[aux_scope_ref].functions:
+            function_ref = scope_tree.dict[aux_scope_ref].functions[function_name]
+            break
+        else:
+            aux_scope_ref = scope_tree.dict[aux_scope_ref].parent_ref
+    if aux_scope_ref == -1:
+        e_error("Function called before instantiated", p)
+    function_type = scope_tree.dict[function_ref].return_type
+    function_start_quad = scope_tree.dict[function_ref].quad_start
     params_list = scope_tree.dict[function_ref].params
+    return_variable_name = f"${function_name}_return_value"
+    return_variable_addr = get_addr(return_variable_name, function_type)
     # Se pasa una referencia a Que es scope es func_name con func_ref, esto en relacion al scope_tree
     # Debug Quad list
-    quad_list.append(Quad(Operations.GOSUB, left=f"${function_name}_return_value", right=function_ref))
+    quad_list.append(Quad(Operations.GOSUB, function_name, function_ref, function_start_quad))
     # Addr quad list
-    quad_addr_list.append(Quad(Operations.GOSUB, left=f"${function_name}_return_value", right=function_ref))
+    quad_addr_list.append(Quad(Operations.GOSUB, function_name, function_ref, function_start_quad))
 
     # Handle return_value
     temp_var = gen_temp_var()
@@ -669,13 +709,13 @@ def p_n_function_call_6(p):
     temp_var_addr = get_addr(temp_var, temp_var_type)
     PilaO.append(temp_var)
     PTypes.append(temp_var_type)
+    scope_tree.dict[current_scope_ref].add_variable(return_variable_name, temp_var_type, return_variable_name)
 
     scope_tree.dict[current_scope_ref].add_variable(temp_var, temp_var_type, temp_var_addr)
     # Debug quad list
-    quad_list.append(Quad(Operations.EQUAL, left=f"${function_name}_return_value", target=temp_var))
+    quad_list.append(Quad(Operations.EQUAL, left=return_variable_name, target=temp_var))
     # Addr quad list
-    quad_addr_list.append(Quad(Operations.EQUAL, left=f"${function_name}_return_value", target=temp_var_addr))
-
+    quad_addr_list.append(Quad(Operations.EQUAL, left=return_variable_name, target=temp_var_addr))
 
     last_function_call.pop()
     pass
@@ -691,10 +731,11 @@ def p_n_return(p):
     return_type = PTypes.pop()
     if return_type != func_return_type:
         e_error(f"Wrong return type for ({func_name}), return type is ({return_type.value}), must be ({func_return_type.value})", p)
+    return_var_name = f"${func_name}_return_value"
     # Debug Quad List
-    quad_list.append(Quad(Operations.RETURN, target=return_value))
+    quad_list.append(Quad(Operations.RETURN, left=return_var_name, target=return_value))
     # Addr Quad List
-    quad_addr_list.append(Quad(Operations.RETURN, target=get_addr(return_value, return_type)))
+    quad_addr_list.append(Quad(Operations.RETURN, left=return_var_name, target=get_addr(return_value, return_type)))
     pass
 
 def p_n_return_void(p):
@@ -1059,11 +1100,11 @@ result = parser.parse(data)
 # print_variable_scopes()
 # print_pilas()
 # print(constants_table)
-# print_scope_tree()
-# print_addr_quads()
-# print_quads()
+print_scope_tree()
+print_addr_quads()
+print_quads()
 
-vm = VirtualMachine(quad_addr_list, constants_table)
+vm = VirtualMachine(quad_addr_list, constants_table, scope_tree)
 vm.execute_quads()
 # vm.print_mem()
 # vm.print_mem_tree()

@@ -19,6 +19,15 @@ class ExecutionTree:
     def __str__(self):
         lista = [str(self.node_dict[ref]) for ref in range(0, len(self.node_dict))]
         return "\n".join(lista)
+
+    def get_node_ref(self, semantic_scope_ref):
+        aux_ref = self.current_node_ref
+        while (aux_ref > -1):
+            if semantic_scope_ref == self.node_dict[aux_ref].semantic_tree_ref:
+                return self.node_dict[aux_ref].semantic_tree_ref
+            aux_ref = self.node_dict[aux_ref].parent_node_ref
+        self.__error(f"Could not find execution node for semantic ref({semantic_scope_ref})")
+
     
     def get_value(self, addr):
         aux_node_ref = self.__get_node_ref_for_addr(addr)
@@ -37,9 +46,9 @@ class ExecutionTree:
             layer_stack_top = node.layer_stack[-1]
             layer_stack_top[addr] = value
         
-    def add_node(self):
+    def add_node(self, semantic_tree_ref, parent_ref):
         last_empty_ref = len(self.node_dict)
-        new_node = Node(last_empty_ref, self.current_node_ref)
+        new_node = Node(last_empty_ref, parent_ref, semantic_tree_ref)
         self.node_dict[new_node.node_ref] = new_node
         self.current_node_ref = new_node.node_ref
     
@@ -55,10 +64,11 @@ class ExecutionTree:
 
 class Node:
 
-    def __init__(self, node_ref, parent_node_ref):
+    def __init__(self, node_ref, parent_node_ref, semantic_tree_ref):
         self.node_ref = node_ref
         self.parent_node_ref = parent_node_ref
         self.layer_stack = [{}]
+        self.semantic_tree_ref = semantic_tree_ref
     
     def __str__(self):
         return f"ref:{self.node_ref}, parent_ref:{self.parent_node_ref}, layer_stack:{self.layer_stack}"

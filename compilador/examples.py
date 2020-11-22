@@ -97,8 +97,9 @@ data_examples.append(Example(
 
         #string hola = "hola";
         #int a = masUno(5);
-        int b = 5;
-        int c = process(1,masUno(5), 3);
+        #int b = 5;
+        #int c = process(1,masUno(5), 3);
+        print(masUno(masUno(1)));
     '''
 ))
 
@@ -178,24 +179,26 @@ data_examples.append(Example(
         OwO
         int global = 999;
 
+        function addOne int x : int {
+            int y = 4 + global;
+            print(y);
+
+            function addTwo int x : int {
+                print(x);
+                if (x < 10) {
+                    x = x + 2 + addTwo(x);
+                }
+                return x;
+            }
+
+            return addTwo(x + 1);
+        }
+
         function minusOne int x : int {
             return addOne(x) - 2;
         }
 
-        function addOne int x : int {
-            int y = 4 + global;
-            function addTwo int x : int {
-
-                return x + addTwo(4);
-            }
-
-            if (x > 10) {
-                #return x;
-            }
-            return addTwo(x + 1);
-        }
-
-        minusOne(1);
+        print(minusOne(1));
     '''
 ))
 
@@ -226,5 +229,34 @@ data_examples.append(Example(
         print(5 <= 5);
 
         print("h" + "e" + "l" + "l" + "o" + " " + "w" + "o" + "r" + "l" + "d");
+    '''
+))
+
+data_examples.append(Example(
+    'Recursion',
+    '''
+        OwO
+        function nose int x : void {
+            print(x);
+            if(x < 10) {
+                nose(x + 1); 
+            }
+        }
+        nose(1);
+    '''
+))
+
+data_examples.append(Example(
+    'Fibbonacci',
+    '''
+        OwO
+        function fibo int x : int {
+            int value = 0;
+            if (x <= 1) {
+                
+            }
+            return fibo(value);
+        }
+        print(fibo(3));
     '''
 ))
