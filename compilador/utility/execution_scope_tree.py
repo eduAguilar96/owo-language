@@ -2,6 +2,7 @@ class ExecutionTree:
 
     def __init__(self):
         self.current_node_ref = -1
+        self.node_path_stack = []
         self.node_dict = {}
     
     def __error(self, e):
@@ -11,7 +12,7 @@ class ExecutionTree:
         aux_node_ref = self.current_node_ref
         while(aux_node_ref > -1):
             aux_node = self.node_dict[aux_node_ref]
-            if(addr in aux_node.layer_stack[-1]):
+            if(len(aux_node.layer_stack) > 0 and addr in aux_node.layer_stack[-1]):
                 return aux_node_ref
             aux_node_ref = aux_node.parent_node_ref
         return -1
@@ -51,16 +52,18 @@ class ExecutionTree:
         new_node = Node(last_empty_ref, parent_ref, semantic_tree_ref)
         self.node_dict[new_node.node_ref] = new_node
         self.current_node_ref = new_node.node_ref
+        self.node_path_stack.append(new_node.node_ref)
     
     def add_layer(self):
         node = self.node_dict[self.current_node_ref]
         node.add_layer()
     
     def step_back(self):
-        if len(self.node_dict[self.current_node_ref].layer_stack) > 0:
+        if len(self.node_dict[self.current_node_ref].layer_stack) > 1:
             self.node_dict[self.current_node_ref].layer_stack.pop()
             return
-        self.current_node_ref = self.node_dict[self.current_node_ref].parent_node_ref
+        self.node_path_stack.pop()
+        self.current_node_ref = self.node_dict[self.node_path_stack[-1]].node_ref
 
 class Node:
 
@@ -74,8 +77,4 @@ class Node:
         return f"ref:{self.node_ref}, parent_ref:{self.parent_node_ref}, layer_stack:{self.layer_stack}"
     
     def add_layer(self):
-        self.layer_stack.append({})      
-
-# class Layer:
-#     def __init__(self):
-#         self.mem = {}
+        self.layer_stack.append({})

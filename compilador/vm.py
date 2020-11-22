@@ -3,9 +3,9 @@ from utility.quad import *
 from utility.semantic_scope_tree import *
 from utility.execution_scope_tree import *
 
-mem = {}
 mem_tree = ExecutionTree()
 args_list_stack = []
+semantic_tree_ref_stack = []
 return_instruction_pointer_stack = []
 return_values = {}
 
@@ -71,11 +71,7 @@ class VirtualMachine:
             constant_type = self.constants_table[value]['type']
             if constant_type == Types.STRING_TYPE:
                 value = value.strip('"')
-            # mem[constant_addr] = self.type_map[constant_type](value)
             mem_tree.set_value(constant_addr, self.type_map[constant_type](value))
-        # print(self.constants_table)
-        # print(mem)
-
     def execute_quads(self):
         while True:
             self.set_current_quad()
@@ -97,15 +93,15 @@ class VirtualMachine:
         print(f"OwO> {s}")
 
     def op_print(self):
-        # s = mem[self.current_quad.target]
         s_t = mem_tree.get_value(self.current_quad.target)
-        # self.output(f"Old: {s}")
         self.output(f"{s_t}")
         self.instruction_pointer += 1
 
     def op_start(self):
         self.is_running = True
         self.current_semantic_scope_ref = 0
+        global semantic_tree_ref_stack
+        semantic_tree_ref_stack.append(0)
         self.set_constants()
         self.instruction_pointer += 1
 
@@ -114,133 +110,87 @@ class VirtualMachine:
         self.is_running = False
     
     def op_plus(self):
-        # global mem
-        # mem[self.current_quad.target] = mem[self.current_quad.left] + mem[self.current_quad.right]
-
         global mem_tree
         tree_result = mem_tree.get_value(self.current_quad.left) + mem_tree.get_value(self.current_quad.right)
         mem_tree.set_value(self.current_quad.target, tree_result)
         self.instruction_pointer += 1
     
     def op_minus(self):
-        # global mem
-        # mem[self.current_quad.target] = mem[self.current_quad.left] - mem[self.current_quad.right]
-
         global mem_tree
         tree_result = mem_tree.get_value(self.current_quad.left) - mem_tree.get_value(self.current_quad.right)
         mem_tree.set_value(self.current_quad.target, tree_result)
         self.instruction_pointer += 1
     
     def op_times(self):
-        # global mem
-        # mem[self.current_quad.target] = mem[self.current_quad.left] * mem[self.current_quad.right]
-
         global mem_tree
-        left = mem_tree.get_value(self.current_quad.left)
-        right = mem_tree.get_value(self.current_quad.right)
         tree_result = mem_tree.get_value(self.current_quad.left) * mem_tree.get_value(self.current_quad.right)
         mem_tree.set_value(self.current_quad.target, tree_result)
         self.instruction_pointer += 1
     
     def op_divide(self):
-        # global mem
-        # mem[self.current_quad.target] = mem[self.current_quad.left] / mem[self.current_quad.right]
-
         global mem_tree
         tree_result = mem_tree.get_value(self.current_quad.left) / mem_tree.get_value(self.current_quad.right)
         mem_tree.set_value(self.current_quad.target, tree_result)
         self.instruction_pointer += 1
     
     def op_modulus(self):
-        # global mem
-        # mem[self.current_quad.target] = mem[self.current_quad.left] % mem[self.current_quad.right]
-
         global mem_tree
         tree_result = mem_tree.get_value(self.current_quad.left) % mem_tree.get_value(self.current_quad.right)
         mem_tree.set_value(self.current_quad.target, tree_result)
         self.instruction_pointer += 1
     
     def op_equal(self):
-        # global mem
-        # mem[self.current_quad.target] = mem[self.current_quad.left]
-
         global mem_tree
         # check if variable is global funciton return variable, which is not in memory
         if(str(self.current_quad.left)[0] == '$'):
-            # print(f"{self.current_quad.target} = {self.current_quad.left}")
-            # print(return_values)
             mem_tree.set_value(self.current_quad.target, return_values[self.current_quad.left])
         else:
             mem_tree.set_value(self.current_quad.target, mem_tree.get_value(self.current_quad.left))
         self.instruction_pointer += 1
     
     def op_or(self):
-        # global mem
-        # mem[self.current_quad.target] = mem[self.current_quad.left] or mem[self.current_quad.right]
-
         global mem_tree
         tree_result = mem_tree.get_value(self.current_quad.left) or mem_tree.get_value(self.current_quad.right)
         mem_tree.set_value(self.current_quad.target, tree_result)
         self.instruction_pointer += 1
     
     def op_and(self):
-        # global mem
-        # mem[self.current_quad.target] = mem[self.current_quad.left] and mem[self.current_quad.right]
-
         global mem_tree
         tree_result = mem_tree.get_value(self.current_quad.left) and mem_tree.get_value(self.current_quad.right)
         mem_tree.set_value(self.current_quad.target, tree_result)
         self.instruction_pointer += 1
     
     def op_equalequal(self):
-        # global mem
-        # mem[self.current_quad.target] = mem[self.current_quad.left] == mem[self.current_quad.right]
-
         global mem_tree
         tree_result = mem_tree.get_value(self.current_quad.left) == mem_tree.get_value(self.current_quad.right)
         mem_tree.set_value(self.current_quad.target, tree_result)
         self.instruction_pointer += 1
     
     def op_lessthan(self):
-        # global mem
-        # mem[self.current_quad.target] = mem[self.current_quad.left] < mem[self.current_quad.right]
-
         global mem_tree
         tree_result = mem_tree.get_value(self.current_quad.left) < mem_tree.get_value(self.current_quad.right)
         mem_tree.set_value(self.current_quad.target, tree_result)
         self.instruction_pointer += 1
     
     def op_greaterthan(self):
-        # global mem
-        # mem[self.current_quad.target] = mem[self.current_quad.left] > mem[self.current_quad.right]
-
         global mem_tree
         tree_result = mem_tree.get_value(self.current_quad.left) > mem_tree.get_value(self.current_quad.right)
         mem_tree.set_value(self.current_quad.target, tree_result)
         self.instruction_pointer += 1
     
     def op_notequal(self):
-        # global mem
-        # mem[self.current_quad.target] = mem[self.current_quad.left] != mem[self.current_quad.right]
-
         global mem_tree
         tree_result = mem_tree.get_value(self.current_quad.left) != mem_tree.get_value(self.current_quad.right)
         mem_tree.set_value(self.current_quad.target, tree_result)
         self.instruction_pointer += 1
     
     def op_lessthanorequal(self):
-        # global mem
-        # mem[self.current_quad.target] = mem[self.current_quad.left] <= mem[self.current_quad.right]
-
         global mem_tree
         tree_result = mem_tree.get_value(self.current_quad.left) <= mem_tree.get_value(self.current_quad.right)
         mem_tree.set_value(self.current_quad.target, tree_result)
         self.instruction_pointer += 1
     
     def op_greaterthanorequal(self):
-        # global mem
-        # mem[self.current_quad.target] = mem[self.current_quad.left] >= mem[self.current_quad.right]
-
         global mem_tree
         tree_result = mem_tree.get_value(self.current_quad.left) >= mem_tree.get_value(self.current_quad.right)
         mem_tree.set_value(self.current_quad.target, tree_result)
@@ -251,7 +201,6 @@ class VirtualMachine:
     
 
     def op_gotot(self):
-        # condition = mem[self.current_quad.left]
         condition_t = mem_tree.get_value(self.current_quad.left)
         if condition_t == True:    
             self.instruction_pointer = self.current_quad.target
@@ -259,7 +208,6 @@ class VirtualMachine:
         self.instruction_pointer = self.instruction_pointer + 1
     
     def op_gotof(self):
-        # condition = mem[self.current_quad.left]
         condition_t = mem_tree.get_value(self.current_quad.left)
         if condition_t == False:    
             self.instruction_pointer = self.current_quad.target
@@ -287,48 +235,47 @@ class VirtualMachine:
         function_name = self.semantic_tree.dict[function_semantic_scope_ref].func_name
         # Set new instruction pointer
         self.instruction_pointer = function_start_quad
-        # TODO change execution node
         # USING SEMANTIC TREE
+        # if function is self, add layer
+        if(function_name == self.semantic_tree.dict[semantic_tree_ref_stack[-1]].func_name):
+            mem_tree.add_layer()
         # if function is child function, add step from current position
-        # print(f"current_semantic_scope_ref: {self.current_semantic_scope_ref}")
-        # print(self.semantic_tree)
-        if(function_name in self.semantic_tree.dict[self.current_semantic_scope_ref].functions):
+        elif(function_name in self.semantic_tree.dict[semantic_tree_ref_stack[-1]].functions):
             mem_tree.add_node(function_semantic_scope_ref, mem_tree.current_node_ref)
         # if function is NOT child function, go up and find semantic parent, add step from parent
         else:
-            aux_semantic_scope_ref = self.current_semantic_scope_ref
+            print(f"Function is NOT Child, looking for({function_name}) function parent int...")
+            aux_semantic_scope_ref = semantic_tree_ref_stack[-1]
             while (aux_semantic_scope_ref > -1):
+                print(self.semantic_tree.dict[aux_semantic_scope_ref])
                 # if function in semantic scope parent
                 if (function_name in self.semantic_tree.dict[aux_semantic_scope_ref].functions):
+                    print(f"==Found in scope_ref:{aux_semantic_scope_ref}")
                     # get equivalent execution node -> semantic scope
                     execution_parent_ref = mem_tree.get_node_ref(aux_semantic_scope_ref)
                     # add new node
                     mem_tree.add_node(function_semantic_scope_ref, execution_parent_ref)
                 aux_semantic_scope_ref = self.semantic_tree.dict[aux_semantic_scope_ref].parent_ref
-        self.current_semantic_scope_ref = function_semantic_scope_ref
-        # TODO set up parameters
-        # loop through list of parameters, form era stack
-        params_list = self.semantic_tree.dict[self.current_semantic_scope_ref].params
-        # print(f"args_list_stack: {args_list_stack}")
-        # print(f"params_list[i]: {params_list}")
-        # print(f"args_list_stack[-1]: {args_list_stack[-1]}")
+        semantic_tree_ref_stack.append(function_semantic_scope_ref)
+
+        # loop through list of parameters and list of arguments
+        params_list = self.semantic_tree.dict[semantic_tree_ref_stack[-1]].params
         for i in range(0, len(args_list_stack[-1])):
             param_name = params_list[i]
-            # print(f"param_name: {param_name}")
-            arg_addr = self.semantic_tree.dict[self.current_semantic_scope_ref].vars[param_name]['addr']
+            arg_addr = self.semantic_tree.dict[semantic_tree_ref_stack[-1]].vars[param_name]['addr']
             mem_tree.set_value(arg_addr, args_list_stack[-1][i])
-            # print(f"arg_name: {args_list_stack[-1][i]}")
         args_list_stack.pop()
             
     
     def op_return(self):
         return_value = mem_tree.get_value(self.current_quad.target)
         return_values[self.current_quad.left] = return_value
-        # print(return_values)
         self.instruction_pointer = self.instruction_pointer + 1
     
     def op_endfunc(self):
+        mem_tree.step_back()
         self.instruction_pointer = return_instruction_pointer_stack[-1]
         return_instruction_pointer_stack.pop()
+        semantic_tree_ref_stack.pop()
     
 

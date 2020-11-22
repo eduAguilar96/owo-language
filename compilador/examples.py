@@ -250,13 +250,37 @@ data_examples.append(Example(
     'Fibbonacci',
     '''
         OwO
+        int i = 2;
         function fibo int x : int {
-            int value = 0;
             if (x <= 1) {
-                
+                return x;
             }
-            return fibo(value);
+            int a = fibo(x-1);
+            int b = fibo(x-2);
+            return a + b;
         }
+        print(fibo(0));
+        print(fibo(1));
+        print(fibo(2));
         print(fibo(3));
+        print(fibo(4));
+        print(fibo(5));
+        print(fibo(6));
     '''
+))
+
+data_examples.append(Example(
+    'Basic Recursive',
+     '''
+        OwO
+        function masUno int x : int {
+            print("Inside masUno");
+            print(x);
+            if (x <= 1) {
+                x = masUno(x+1);
+            }
+            return x;
+        }
+        print(masUno(0));
+     '''
 ))

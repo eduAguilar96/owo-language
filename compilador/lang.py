@@ -597,7 +597,6 @@ def p_n_function_call_1(p):
     aux_scope_ref = current_scope_ref
     while(aux_scope_ref > -1):
         # check if function is child context
-        print(scope_tree.dict[aux_scope_ref].functions)
         if func_name in scope_tree.dict[aux_scope_ref].functions:
             func_ref = scope_tree.dict[aux_scope_ref].functions[func_name]
             # Se pasa una referencia a Que es scope es func_name con func_ref, esto en relacion al scope_tree
@@ -625,9 +624,6 @@ def p_n_function_call_3(p):
     argument_value = PilaO.pop()
     argument_type = PTypes.pop()
     function_name = last_function_call[-1]
-    print_scope_tree()
-    print(f"current_scope_ref: {current_scope_ref}")
-    print(scope_tree.dict[current_scope_ref].functions)
     # Get function ref by traversing up scope tree
     aux_scope_ref = current_scope_ref
     while aux_scope_ref > -1:
@@ -722,20 +718,44 @@ def p_n_function_call_6(p):
 
 def p_n_return(p):
     'n_return : '
-    func_ref = current_scope_ref
-    func_name = scope_tree.dict[func_ref].func_name
-    func_return_type = scope_tree.dict[func_ref].return_type
+    # thorw error if in global scope
+    if(current_scope_ref == 0):
+        e_error("Unable to use 'return' statement in global scope", p)
+
+    # Get function ref by traversing up scope tree
+    aux_scope_ref = current_scope_ref
+    while aux_scope_ref > -1:
+        if scope_tree.dict[aux_scope_ref].func_name:
+            function_ref = aux_scope_ref
+            break
+        else:
+            aux_scope_ref = scope_tree.dict[aux_scope_ref].parent_ref
+    if aux_scope_ref == -1:
+        e_error("Function called before instantiated", p)
+
+    # Get Function attributes
+    func_name = scope_tree.dict[function_ref].func_name
+    func_return_type = scope_tree.dict[function_ref].return_type
+
+    # Break if void function
     if(func_return_type == Types.VOID):
         e_error(f"Void function ({func_name}) cannot have a return value", p)
+    
+    # Get return value
     return_value = PilaO.pop()
     return_type = PTypes.pop()
     if return_type != func_return_type:
         e_error(f"Wrong return type for ({func_name}), return type is ({return_type.value}), must be ({func_return_type.value})", p)
     return_var_name = f"${func_name}_return_value"
+
     # Debug Quad List
     quad_list.append(Quad(Operations.RETURN, left=return_var_name, target=return_value))
     # Addr Quad List
     quad_addr_list.append(Quad(Operations.RETURN, left=return_var_name, target=get_addr(return_value, return_type)))
+    # Debug quad list
+    quad_list.append(Quad(Operations.ENDFUNC))
+    # Addr quad list
+    quad_addr_list.append(Quad(Operations.ENDFUNC))
     pass
 
 def p_n_return_void(p):
@@ -938,7 +958,6 @@ def p_factor(p):
     '''
     pass
 
-# TODO falta agregar n_math_expression_1 para function_call
 def p_value(p):
     '''
     value : function_call
@@ -946,8 +965,6 @@ def p_value(p):
     | NAME n_variable_reference n_math_expression_1_name
     '''
     pass
-
-# TODO agregar soporte para instantiate varibale sin un assign
 
 def p_declare(p):
     '''
@@ -986,10 +1003,18 @@ def p_statement_aux(p):
     # | PRINT
     pass
 
+def p_function_codeblock(p):
+    '''
+    function_codeblock : codeblock
+    | return
+    '''
+    pass
+
 def p_codeblock(p):
     '''
     codeblock : empty
     | codeblock_aux codeblock
+    | return
     '''
     pass
 
@@ -1100,9 +1125,9 @@ result = parser.parse(data)
 # print_variable_scopes()
 # print_pilas()
 # print(constants_table)
-print_scope_tree()
-print_addr_quads()
-print_quads()
+# print_scope_tree()
+# print_quads()
+# print_addr_quads()
 
 vm = VirtualMachine(quad_addr_list, constants_table, scope_tree)
 vm.execute_quads()
