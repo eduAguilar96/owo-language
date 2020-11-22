@@ -3,9 +3,11 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 Unused terminals:
 
     DOT
+    FALSE
     LBRACKET
     NOT
     RBRACKET
+    TRUE
 
 Grammar
 
@@ -145,6 +147,7 @@ DOUBLE_TYPE          : 50 65
 ELSE                 : 121
 EQUAL                : 102 103
 EQUALEQUAL           : 55
+FALSE                : 
 FLOAT                : 59
 FLOAT_TYPE           : 51 66
 FOR                  : 119
@@ -177,6 +180,7 @@ SEMICOLON            : 69 70 105
 STRING               : 61
 STRING_TYPE          : 49 64
 TIMES                : 91
+TRUE                 : 
 VOID                 : 62
 WHILE                : 118
 error                : 

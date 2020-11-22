@@ -11,9 +11,10 @@ class Scope:
         self.params = []
         self.return_value = None
 
-    def add_variable(self, name, type):
+    def add_variable(self, name, type, addr=-1):
         self.vars[name] = {
-            'type': type
+            'type': type,
+            'addr': addr
         }
 
     def add_parameter(self, name):

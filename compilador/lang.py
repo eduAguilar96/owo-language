@@ -2,6 +2,7 @@ import sys
 import lex
 import yacc
 from examples import *
+from vm import *
 from utility.scope_tree import *
 from utility.quad import *
 from utility.constants import *
@@ -28,7 +29,9 @@ reserved = {
     #logical
     'and': 'AND',
     'or': 'OR',
-    'not': 'NOT'
+    'not': 'NOT',
+    'True': 'TRUE',
+    'False': 'FALSE',
 }
 
 # Tokens
@@ -101,7 +104,7 @@ current_type = None
 scope_tree = ScopeTree()
 current_scope_ref = 0
 
-start = 'program'
+constants_table = {}
 
 # Pending Operators
 POper = []
@@ -113,8 +116,84 @@ PTypes = []
 PJumps = []
 # Counter for used temporary variables
 temps_counter = 1
+
+DIR_SIZE = 1000
+
+DIR_INT = 1000
+dir_last_empty_int = DIR_INT
+
+DIR_STRING = DIR_INT + DIR_SIZE
+dir_last_empty_string = DIR_STRING
+
+DIR_FLOAT = DIR_STRING + DIR_SIZE
+dir_last_empty_float = DIR_FLOAT
+
+DIR_BOOL =  DIR_FLOAT + DIR_SIZE
+dir_last_empty_bool = DIR_BOOL
+# List of quadruples with addresses
+quad_addr_list = [Quad(Operations.START)]
 # List of quadruples
 quad_list = [Quad(Operations.START)]
+
+start = 'program'
+
+def check_out_of_mem(last_addr, initial_addr):
+    if(last_addr >= DIR_SIZE + initial_addr):
+        raise Exception("OwO: Out of memory")
+
+def get_var_addr(var, var_type):
+    aux_scope_ref = current_scope_ref
+    while aux_scope_ref > -1:
+        vars_table = scope_tree.dict[current_scope_ref].vars
+        if var in vars_table:
+            var_addr = vars_table[var]['addr']
+            if var_addr != -1:
+                return var_addr
+        aux_scope_ref = scope_tree.dict[aux_scope_ref].parent_ref
+    return -1
+
+def is_constant(token):
+    return token[0] == '"' or token[0].isdigit() or token == "True" or token == "False"
+
+def get_addr(value, value_type):
+    # print(f"Getting address for{value}, is_constant={is_constant}")
+    if is_constant(value):
+        if value in constants_table:
+            return constants_table[value]
+    else:
+        # Check if variable already exists
+        addr = get_var_addr(value, value_type)
+        if addr != -1:
+            return addr
+
+    # Variable/constant is NEW, create new addr
+    if(value_type == Types.INT_TYPE):
+        global dir_last_empty_int
+        check_out_of_mem(dir_last_empty_int, DIR_INT)
+        addr = dir_last_empty_int
+        dir_last_empty_int += 1
+    elif(value_type == Types.STRING_TYPE):
+        global dir_last_empty_string
+        check_out_of_mem(dir_last_empty_string, DIR_STRING)
+        addr = dir_last_empty_string
+        dir_last_empty_string += 1
+    elif(value_type == Types.FLOAT_TYPE):
+        global dir_last_empty_float
+        check_out_of_mem(dir_last_empty_float, DIR_FLOAT)
+        addr = dir_last_empty_float
+        dir_last_empty_float += 1
+    elif(value_type == Types.BOOL_TYPE):
+        global dir_last_empty_bool
+        check_out_of_mem(dir_last_empty_bool, DIR_BOOL)
+        addr = dir_last_empty_bool
+        dir_last_empty_bool += 1
+    elif(value_type == Types.VOID):
+        addr = -1
+    else:
+        raise Exception("OwO: Attempting to generate address for unkown variable type")
+
+    return addr
+    
 
 ## Puntos Neuralgicos
 
@@ -186,30 +265,43 @@ def p_n_variable_reference(p):
 def p_n_variable_instantiate(p):
     'n_variable_instantiate : '
     var_name = get_last_t(p)
-    scope_tree.dict[current_scope_ref].add_variable(var_name, current_type)
+    var_addr = get_addr(var_name, current_type)
+    scope_tree.dict[current_scope_ref].add_variable(var_name, current_type, var_addr)
 
 # Cada vez que se lee un Name y se esta creando una variable en los parametros
 # de una funcion
 def p_n_variable_instantiate_param(p):
     'n_variable_instantiate_param : '
     var_name = get_last_t(p)
-    scope_tree.dict[current_scope_ref].add_variable(var_name, current_type)
+    var_addr = get_addr(var_name, current_type)
+    scope_tree.dict[current_scope_ref].add_variable(var_name, current_type, var_addr)
     scope_tree.dict[current_scope_ref].add_parameter(var_name)
+
+def insert_constant(constant, constant_type):
+    if constant in constants_table:
+        return
+    constants_table[constant] = get_addr(constant, constant_type)
 
 # Puntos neuralgico s para procesar expresiones arithmeticas/matematicas
 def p_n_math_expression_1_int(p):
     'n_math_expression_1_int : '
-    n_math_expression(get_last_t(p), Types.INT_TYPE)
+    token = get_last_t(p)
+    insert_constant(token, Types.INT_TYPE)
+    n_math_expression(token, Types.INT_TYPE)
     pass
 
 def p_n_math_expression_1_float(p):
     'n_math_expression_1_float : '
-    n_math_expression(get_last_t(p), Types.FLOAT_TYPE)
+    token = get_last_t(p)
+    insert_constant(token, Types.FLOAT_TYPE)
+    n_math_expression(token, Types.FLOAT_TYPE)
     pass
 
 def p_n_math_expression_1_string(p):
     'n_math_expression_1_string : '
-    n_math_expression(get_last_t(p), Types.STRING_TYPE)
+    token = get_last_t(p)
+    insert_constant(token, Types.STRING_TYPE)
+    n_math_expression(token, Types.STRING_TYPE)
     pass
 
 def p_n_math_expression_1_name(p):
@@ -311,12 +403,18 @@ def n_math_expression_gen_quad(operadores):
         result_type = semantic_cube[left_type][right_type][operator]
         if result_type:
             result = gen_temp_var()
+            # Add to debug quad
             temp_quad = Quad(operator, left_operand, right_operand, result)
             quad_list.append(temp_quad)
+            # Add to addr quad
+            result_addr = get_addr(result, result_type)
+            addr_quad = Quad(operator, get_addr(left_operand, left_type), get_addr(right_operand, right_type), result_addr)
+            quad_addr_list.append(addr_quad)
+    
             PilaO.append(result)
             PTypes.append(result_type)
             # Append variable temp a los scopes
-            scope_tree.dict[current_scope_ref].add_variable(result, result_type)
+            scope_tree.dict[current_scope_ref].add_variable(result, result_type, result_addr)
             # TODO si algun operand es temparal(t#) entonces regresarla a "AVAILABLE", se puede volver a usar
         else:
             return f"Type Mismatch: left[type: {left_type}, op: {left_operand}]"\
@@ -325,13 +423,17 @@ def n_math_expression_gen_quad(operadores):
 
 def p_n_two_way_conditional_1(p):
     'n_two_way_conditional_1 : '
-    exp_type = PTypes.pop()
-    if(exp_type != Types.BOOL_TYPE):
+    result_type = PTypes.pop()
+    if(result_type != Types.BOOL_TYPE):
         e_error("Type Mismatch in two way conditional", p)
     else:
         result = PilaO.pop()
+        # Adding to debug quad list
         temp_quad = Quad(Operations.GOTOF, result)
         quad_list.append(temp_quad)
+        # Adding to addr quad list
+        addr_quad = Quad(Operations.GOTOF, get_addr(result, result_type))
+        quad_addr_list.append(addr_quad)
         cont = len(quad_list)
         PJumps.append(cont-1)
     pass
@@ -340,17 +442,28 @@ def p_n_two_way_conditional_2(p):
     'n_two_way_conditional_2 : '
     end = PJumps.pop()
     cont = len(quad_list)
+    # Debuag quad list
     quad_list[end].target = cont
+    # Addr quad list
+    quad_addr_list[end].target = cont
     pass
 
 def p_n_two_way_conditional_3(p):
     'n_two_way_conditional_3 : '
+    # Debug Quad list
     temp_quad = Quad(Operations.GOTO)
     quad_list.append(temp_quad)
+    # Addr quad list
+    addr_quad = Quad(Operations.GOTO)
+    quad_addr_list.append(addr_quad)
+
     jump_false = PJumps.pop()
     cont = len(quad_list)
     PJumps.append(cont-1)
+    # Debug Quad list
     quad_list[jump_false].target = cont
+    # Addr quad list
+    quad_addr_list[jump_false].target = cont
     pass
 
 def p_n_pre_condition_loop_1(p):
@@ -361,13 +474,18 @@ def p_n_pre_condition_loop_1(p):
 
 def p_n_pre_condition_loop_2(p):
     'p_n_pre_condition_loop_2 : '
-    exp_type = PTypes.pop()
-    if(exp_type != Types.BOOL_TYPE):
+    result_type = PTypes.pop()
+    if(result_type != Types.BOOL_TYPE):
         e_error("Type Mismatch in pre condition loop", p)
     else:
         result = PilaO.pop()
+        # Debug quad list
         temp_quad = Quad(Operations.GOTOF, result)
         quad_list.append(temp_quad)
+        # Addr quad list
+        addr_quad = Quad(Operations.GOTOF, get_addr(result, result_type))
+        quad_addr_list.append(addr_quad)
+
         cont = len(quad_list)
         PJumps.append(cont-1)
     pass
@@ -376,10 +494,18 @@ def p_n_pre_condition_loop_3(p):
     'p_n_pre_condition_loop_3 : '
     end = PJumps.pop()
     return_jump = PJumps.pop()
+    # Debug quad list
     temp_quad = Quad(Operations.GOTO, target=return_jump)
     quad_list.append(temp_quad)
+    # Addr quad list
+    addr_quad = Quad(Operations.GOTO, target=return_jump)
+    quad_addr_list.append(addr_quad)
+
     cont = len(quad_list)
+    # Debug quad list
     quad_list[end].target = cont
+    # Addr quad list
+    quad_addr_list[end].target = cont
     pass
 
 def p_n_seen_equal_op(p):
@@ -398,8 +524,12 @@ def do_assign():
         operator = POper.pop()
         result_type = semantic_cube[left_type][right_type][operator]
         if result_type:
+            # Debug quad list
             temp_quad = Quad(operator, left_operand, target=right_operand)
             quad_list.append(temp_quad)
+            # Addr quad list
+            addr_quad = Quad(operator, get_addr(left_operand, left_type), target=get_addr(right_operand, right_type))
+            quad_addr_list.append(addr_quad)
             # TODO si algun operand es temparal(t#) entonces regresarla a "AVAILABLE", se puede volver a usar
         else:
             return f"Type Mismatch: left[type: {left_type}, op: {left_operand}]"\
@@ -410,7 +540,10 @@ def do_assign():
 def p_n_before_function_definition(p):
     'n_before_function_definition : '
     PJumps.append(len(quad_list))
+    # Debug quad list
     quad_list.append(Quad(Operations.GOTO))
+    # Addr quad list
+    quad_addr_list.append(Quad(Operations.GOTO))
     pass
 
 def p_n_function_block_start(p):
@@ -420,9 +553,16 @@ def p_n_function_block_start(p):
 
 def p_n_function_block_end(p):
     'n_function_block_end : '
+    # Debug quad list
     quad_list.append(Quad(Operations.ENDFUNC))
+    # Addr quad list
+    quad_addr_list.append(Quad(Operations.ENDFUNC))
+
     function_start = PJumps.pop()
+    # Debug quad list
     quad_list[function_start].target = len(quad_list)
+    # Addr quad list
+    quad_addr_list[function_start].target = len(quad_list)
     pass
 
 def p_n_function_type(p):
@@ -443,7 +583,10 @@ def p_n_function_call_1(p):
         if func_name in scope_tree.dict[aux_scope_ref].functions:
             func_ref = scope_tree.dict[current_scope_ref].functions[func_name]
             # Se pasa una referencia a Que es scope es func_name con func_ref, esto en relacion al scope_tree
+            # Debug quad list
             quad_list.append(Quad(Operations.ERA, left=func_name, right=func_ref))
+            # Addr quad list
+            quad_addr_list.append(Quad(Operations.ERA, left=func_name, right=func_ref))
             return
         aux_scope_ref = scope_tree.dict[aux_scope_ref].parent_ref
     e_error(f"Function {func_name} called before instantiated", p)
@@ -473,7 +616,10 @@ def p_n_function_call_3(p):
         e_error(f"Type Mismatch for argument({params_list[argument_counter[-1]]}) in function ({function_name}) call", p)
 
     argument_temp = f"$param{argument_counter[-1]+1}"
+    # Debug quad list
     quad_list.append(Quad(Operations.PARAM, left=argument_value, target=argument_temp))
+    # Addr quad list
+    quad_addr_list.append(Quad(Operations.PARAM, left=get_addr(argument_value, argument_type), target=argument_temp))
     pass
 
 def p_n_function_call_4(p):
@@ -498,13 +644,25 @@ def p_n_function_call_6(p):
     function_ref = scope_tree.dict[current_scope_ref].functions[function_name]
     params_list = scope_tree.dict[function_ref].params
     # Se pasa una referencia a Que es scope es func_name con func_ref, esto en relacion al scope_tree
+    # Debug Quad list
     quad_list.append(Quad(Operations.GOSUB, left=f"${function_name}_return_value", right=function_ref))
+    # Addr quad list
+    quad_addr_list.append(Quad(Operations.GOSUB, left=f"${function_name}_return_value", right=function_ref))
+
     # Handle return_value
     temp_var = gen_temp_var()
+    temp_var_type = scope_tree.dict[function_ref].return_type
+    temp_var_addr = get_addr(temp_var, temp_var_type)
     PilaO.append(temp_var)
-    PTypes.append(scope_tree.dict[function_ref].return_type)
-    scope_tree.dict[current_scope_ref].add_variable(temp_var, scope_tree.dict[function_ref].return_type)
+    PTypes.append(temp_var_type)
+
+    scope_tree.dict[current_scope_ref].add_variable(temp_var, temp_var_type, temp_var_addr)
+    # Debug quad list
     quad_list.append(Quad(Operations.EQUAL, left=f"${function_name}_return_value", target=temp_var))
+    # Addr quad list
+    quad_addr_list.append(Quad(Operations.EQUAL, left=f"${function_name}_return_value", target=temp_var_addr))
+
+
     last_function_call.pop()
     pass
 
@@ -519,7 +677,10 @@ def p_n_return(p):
     return_type = PTypes.pop()
     if return_type != func_return_type:
         e_error(f"Wrong return type for ({func_name}), return type is ({return_type.value}), must be ({func_return_type.value})", p)
+    # Debug Quad List
     quad_list.append(Quad(Operations.RETURN, target=return_value))
+    # Addr Quad List
+    quad_addr_list.append(Quad(Operations.RETURN, target=get_addr(return_value, return_type)))
     pass
 
 def p_n_return_void(p):
@@ -531,16 +692,22 @@ def p_n_return_void(p):
 
 def p_n_print(p):
     'n_print : '
-    str = PilaO.pop()
+    s = PilaO.pop()
     str_type = PTypes.pop()
     if str_type != Types.STRING_TYPE:
         e_error("Cannot print non STRING value" ,p)
-    quad_list.append(Quad(Operations.PRINT, target=str))
+    # Debug Quad list
+    quad_list.append(Quad(Operations.PRINT, target=s))
+    # Addr Quad list
+    quad_addr_list.append(Quad(Operations.PRINT, target=get_addr(s, str_type)))
     pass
 
 def p_n_end(p):
     'n_end : '
+    # Debug Quad list
     quad_list.append(Quad(Operations.END))
+    # Addr Quad list
+    quad_addr_list.append(Quad(Operations.END))
     pass
 
 def gen_temp_var():
@@ -827,6 +994,10 @@ def print_quads():
     print("--Quads")
     [print(f"{ref} {quad_list[ref]}") for ref in range(0, len(quad_list))]
 
+def print_addr_quads():
+    print("--Addr Quads")
+    [print(f"{ref} {quad_addr_list[ref]}") for ref in range(0, len(quad_addr_list))]
+
 # Error handling for semantic exceptions
 def e_error(e, p):
     raise Exception(f"OwO: {e} in line: {p.lineno(-1)}")
@@ -869,8 +1040,12 @@ while True:
 
 result = parser.parse(data)
 
-
 # print_variable_scopes()
 # print_pilas()
+print(constants_table)
 print_scope_tree()
+print_addr_quads()
 print_quads()
+
+# vm = VirtualMachine(quad_list)
+# vm.execute_quads()

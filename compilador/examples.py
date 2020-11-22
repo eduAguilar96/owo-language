@@ -130,8 +130,8 @@ data_examples.append(Example(
         OwO
 
         print("Hello World");
-        string hola = "Hola mundo";
-        print(hola);
+        #string hola = "Hola mundo";
+        #print(hola);
     '''
 ))
 
@@ -141,5 +141,35 @@ data_examples.append(Example(
         OwO
         int a;
         a = 1;
+    '''
+))
+
+data_examples.append(Example(
+    'Dos whiles de Guadiana',
+    '''
+        OwO
+        int i = 0;
+        while (i < 10) {
+            int x = 3000;
+            i = i + 1;
+        }
+        while (i < 10) {
+            int x = 3000;
+            i = i + 1;
+        }
+    '''
+))
+data_examples.append(Example(
+    'Recursion de Aaron',
+    '''
+        OwO
+        function addOne int x : int {
+            if (x > 10) {
+                return x;
+            }
+            return addOne(x + 1)
+        }
+
+        addOne(1);
     '''
 ))
