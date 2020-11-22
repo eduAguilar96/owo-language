@@ -34,7 +34,7 @@ class ExecutionTree:
         aux_node_ref = self.__get_node_ref_for_addr(addr)
         if aux_node_ref != -1:
             return self.node_dict[aux_node_ref].layer_stack[-1][addr]
-        self.__error(f"could not find address {addr}, current execution node: {self.current_node_ref}")
+        self.__error(f"Could not find address {addr}, current execution node: {self.current_node_ref}")
     
     def set_value(self, addr, value):
         aux_node_ref = self.__get_node_ref_for_addr(addr)

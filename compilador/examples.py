@@ -116,8 +116,11 @@ data_examples.append(Example(
             return 0;
         }
 
+
+        # int x = masUno(1); Esto causa un error
         int zero = cero();
-        int x = masUno(x);
+        int x = masUno(1);
+
     '''
 ))
 
