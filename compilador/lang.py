@@ -3,7 +3,7 @@ import lex
 import yacc
 from examples import *
 from vm import *
-from utility.scope_tree import *
+from utility.semantic_scope_tree import *
 from utility.quad import *
 from utility.constants import *
 
@@ -59,7 +59,7 @@ def t_NAME(t):
 
 t_FLOAT = r'((0|[1-9][0-9]*)\.[0-9][0-9]*)'
 t_INT = r'(0|[1-9][0-9]*)'
-t_STRING = r'\".*\"'
+t_STRING = r'("(\\"|[^"])*")'
 
 # Arithmetic operators
 t_PLUS    = r'\+'
@@ -101,7 +101,7 @@ t_ignore_COMMENT = r'\#.*'
 
 current_type = None
 # Scope tree for storing variables and functions
-scope_tree = ScopeTree()
+scope_tree = SemanticScopeTree()
 current_scope_ref = 0
 
 constants_table = {}
@@ -144,7 +144,7 @@ def check_out_of_mem(last_addr, initial_addr):
 def get_var_addr(var, var_type):
     aux_scope_ref = current_scope_ref
     while aux_scope_ref > -1:
-        vars_table = scope_tree.dict[current_scope_ref].vars
+        vars_table = scope_tree.dict[aux_scope_ref].vars
         if var in vars_table:
             var_addr = vars_table[var]['addr']
             if var_addr != -1:
@@ -306,9 +306,16 @@ def p_n_math_expression_1_float(p):
 def p_n_math_expression_1_string(p):
     'n_math_expression_1_string : '
     token = get_last_t(p)
+    # token = token.strip('"')
     insert_constant(token, Types.STRING_TYPE)
     n_math_expression(token, Types.STRING_TYPE)
     pass
+
+def p_n_math_expression_1_bool(p):
+    'n_math_expression_1_bool : '
+    token = get_last_t(p)
+    insert_constant(token, Types.BOOL_TYPE)
+    n_math_expression(token, Types.BOOL_TYPE)
 
 def p_n_math_expression_1_name(p):
     'n_math_expression_1_name : '
@@ -775,6 +782,8 @@ def p_literal(p):
     literal : FLOAT n_math_expression_1_float
     | INT n_math_expression_1_int
     | STRING n_math_expression_1_string
+    | TRUE n_math_expression_1_bool
+    | FALSE n_math_expression_1_bool
     '''
     pass
 
@@ -1049,11 +1058,12 @@ result = parser.parse(data)
 
 # print_variable_scopes()
 # print_pilas()
-print(constants_table)
-print_scope_tree()
-print_addr_quads()
-print_quads()
+# print(constants_table)
+# print_scope_tree()
+# print_addr_quads()
+# print_quads()
 
 vm = VirtualMachine(quad_addr_list, constants_table)
 vm.execute_quads()
-vm.print_mem()
+# vm.print_mem()
+# vm.print_mem_tree()

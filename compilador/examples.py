@@ -45,9 +45,15 @@ data_examples.append(Example(
     'If else',
     '''
         OwO
-        if (A + B < C) {
+        int A = 1;
+        int B = 1;
+        int C = 3;
+        int D = 5;
+        if (A + B > C) {
+            print("Inside if");
             A = B + C;
         } else {
+            print("Inside else");
             A = B + C * D;
         }
     '''
@@ -73,6 +79,8 @@ data_examples.append(Example(
     'Nested Function calls',
     '''
         OwO
+
+        int global = 9000;
 
         function masUno int x : int {
             return x + 1;
@@ -153,10 +161,13 @@ data_examples.append(Example(
         while (i < 10) {
             int x = 3000;
             i = i + 1;
+            print(x + i);
         }
+        i = 0;
         while (i < 10) {
             int x = 3000;
             i = i + 1;
+            print(i);
         }
     '''
 ))
@@ -165,14 +176,26 @@ data_examples.append(Example(
     'Recursion de Aaron',
     '''
         OwO
+        int global = 999;
+
+        function minusOne int x : int {
+            return addOne(x) - 2;
+        }
+
         function addOne int x : int {
+            int y = 4 + global;
+            function addTwo int x : int {
+
+                return x + addTwo(4);
+            }
+
             if (x > 10) {
                 #return x;
             }
-            return addOne(x + 1);
+            return addTwo(x + 1);
         }
 
-        addOne(1);
+        minusOne(1);
     '''
 ))
 
@@ -181,5 +204,27 @@ data_examples.append(Example(
     '''
         OwO
         print(10 % 2);
+    '''
+))
+
+data_examples.append(Example(
+    'Boolean',
+    '''
+        OwO
+        bool a = True;
+        bool b = False;
+        string hello = "hello";
+        string world = "world";
+        print(hello + world);
+        print("4 > 5");
+        print(4 > 5);
+        print("4 < 5");
+        print(4 < 5);
+        print("4 <= 5");
+        print(4 <= 5);
+        print("5 <= 5");
+        print(5 <= 5);
+
+        print("h" + "e" + "l" + "l" + "o" + " " + "w" + "o" + "r" + "l" + "d");
     '''
 ))

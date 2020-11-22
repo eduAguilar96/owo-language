@@ -27,7 +27,7 @@ class Scope:
         return f"ref: {self.ref} {self.func_name + ' : ' + str(self.return_type) + ' - ' + str(self.quad_start) if self.func_name else ''} \n" \
             f"parent_ref: {self.parent_ref}\n" + str_vars + str_params + str_functions
 
-class ScopeTree:
+class SemanticScopeTree:
     def __init__(self):
         self.counter = 0
         global_scope = Scope(-1)
