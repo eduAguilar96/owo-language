@@ -159,7 +159,7 @@ def get_addr(value, value_type):
     # print(f"Getting address for{value}, is_constant={is_constant}")
     if is_constant(value):
         if value in constants_table:
-            return constants_table[value]
+            return constants_table[value]['addr']
     else:
         # Check if variable already exists
         addr = get_var_addr(value, value_type)
@@ -232,10 +232,13 @@ def p_n_open_new_scope_function(p):
     new_scope = Scope(scope_tree.dict[current_scope_ref].ref)
     new_scope.func_name = func_name
     scope_tree.add_scope(new_scope)
+    # Set current scope to new scope
     current_scope_ref = new_scope.ref
     # Add reference for new/current scope to scope parent.functions
     parent_ref = scope_tree.dict[current_scope_ref].parent_ref
     scope_tree.dict[parent_ref].functions[func_name] = current_scope_ref
+    # Add reference for new/current scope to itself.functions
+    scope_tree.dict[current_scope_ref].functions[func_name] = current_scope_ref
     pass
 
 # Cuando se cierra un {} y se cierra un contexto
@@ -280,7 +283,10 @@ def p_n_variable_instantiate_param(p):
 def insert_constant(constant, constant_type):
     if constant in constants_table:
         return
-    constants_table[constant] = get_addr(constant, constant_type)
+    constants_table[constant] = {
+            'addr': get_addr(constant, constant_type),
+            'type': constant_type,
+        }
 
 # Puntos neuralgico s para procesar expresiones arithmeticas/matematicas
 def p_n_math_expression_1_int(p):
@@ -580,6 +586,7 @@ def p_n_function_call_1(p):
     last_function_call.append(func_name)
     aux_scope_ref = current_scope_ref
     while(aux_scope_ref > -1):
+        # check if function is child context
         if func_name in scope_tree.dict[aux_scope_ref].functions:
             func_ref = scope_tree.dict[current_scope_ref].functions[func_name]
             # Se pasa una referencia a Que es scope es func_name con func_ref, esto en relacion al scope_tree
@@ -694,8 +701,8 @@ def p_n_print(p):
     'n_print : '
     s = PilaO.pop()
     str_type = PTypes.pop()
-    if str_type != Types.STRING_TYPE:
-        e_error("Cannot print non STRING value" ,p)
+    # if str_type != Types.STRING_TYPE:
+    #     e_error("Cannot print non STRING value" ,p)
     # Debug Quad list
     quad_list.append(Quad(Operations.PRINT, target=s))
     # Addr Quad list
@@ -1047,5 +1054,6 @@ print_scope_tree()
 print_addr_quads()
 print_quads()
 
-# vm = VirtualMachine(quad_list)
-# vm.execute_quads()
+vm = VirtualMachine(quad_addr_list, constants_table)
+vm.execute_quads()
+vm.print_mem()

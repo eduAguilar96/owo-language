@@ -36,7 +36,8 @@ data_examples.append(Example(
         int B = 2;
         int C = 3;
         int D = 4;
-        int suma = A + B and C >= D or B;
+        int suma = A + B + C + D;
+        print(suma);
     '''
 ))
 
@@ -159,17 +160,26 @@ data_examples.append(Example(
         }
     '''
 ))
+
 data_examples.append(Example(
     'Recursion de Aaron',
     '''
         OwO
         function addOne int x : int {
             if (x > 10) {
-                return x;
+                #return x;
             }
-            return addOne(x + 1)
+            return addOne(x + 1);
         }
 
         addOne(1);
+    '''
+))
+
+data_examples.append(Example(
+    'Modulus',
+    '''
+        OwO
+        print(10 % 2);
     '''
 ))
