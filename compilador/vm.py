@@ -12,6 +12,7 @@ return_values = {}
 class VirtualMachine:
 
     def __init__(self, quad_list, constants_table, semantic_tree, debug_mode=False):
+        self.bash_signature = "OwO"
         self.current_scope_stack = [0]
         self.quad_list = quad_list
         self.constants_table = constants_table
@@ -45,6 +46,9 @@ class VirtualMachine:
             Operations.GOSUB: self.op_gosub,
             Operations.RETURN: self.op_return,
             Operations.ENDFUNC: self.op_endfunc,
+            Operations.INPUTSTRING: self.op_inputstring,
+            Operations.INPUTINT: self.op_inputint,
+            Operations.INPUTFLOAT: self.op_inputfloat,
         }
         self.type_map = {
             Types.INT_TYPE: int,
@@ -54,9 +58,6 @@ class VirtualMachine:
         }
         self.is_running = False
         self.current_quad = None
-    
-    def print_mem(self):
-        print(mem)
     
     def print_mem_tree(self):
         print(mem_tree)
@@ -90,7 +91,7 @@ class VirtualMachine:
         raise Exception(f"OwO: Unkown op code {self.current_quad.op_code}")
 
     def output(self, s):
-        print(f"OwO> {s}")
+        print(f"{self.bash_signature}> {s}")
 
     def op_print(self):
         s_t = mem_tree.get_value(self.current_quad.target)
@@ -244,13 +245,11 @@ class VirtualMachine:
             mem_tree.add_node(function_semantic_scope_ref, mem_tree.current_node_ref)
         # if function is NOT child function, go up and find semantic parent, add step from parent
         else:
-            print(f"Function is NOT Child, looking for({function_name}) function parent int...")
             aux_semantic_scope_ref = semantic_tree_ref_stack[-1]
             while (aux_semantic_scope_ref > -1):
-                print(self.semantic_tree.dict[aux_semantic_scope_ref])
+                # print(self.semantic_tree.dict[aux_semantic_scope_ref])
                 # if function in semantic scope parent
                 if (function_name in self.semantic_tree.dict[aux_semantic_scope_ref].functions):
-                    print(f"==Found in scope_ref:{aux_semantic_scope_ref}")
                     # get equivalent execution node -> semantic scope
                     execution_parent_ref = mem_tree.get_node_ref(aux_semantic_scope_ref)
                     # add new node
@@ -277,5 +276,21 @@ class VirtualMachine:
         self.instruction_pointer = return_instruction_pointer_stack[-1]
         return_instruction_pointer_stack.pop()
         semantic_tree_ref_stack.pop()
+
+    def op_inputstring(self):
+        i = input(f"{self.bash_signature}<s ")
+        mem_tree.set_value(self.current_quad.target, str(i))
+        self.instruction_pointer = self.instruction_pointer + 1
+
+
+    def op_inputint(self):
+        i = input(f"{self.bash_signature}<i ")
+        mem_tree.set_value(self.current_quad.target, int(i))
+        self.instruction_pointer = self.instruction_pointer + 1
+
+    def op_inputfloat(self):
+        i = input(f"{self.bash_signature}<f ")
+        mem_tree.set_value(self.current_quad.target, float(i))
+        self.instruction_pointer = self.instruction_pointer + 1
     
 

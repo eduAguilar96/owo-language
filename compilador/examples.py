@@ -287,3 +287,26 @@ data_examples.append(Example(
         print(masUno(0));
      '''
 ))
+
+data_examples.append(Example(
+    'Input',
+    '''
+        OwO
+        print("How old are you?");
+        int a = input_i();
+        print("How tall are you?");
+        float height = input_f();
+        print("whats your name?");
+        string name = input_s();
+        
+        print("Hello " + name + " its great to meet you!");
+        print(name + " is...");
+        print(height);
+        print("...meters tall");
+        print(name + " is...");
+        print(a);
+        print("...years old");
+
+
+    '''
+))

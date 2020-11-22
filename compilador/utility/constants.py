@@ -54,6 +54,9 @@ class Operations(Enum):
   PARAM = 'param'
   RETURN = 'return'
   PRINT = 'print'
+  INPUTSTRING = 'inputString'
+  INPUTINT = 'inputInt'
+  INPUTFLOAT = 'inputFloat'
 
 #Tokens to Enum
 operations_map = {

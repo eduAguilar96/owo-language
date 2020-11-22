@@ -21,6 +21,9 @@ reserved = {
     'OwO': 'OWO',
     'CHIEF/AARON': 'IDK',
     'print': 'PRINT',
+    'input_s': 'INPUTSTRING',
+    'input_i': 'INPUTINT',
+    'input_f': 'INPUTFLOAT',
     # Flow
     'if': 'IF',
     'else': 'ELSE',
@@ -958,11 +961,51 @@ def p_factor(p):
     '''
     pass
 
+def p_n_input_string(p):
+    'n_input_string : '
+    n_input(Types.STRING_TYPE, Operations.INPUTSTRING)
+    pass
+
+def p_n_input_int(p):
+    'n_input_int : '
+    n_input(Types.INT_TYPE, Operations.INPUTINT)
+    pass
+
+def p_n_input_float(p):
+    'n_input_float : '
+    n_input(Types.FLOAT_TYPE, Operations.INPUTFLOAT)
+    pass
+
+def n_input(temp_var_type, op_code):
+    temp_var = gen_temp_var()
+    # Add to debug quad
+    temp_quad = Quad(op_code, target=temp_var)
+    quad_list.append(temp_quad)
+    # Add to addr quad
+    temp_var_addr = get_addr(temp_var, temp_var_type)
+    addr_quad = Quad(op_code,  target=temp_var_addr)
+    quad_addr_list.append(addr_quad)
+    # Append variable temp a los scopes
+    scope_tree.dict[current_scope_ref].add_variable(temp_var, temp_var_type, temp_var_addr)
+    # Agregar a las pilas de operadores
+    PilaO.append(temp_var)
+    PTypes.append(temp_var_type)
+    pass
+
+def p_input(p):
+    '''
+    input : INPUTSTRING LPARENTHESIS RPARENTHESIS n_input_string
+    | INPUTINT LPARENTHESIS RPARENTHESIS n_input_int
+    | INPUTFLOAT LPARENTHESIS RPARENTHESIS n_input_float
+    '''
+    pass
+
 def p_value(p):
     '''
     value : function_call
     | literal
     | NAME n_variable_reference n_math_expression_1_name
+    | input
     '''
     pass
 
