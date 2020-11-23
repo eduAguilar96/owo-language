@@ -54,6 +54,7 @@ class VirtualMachine:
             'in': 0,
             'out': 1,
             'err': 2,
+            'status': 3,
         }
         self.is_running = False
         self.current_quad = None
@@ -78,13 +79,20 @@ class VirtualMachine:
             if constant_type == Types.STRING_TYPE:
                 value = value.strip('"')
             self.mem_tree.set_value(constant_addr, self.type_map[constant_type](value))
+
     def execute_quads(self):
+        print('WHAT THE ACTUAL FK')
         while True:
             self.set_current_quad()
             op_code = self.current_quad.op_code
+            print(f'Last opcode ran ({op_code})')
+            stdin = self.stdoutin[self.std['in']]
+            if not stdin and op_code in [Operations.INPUTSTRING, Operations.INPUTINT, Operations.INPUTFLOAT]:
+                print(f"Enterng yield because of opcode ({op_code})")
+                return op_code
             self.execute_op(op_code)
             if(not self.is_running):
-                break
+                return None
     
     def execute_op(self, op_code):
         self.op_map.get(op_code, self.op_error)()
@@ -271,8 +279,14 @@ class VirtualMachine:
         self.return_instruction_pointer_stack.pop()
         self.semantic_tree_ref_stack.pop()
 
+    def flush_stdin(self):
+        self.stdoutin[self.std['in']] = ''
+
     def op_inputstring(self):
-        i = input(f"{self.bash_signature}<s ")
+        # i = input(f"{self.bash_signature}<s ")
+        i = self.stdoutin[self.std['in']]
+        # flush stdin
+        self.flush_stdin()
         self.mem_tree.set_value(self.current_quad.target, str(i))
         self.instruction_pointer = self.instruction_pointer + 1
 
