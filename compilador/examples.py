@@ -242,7 +242,7 @@ data_examples.append(Example(
         function nose int x : void {
             print(x);
             if(x < 10) {
-                nose(x + 1); 
+                nose(x + 1);
             }
         }
         nose(1);
@@ -289,7 +289,7 @@ data_examples.append(Example(
         float height = input_f();
         print("whats your name?");
         string name = input_s();
-        
+
         print("Hello " + name + " its great to meet you!");
         print(name + " is...");
         print(height);
@@ -341,5 +341,12 @@ data_examples.append(Example(
     '''
         OwO
         print(4 * (1 + 1));
+    '''
+))
+
+data_examples.append(Example(
+    'Test Arrays',
+    '''
+        OwO
     '''
 ))

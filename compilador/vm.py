@@ -64,7 +64,7 @@ class VirtualMachine:
         self.semantic_tree_ref_stack = []
         self.return_instruction_pointer_stack = []
         self.return_values = {}
-    
+
     def print_mem_tree(self):
         print(self.mem_tree)
 
@@ -80,7 +80,10 @@ class VirtualMachine:
                 value = value.strip('"')
             self.mem_tree.set_value(constant_addr, self.type_map[constant_type](value))
 
-    def execute_quads(self):
+    def execute_quads(self, run_in_terminal=False):
+        if run_in_terminal:
+            self.execute_quads_in_termianl()
+            return
         while True:
             self.set_current_quad()
             op_code = self.current_quad.op_code
@@ -98,13 +101,21 @@ class VirtualMachine:
                 return op_code
             if(not self.is_running):
                 return None
-    
+
+    def execute_quads_in_termianl(self):
+        while True:
+            self.set_current_quad()
+            op_code = self.current_quad.op_code
+            self.execute_op(op_code)
+            if(not self.is_running):
+                break
+
     def execute_op(self, op_code):
         self.op_map.get(op_code, self.op_error)()
 
     def set_current_quad(self):
         self.current_quad = self.quad_list[self.instruction_pointer]
-    
+
     def op_error(self):
         raise Exception(f"OwO: Unkown op code {self.current_quad.op_code}")
 
@@ -131,97 +142,97 @@ class VirtualMachine:
         if self.debug_mode:
             self.output("Terminating OwO...")
         self.is_running = False
-    
+
     def op_plus(self):
         tree_result = self.mem_tree.get_value(self.current_quad.left) + self.mem_tree.get_value(self.current_quad.right)
         self.mem_tree.set_value(self.current_quad.target, tree_result)
         self.instruction_pointer += 1
-    
+
     def op_minus(self):
         tree_result = self.mem_tree.get_value(self.current_quad.left) - self.mem_tree.get_value(self.current_quad.right)
         self.mem_tree.set_value(self.current_quad.target, tree_result)
         self.instruction_pointer += 1
-    
+
     def op_times(self):
         tree_result = self.mem_tree.get_value(self.current_quad.left) * self.mem_tree.get_value(self.current_quad.right)
         self.mem_tree.set_value(self.current_quad.target, tree_result)
         self.instruction_pointer += 1
-    
+
     def op_divide(self):
         tree_result = self.mem_tree.get_value(self.current_quad.left) / self.mem_tree.get_value(self.current_quad.right)
         self.mem_tree.set_value(self.current_quad.target, tree_result)
         self.instruction_pointer += 1
-    
+
     def op_modulus(self):
         tree_result = self.mem_tree.get_value(self.current_quad.left) % self.mem_tree.get_value(self.current_quad.right)
         self.mem_tree.set_value(self.current_quad.target, tree_result)
         self.instruction_pointer += 1
-    
+
     def op_equal(self):
         if(str(self.current_quad.left)[0] == '$'):
             self.mem_tree.set_value(self.current_quad.target, self.return_values[self.current_quad.left])
         else:
             self.mem_tree.set_value(self.current_quad.target, self.mem_tree.get_value(self.current_quad.left))
         self.instruction_pointer += 1
-    
+
     def op_or(self):
         tree_result = self.mem_tree.get_value(self.current_quad.left) or self.mem_tree.get_value(self.current_quad.right)
         self.mem_tree.set_value(self.current_quad.target, tree_result)
         self.instruction_pointer += 1
-    
+
     def op_and(self):
         tree_result = self.mem_tree.get_value(self.current_quad.left) and self.mem_tree.get_value(self.current_quad.right)
         self.mem_tree.set_value(self.current_quad.target, tree_result)
         self.instruction_pointer += 1
-    
+
     def op_equalequal(self):
         tree_result = self.mem_tree.get_value(self.current_quad.left) == self.mem_tree.get_value(self.current_quad.right)
         self.mem_tree.set_value(self.current_quad.target, tree_result)
         self.instruction_pointer += 1
-    
+
     def op_lessthan(self):
         tree_result = self.mem_tree.get_value(self.current_quad.left) < self.mem_tree.get_value(self.current_quad.right)
         self.mem_tree.set_value(self.current_quad.target, tree_result)
         self.instruction_pointer += 1
-    
+
     def op_greaterthan(self):
         tree_result = self.mem_tree.get_value(self.current_quad.left) > self.mem_tree.get_value(self.current_quad.right)
         self.mem_tree.set_value(self.current_quad.target, tree_result)
         self.instruction_pointer += 1
-    
+
     def op_notequal(self):
         tree_result = self.mem_tree.get_value(self.current_quad.left) != self.mem_tree.get_value(self.current_quad.right)
         self.mem_tree.set_value(self.current_quad.target, tree_result)
         self.instruction_pointer += 1
-    
+
     def op_lessthanorequal(self):
         tree_result = self.mem_tree.get_value(self.current_quad.left) <= self.mem_tree.get_value(self.current_quad.right)
         self.mem_tree.set_value(self.current_quad.target, tree_result)
         self.instruction_pointer += 1
-    
+
     def op_greaterthanorequal(self):
         tree_result = self.mem_tree.get_value(self.current_quad.left) >= self.mem_tree.get_value(self.current_quad.right)
         self.mem_tree.set_value(self.current_quad.target, tree_result)
         self.instruction_pointer += 1
-    
+
     def op_goto(self):
         self.instruction_pointer = self.current_quad.target
-    
+
 
     def op_gotot(self):
         condition_t = self.mem_tree.get_value(self.current_quad.left)
-        if condition_t == True:    
+        if condition_t == True:
             self.instruction_pointer = self.current_quad.target
             return
         self.instruction_pointer = self.instruction_pointer + 1
-    
+
     def op_gotof(self):
         condition_t = self.mem_tree.get_value(self.current_quad.left)
-        if condition_t == False:    
+        if condition_t == False:
             self.instruction_pointer = self.current_quad.target
             return
         self.instruction_pointer = self.instruction_pointer + 1
-    
+
     def op_era(self):
         # Add empty list to store param values, add to to stack
         self.args_list_stack.append([])
@@ -233,7 +244,7 @@ class VirtualMachine:
         # Add param to last/top params list
         self.args_list_stack[-1].append(self.mem_tree.get_value(self.current_quad.left))
         self.instruction_pointer = self.instruction_pointer + 1
-    
+
     def op_gosub(self):
         # Add current position + 1 to IP stack
         self.return_instruction_pointer_stack.append(self.instruction_pointer + 1)
@@ -271,13 +282,13 @@ class VirtualMachine:
             arg_addr = self.semantic_tree.dict[self.semantic_tree_ref_stack[-1]].vars[param_name]['addr']
             self.mem_tree.set_value(arg_addr, self.args_list_stack[-1][i])
         self.args_list_stack.pop()
-            
-    
+
+
     def op_return(self):
         return_value = self.mem_tree.get_value(self.current_quad.target)
         self.return_values[self.current_quad.left] = return_value
         self.instruction_pointer = self.instruction_pointer + 1
-    
+
     def op_endfunc(self):
         self.mem_tree.step_back()
         self.instruction_pointer = self.return_instruction_pointer_stack[-1]
@@ -305,5 +316,3 @@ class VirtualMachine:
         i = input(f"{self.bash_signature}<f ")
         self.mem_tree.set_value(self.current_quad.target, float(i))
         self.instruction_pointer = self.instruction_pointer + 1
-    
-
