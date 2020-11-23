@@ -1,4 +1,4 @@
-from utility.constants import *
+from compilador.utility.constants import *
 
 class Quad:
 

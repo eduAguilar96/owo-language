@@ -1,11 +1,43 @@
+from kivy.app import App
+from kivy.extras.highlight import KivyLexer
+from kivy.uix.spinner import Spinner, SpinnerOption
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.codeinput import CodeInput
+from kivy.uix.behaviors import EmacsBehavior
+from kivy.uix.popup import Popup
+from kivy.uix.textinput import TextInput
+from kivy.uix.button import Button 
+from kivy.properties import ListProperty
+from kivy.core.window import Window
+from kivy.core.text import LabelBase
+from pygments import lexers
+import codecs
+import os
+
+# Compiler imports
 import sys
 import lex
 import yacc
-from examples import *
-from vm import *
-from utility.semantic_scope_tree import *
-from utility.quad import *
-from utility.constants import *
+# from compilador.examples import *
+from compilador.vm import VirtualMachine
+from compilador.utility.semantic_scope_tree import Scope, SemanticScopeTree
+from compilador.utility.quad import Quad
+# from compilador.utility.constants import *
+from compilador.utility.constants import Types, Operations, operations_map, semantic_cube, types_map
+
+### SUPER GLOBAL VARIABLES
+current_code = '''
+OwO
+print(10*5);
+'''
+
+# input = 0
+# output = 1
+# err = 3
+stdoutin= ['', '', '']
+
+### COMPILER
+
 
 reserved = {
     # Types
@@ -51,6 +83,7 @@ tokens = [
     'EQUAL', 'LESSTHAN', 'GREATERTHAN',
     # Compound Comparators
     'EQUALEQUAL', 'NOTEQUAL', 'LESSTHANOREQUAL', 'GREATERTHANOREQUAL',
+    
 ] + list(reserved.values())
 
 # Values
@@ -139,6 +172,65 @@ quad_addr_list = [Quad(Operations.START)]
 quad_list = [Quad(Operations.START)]
 
 start = 'program'
+
+# Resets every global variable
+def init_compiler():
+    global current_type 
+    global scope_tree
+    global current_scope_ref
+    global constants_table
+    global POper
+    global PilaO
+    global PTypes
+    global PJumps
+    global temps_counter
+    global DIR_SIZE
+    global DIR_INT
+    global dir_last_empty_int
+    global DIR_STRING
+    global dir_last_empty_string
+    global DIR_FLOAT
+    global dir_last_empty_float
+    global DIR_BOOL
+    global dir_last_empty_bool
+    global quad_addr_list
+    global quad_list 
+
+    current_type = None
+    # Scope tree for storing variables and functions
+    scope_tree = SemanticScopeTree()
+    current_scope_ref = 0
+
+    constants_table = {}
+
+    # Pending Operators
+    POper = []
+    # Pending Operands
+    PilaO = []
+    # Coresponding types
+    PTypes = []
+    # Pending Jumps
+    PJumps = []
+    # Counter for used temporary variables
+    temps_counter = 1
+
+    DIR_SIZE = 1000
+
+    DIR_INT = 1000
+    dir_last_empty_int = DIR_INT
+
+    DIR_STRING = DIR_INT + DIR_SIZE
+    dir_last_empty_string = DIR_STRING
+
+    DIR_FLOAT = DIR_STRING + DIR_SIZE
+    dir_last_empty_float = DIR_FLOAT
+
+    DIR_BOOL =  DIR_FLOAT + DIR_SIZE
+    dir_last_empty_bool = DIR_BOOL
+    # List of quadruples with addresses
+    quad_addr_list = [Quad(Operations.START)]
+    # List of quadruples
+    quad_list = [Quad(Operations.START)] 
 
 # Error check if there is no more memory for a memoery stack
 def check_out_of_mem(last_used_addr, initial_addr):
@@ -1141,29 +1233,35 @@ def p_error(p):
     print(f"Error {p}")
     sys.exit()
 
-# Build the lexer
-lexer = lex.lex()
-# Build the parser
-parser = yacc.yacc()
+# Runs compiler, receives code as arg 
+def run_compiler(code):# Build the lexer
+    init_compiler()
+    lexer = lex.lex()
+    # Build the parser
+    parser = yacc.yacc()
+    # Read input in lexer
+    lexer.input(code)
 
-examples_output = [print(f"{i}. {str(data_examples[i])}") for i in range(0, len(data_examples))]
-user_input = int(input())
-if user_input in range(0, len(examples_output)):
-    data = data_examples[user_input].data
-else:
-    raise Exception("Invalid Code/Index for example")
-
-# Read input in lexer
-lexer.input(data)
-
-# Tokenize
-while True:
-    tok = lexer.token()
-    if not tok:
-        break
+    # Tokenize
+    while True:
+        tok = lexer.token()
+        if not tok:
+            break
     # print(tok)
 
-result = parser.parse(data)
+    result = parser.parse(code)
+    return result
+
+
+
+
+# examples_output = [print(f"{i}. {str(data_examples[i])}") for i in range(0, len(data_examples))]
+# user_input = int(input())
+# if user_input in range(0, len(examples_output)):
+#     data = data_examples[user_input].data
+# else:
+#     raise Exception("Invalid Code/Index for example")
+
 
 # print_variable_scopes()
 # print_pilas()
@@ -1172,7 +1270,203 @@ result = parser.parse(data)
 # print_quads()
 # print_addr_quads()
 
-vm = VirtualMachine(quad_addr_list, constants_table, scope_tree)
-vm.execute_quads()
+# vm = VirtualMachine(quad_addr_list, constants_table, scope_tree)
+# vm.execute_quads()
 # vm.print_mem()
 # vm.print_mem_tree()
+
+
+
+### MOBILE/GRAPHICAL APPLICATION 
+class Fnt_SpinnerOption(SpinnerOption):
+    pass
+
+
+class LoadDialog(Popup):
+
+    def load(self, path, selection):
+        self.choosen_file = [None, ]
+        self.choosen_file = selection
+        Window.title = selection[0][selection[0].rfind(os.sep) + 1:]
+        self.dismiss()
+
+    def cancel(self):
+        self.dismiss()
+
+
+class SaveDialog(Popup):
+
+    def save(self, path, selection):
+        _file = codecs.open(selection, 'w', encoding='utf8')
+        _file.write(self.text)
+        Window.title = selection[selection.rfind(os.sep) + 1:]
+        _file.close()
+        self.dismiss()
+
+    def cancel(self):
+        self.dismiss()
+
+
+class CodeInputWithBindings(EmacsBehavior, CodeInput):
+    '''CodeInput with keybindings.
+    To add more bindings, add the behavior before CodeInput in the class
+    definition.
+    '''
+    pass
+
+
+class CodeInputTest(App):
+
+    files = ListProperty([None, ])
+
+    def build(self):
+        b = BoxLayout(orientation='vertical')
+        languages = Spinner(
+            text='language',
+            values=sorted(['KvLexer', ] + list(lexers.LEXERS.keys())))
+
+        languages.bind(text=self.change_lang)
+
+        menu = BoxLayout(
+            size_hint_y=None,
+            height='30pt')
+        fnt_size = Spinner(
+            text='12',
+            values=list(map(str, list(range(5, 40)))))
+        fnt_size.bind(text=self._update_size)
+
+        fonts = [
+            file for file in LabelBase._font_dirs_files
+            if file.endswith('.ttf')]
+
+        fnt_name = Spinner(
+            text='RobotoMono',
+            option_cls=Fnt_SpinnerOption,
+            values=fonts)
+        fnt_name.bind(text=self._update_font)
+        mnu_file = Spinner(
+            text='File',
+            values=('Open', 'SaveAs', 'Save', 'Close'))
+        mnu_file.bind(text=self._file_menu_selected)
+        key_bindings = Spinner(
+            text='Key bindings',
+            values=('Default key bindings', 'Emacs key bindings'))
+        key_bindings.bind(text=self._bindings_selected)
+
+        run_button = Button(text='Run')
+        run_button.bind(on_press=self.compile)
+
+        menu.add_widget(mnu_file)
+        # menu.add_widget(fnt_size)
+        menu.add_widget(run_button)
+        menu.add_widget(fnt_name)
+        menu.add_widget(languages)
+        menu.add_widget(key_bindings)
+        b.add_widget(menu)
+
+        self.codeinput = CodeInputWithBindings(
+            lexer=KivyLexer(),
+            font_size=12,
+            text=current_code,
+            key_bindings='default',
+            # onChange save to code
+        )
+        
+        self.output_box = CodeInputWithBindings(
+            font_size=12,
+            text="SECTION: Input/Output\n",
+            key_bindings='default',
+        )
+
+        self.command_input = TextInput(text='Hello world', multiline=False, cursor_blink=True, cursor_width=8)
+        self.command_input.bind(on_text_validate=self.on_enter)
+
+        b.add_widget(self.codeinput)
+        b.add_widget(self.output_box)
+        b.add_widget(self.command_input)
+
+        return b
+
+    def compile(self, instance):
+        print("Running compiler...")
+        try:
+            print(f'{10*"#"} current_code {10*"#"} {self.get_code()}')
+            run_compiler(self.get_code())
+            vm = VirtualMachine(quad_addr_list, constants_table, scope_tree, stdoutin=stdoutin)
+            vm.execute_quads()
+            pass
+        except KeyboardInterrupt:
+            return
+        except BaseException as err:
+            print(err)
+        
+        print(f"stdoutin: {stdoutin}")
+        self.display_output(stdoutin[1])
+        # flush stdout after printing
+        stdoutin[1] = ''
+        # print(f"Code: \n{current_code}")
+
+    def on_enter(self, instance):
+      self.stdin = instance.text
+      self.display_output(self.stdin) 
+
+    def get_code(self):
+      return self.codeinput.text
+
+    def display_output(self, message):
+      output = f'{message}'
+      print(f'STDOUT: {output}') 
+      self.output_box.text += output
+
+    def _update_size(self, instance, size):
+        self.codeinput.font_size = float(size)
+
+    def _update_font(self, instance, fnt_name):
+        instance.font_name = self.codeinput.font_name = fnt_name
+
+    def _file_menu_selected(self, instance, value):
+        if value == 'File':
+            return
+        instance.text = 'File'
+        if value == 'Open':
+            if not hasattr(self, 'load_dialog'):
+                self.load_dialog = LoadDialog()
+            self.load_dialog.open()
+            self.load_dialog.bind(choosen_file=self.setter('files'))
+        elif value == 'SaveAs':
+            if not hasattr(self, 'saveas_dialog'):
+                self.saveas_dialog = SaveDialog()
+            self.saveas_dialog.text = self.codeinput.text
+            self.saveas_dialog.open()
+        elif value == 'Save':
+            if self.files[0]:
+                _file = codecs.open(self.files[0], 'w', encoding='utf8')
+                _file.write(self.codeinput.text)
+                _file.close()
+        elif value == 'Close':
+            if self.files[0]:
+                self.codeinput.text = ''
+                Window.title = 'untitled'
+
+    def _bindings_selected(self, instance, value):
+        value = value.split(' ')[0]
+        self.codeinput.key_bindings = value.lower()
+
+    def on_files(self, instance, values):
+        if not values[0]:
+            return
+        _file = codecs.open(values[0], 'r', encoding='utf8')
+        self.codeinput.text = _file.read()
+        _file.close()
+
+    def change_lang(self, instance, z):
+        if z == 'KvLexer':
+            lx = KivyLexer()
+        else:
+            lx = lexers.get_lexer_by_name(lexers.LEXERS[z][2][0])
+        self.codeinput.lexer = lx
+
+
+### MAIN
+if __name__ == '__main__':
+    CodeInputTest().run()
