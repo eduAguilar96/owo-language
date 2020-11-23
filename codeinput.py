@@ -35,6 +35,8 @@ OwO
 print(10*5);
 string name = input_s();
 print(name);
+string name2 = input_s();
+print(name2);
 '''
 
 # input = 0
@@ -1398,50 +1400,25 @@ class CodeInputTest(App):
 
     def compile(self, instance):
         print("Running compiler...")
-        try:
-            print(f'{10*"#"} current_code {10*"#"} {self.get_code()}\n{10*"#"} end_current_code {10*"#"}')
-            run_compiler(self.get_code())
-            self.vm = VirtualMachine(quad_addr_list, constants_table, scope_tree, stdoutin=stdoutin)
-            self.vm.execute_quads()
-            # Simulate do while
-            while (True):
-                yield_op_code = self.vm.execute_quads()
-                if yield_op_code in [Operations.INPUTSTRING, Operations.INPUTINT, Operations.INPUTFLOAT]:
-                    if stdoutin[0] == '':
-                        print('1: Waiting for user input on the graphical side.')
-                        # we return here cause execution will continue after
-                        # user_input, with a callback pointing to continue_execution()
-                        return
-                else:
-                    # Breaks out of do while if it doesnt return an input op_code
-                    # If it gets here it means that vm ended execution
-                    print("Breaking out of the loop yaaaaaay")
-                    break
-            pass
-        except KeyboardInterrupt:
-            return
-        except BaseException as err:
-            print(f"Error caught: {err}")
-            stdoutin[2] += f"{str(err)}\n"
-
-        print(f"stdoutin: {stdoutin}")
-        self.display_output(stdoutin[1]) # stdout
-        self.display_output(stdoutin[2]) # stderr
-        # flush stdout/err after printing
-        stdoutin[1] = stdoutin[2] = ''
-        # print(f"Code: \n{current_code}")
-
-    def continue_execution(self):
+        print(f'{10*"#"} current_code {10*"#"} {self.get_code()}\n{10*"#"} end_current_code {10*"#"}')
+        run_compiler(self.get_code())
+        self.vm = VirtualMachine(quad_addr_list, constants_table, scope_tree, stdoutin=stdoutin)
+        # Starts execution for the first time
+        self.resume_vm_execution()
+            
+    def resume_vm_execution(self):
         print("Resuming execution after...")
         try:
-            self.vm.execute_quads()
             # Simulate do while
             while (True):
                 yield_op_code = self.vm.execute_quads()
                 if yield_op_code in [Operations.INPUTSTRING, Operations.INPUTINT, Operations.INPUTFLOAT]:
                     if stdoutin[0] == '':
-                        print('2: Waiting for user input on the graphical side.')
+                        print('Waiting for user input on the graphical side.')
                         return # this gets resumed if thers an input with the callback of the user_input
+                elif yield_op_code in [Operations.PRINT]:
+                    # We only go out of vm to print ouput and then go back inside
+                    self.display_and_flush_everything()
                 else:
                     # Breaks out of do while if it doesnt return an input op_code
                     # If it gets here it means that vm ended execution
@@ -1454,22 +1431,30 @@ class CodeInputTest(App):
             print(f"Error caught: {err}")
             stdoutin[2] += f"{str(err)}\n"
 
-        
         print(f"stdoutin: {stdoutin}")
-        self.display_output(stdoutin[1]) # stdout
-        self.display_output(stdoutin[2]) # stderr
-        # flush stdout/err after printing
-        stdoutin[1] = stdoutin[2] = ''
-        # print(f"Code: \n{current_code}") 
+        self.display_and_flush_everything()
+
 
     def on_enter(self, instance):
       self.stdin = instance.text
       self.display_output(f'{self.stdin}\n')
       stdoutin[0] = self.stdin 
-      self.continue_execution()
+      self.resume_vm_execution()
+
+    def get_stdout(self):
+        return stdoutin[1]
+    
+    def get_stderr(self):
+        return stdoutin[2]
 
     def get_code(self):
       return self.codeinput.text
+
+    # everything means stdout and stderr
+    def display_and_flush_everything(self):
+        self.display_output(self.get_stdout()) # stdout
+        self.display_output(self.get_stderr()) # stderr 
+        stdoutin[1] = stdoutin[2] = '' 
 
     def display_output(self, message):
       output = f'{message}'
