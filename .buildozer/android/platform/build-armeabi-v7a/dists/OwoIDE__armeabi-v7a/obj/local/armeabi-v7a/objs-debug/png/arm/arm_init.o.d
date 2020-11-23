@@ -1,0 +1,23 @@
+/Users/a4ron/Desktop/tecCar/tecSem8/compiladores/compilador/owo-language/.buildozer/android/platform/build-armeabi-v7a/build/bootstrap_builds/sdl2/obj/local/armeabi-v7a/objs-debug/png/arm/arm_init.o: \
+  /Users/a4ron/Desktop/tecCar/tecSem8/compiladores/compilador/owo-language/.buildozer/android/platform/build-armeabi-v7a/build/bootstrap_builds/sdl2/jni/SDL2_image/external/libpng-1.6.32/arm/arm_init.c \
+  /Users/a4ron/Desktop/tecCar/tecSem8/compiladores/compilador/owo-language/.buildozer/android/platform/build-armeabi-v7a/build/bootstrap_builds/sdl2/jni/SDL2_image/external/libpng-1.6.32/arm/../pngpriv.h \
+  /Users/a4ron/Desktop/tecCar/tecSem8/compiladores/compilador/owo-language/.buildozer/android/platform/build-armeabi-v7a/build/bootstrap_builds/sdl2/jni/SDL2_image/external/libpng-1.6.32/pnglibconf.h \
+  /Users/a4ron/Desktop/tecCar/tecSem8/compiladores/compilador/owo-language/.buildozer/android/platform/build-armeabi-v7a/build/bootstrap_builds/sdl2/jni/SDL2_image/external/libpng-1.6.32/png.h \
+  /Users/a4ron/Desktop/tecCar/tecSem8/compiladores/compilador/owo-language/.buildozer/android/platform/build-armeabi-v7a/build/bootstrap_builds/sdl2/jni/SDL2_image/external/libpng-1.6.32/pngconf.h \
+  /Users/a4ron/Desktop/tecCar/tecSem8/compiladores/compilador/owo-language/.buildozer/android/platform/build-armeabi-v7a/build/bootstrap_builds/sdl2/jni/SDL2_image/external/libpng-1.6.32/pngstruct.h \
+  /Users/a4ron/Desktop/tecCar/tecSem8/compiladores/compilador/owo-language/.buildozer/android/platform/build-armeabi-v7a/build/bootstrap_builds/sdl2/jni/SDL2_image/external/libpng-1.6.32/pnginfo.h \
+  /Users/a4ron/Desktop/tecCar/tecSem8/compiladores/compilador/owo-language/.buildozer/android/platform/build-armeabi-v7a/build/bootstrap_builds/sdl2/jni/SDL2_image/external/libpng-1.6.32/pngdebug.h
+
+/Users/a4ron/Desktop/tecCar/tecSem8/compiladores/compilador/owo-language/.buildozer/android/platform/build-armeabi-v7a/build/bootstrap_builds/sdl2/jni/SDL2_image/external/libpng-1.6.32/arm/../pngpriv.h:
+
+/Users/a4ron/Desktop/tecCar/tecSem8/compiladores/compilador/owo-language/.buildozer/android/platform/build-armeabi-v7a/build/bootstrap_builds/sdl2/jni/SDL2_image/external/libpng-1.6.32/pnglibconf.h:
+
+/Users/a4ron/Desktop/tecCar/tecSem8/compiladores/compilador/owo-language/.buildozer/android/platform/build-armeabi-v7a/build/bootstrap_builds/sdl2/jni/SDL2_image/external/libpng-1.6.32/png.h:
+
+/Users/a4ron/Desktop/tecCar/tecSem8/compiladores/compilador/owo-language/.buildozer/android/platform/build-armeabi-v7a/build/bootstrap_builds/sdl2/jni/SDL2_image/external/libpng-1.6.32/pngconf.h:
+
+/Users/a4ron/Desktop/tecCar/tecSem8/compiladores/compilador/owo-language/.buildozer/android/platform/build-armeabi-v7a/build/bootstrap_builds/sdl2/jni/SDL2_image/external/libpng-1.6.32/pngstruct.h:
+
+/Users/a4ron/Desktop/tecCar/tecSem8/compiladores/compilador/owo-language/.buildozer/android/platform/build-armeabi-v7a/build/bootstrap_builds/sdl2/jni/SDL2_image/external/libpng-1.6.32/pnginfo.h:
+
+/Users/a4ron/Desktop/tecCar/tecSem8/compiladores/compilador/owo-language/.buildozer/android/platform/build-armeabi-v7a/build/bootstrap_builds/sdl2/jni/SDL2_image/external/libpng-1.6.32/pngdebug.h:
