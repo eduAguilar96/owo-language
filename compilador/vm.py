@@ -81,16 +81,21 @@ class VirtualMachine:
             self.mem_tree.set_value(constant_addr, self.type_map[constant_type](value))
 
     def execute_quads(self):
-        print('WHAT THE ACTUAL FK')
         while True:
             self.set_current_quad()
             op_code = self.current_quad.op_code
             print(f'Last opcode ran ({op_code})')
             stdin = self.stdoutin[self.std['in']]
+            # TODO Handle case when user executes vm accidentally with an enter,
+            # either by disabling the enter  on the graphical side till there's
+            # a print or by checking for stdin and op_code mismatch here in vm.
             if not stdin and op_code in [Operations.INPUTSTRING, Operations.INPUTINT, Operations.INPUTFLOAT]:
                 print(f"Enterng yield because of opcode ({op_code})")
                 return op_code
             self.execute_op(op_code)
+            if op_code in [Operations.PRINT]:
+                print(f"Pausing execution for output... {op_code}")
+                return op_code
             if(not self.is_running):
                 return None
     
