@@ -597,6 +597,8 @@ def p_n_function_type(p):
 last_function_call = []
 def p_n_function_call_1(p):
     'n_function_call_1 : '
+    # Insert false bottom to Operator stack
+    POper.append('(')
     func_name = get_last_t(p)
     global last_function_call
     last_function_call.append(func_name)
@@ -664,6 +666,8 @@ def p_n_function_call_4(p):
 
 def p_n_function_call_5(p):
     'n_function_call_5 : '
+    # Pop false bottom to Operator stack
+    POper.pop()
     function_name = last_function_call[-1]
     # Get function ref by traversing up scope tree
     aux_scope_ref = current_scope_ref

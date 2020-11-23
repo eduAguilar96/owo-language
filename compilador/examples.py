@@ -253,22 +253,13 @@ data_examples.append(Example(
     'Fibbonacci',
     '''
         OwO
-        int i = 2;
         function fibo int x : int {
             if (x <= 1) {
                 return x;
             }
-            int a = fibo(x-1);
-            int b = fibo(x-2);
-            return a + b;
+            return fibo(x-1) + fibo(x-2);
         }
         print(fibo(0));
-        print(fibo(1));
-        print(fibo(2));
-        print(fibo(3));
-        print(fibo(4));
-        print(fibo(5));
-        print(fibo(6));
     '''
 ))
 
@@ -308,5 +299,47 @@ data_examples.append(Example(
         print("...years old");
 
 
+    '''
+))
+
+data_examples.append(Example(
+    'Concatenated function calls',
+    '''
+        OwO
+        function masUno int n : int {
+            return n + 1;
+        }
+        print(masUno(1));
+        print(masUno(masUno(1)));
+        print(masUno(1) + masUno(1));
+    '''
+))
+
+data_examples.append(Example(
+    'Concatenated function calls in return',
+    '''
+        OwO
+
+        function masUno int n : int {
+            return n + 1;
+        }
+
+        function two int n : int {
+            return masUno(0) + masUno(0);
+        }
+
+        function timesTwo int n : int {
+            return n * 2;
+        }
+
+        print(two(1));
+    '''
+))
+
+data_examples.append(Example(
+    'Verify Math',
+    '''
+        OwO
+        print(4 * (1 + 1));
     '''
 ))
