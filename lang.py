@@ -1,11 +1,13 @@
+# Compiler imports
 import sys
 import lex
 import yacc
-from examples import *
-from vm import *
-from utility.semantic_scope_tree import *
-from utility.quad import *
-from utility.constants import *
+from compilador.examples import *
+from compilador.vm import VirtualMachine
+from compilador.utility.semantic_scope_tree import Scope, SemanticScopeTree
+from compilador.utility.quad import Quad
+# from compilador.utility.constants import *
+from compilador.utility.constants import Types, Operations, operations_map, semantic_cube, types_map
 
 reserved = {
     # Types
@@ -51,6 +53,7 @@ tokens = [
     'EQUAL', 'LESSTHAN', 'GREATERTHAN',
     # Compound Comparators
     'EQUALEQUAL', 'NOTEQUAL', 'LESSTHANOREQUAL', 'GREATERTHANOREQUAL',
+
 ] + list(reserved.values())
 
 # Values
@@ -1141,6 +1144,20 @@ def p_error(p):
     print(f"Error {p}")
     sys.exit()
 
+# Runs compiler, receives code as arg 
+def run_compiler(code):
+    # Read input in lexer
+    lexer.input(data)
+
+    # Tokenize
+    while True:
+        tok = lexer.token()
+        if not tok:
+            break
+    # print(tok)
+
+    result = parser.parse(data)
+
 # Build the lexer
 lexer = lex.lex()
 # Build the parser
@@ -1153,17 +1170,7 @@ if user_input in range(0, len(examples_output)):
 else:
     raise Exception("Invalid Code/Index for example")
 
-# Read input in lexer
-lexer.input(data)
-
-# Tokenize
-while True:
-    tok = lexer.token()
-    if not tok:
-        break
-    # print(tok)
-
-result = parser.parse(data)
+run_compiler(data)
 
 # print_variable_scopes()
 # print_pilas()
