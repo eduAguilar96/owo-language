@@ -12,8 +12,6 @@ from kivy.core.window import Window
 from kivy.core.text import LabelBase
 from pygments import lexers
 from kivy.support import install_twisted_reactor
-install_twisted_reactor()
-from twisted.internet import defer
 
 import codecs
 import os
@@ -34,9 +32,9 @@ current_code = '''
 OwO
 print(10*5);
 string name = input_s();
-print(name);
+print("First input: " + name);
 string name2 = input_s();
-print(name2);
+print("Second input: " + name2);
 '''
 
 # input = 0
@@ -1337,8 +1335,8 @@ class CodeInputTest(App):
             size_hint_y=None,
             height='30pt')
         fnt_size = Spinner(
-            text='12',
-            values=list(map(str, list(range(5, 40)))))
+            text='FontSize: 12',
+            values=list(map(str, list(range(10, 40, 2)))))
         fnt_size.bind(text=self._update_size)
 
         fonts = [
@@ -1363,11 +1361,11 @@ class CodeInputTest(App):
         run_button.bind(on_press=self.compile)
 
         menu.add_widget(mnu_file)
-        # menu.add_widget(fnt_size)
+        menu.add_widget(fnt_size)
         menu.add_widget(run_button)
-        menu.add_widget(fnt_name)
-        menu.add_widget(languages)
-        menu.add_widget(key_bindings)
+        # menu.add_widget(fnt_name)
+        # menu.add_widget(languages)
+        # menu.add_widget(key_bindings)
         b.add_widget(menu)
 
         self.codeinput = CodeInputWithBindings(
