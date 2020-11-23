@@ -11,6 +11,10 @@ from kivy.properties import ListProperty
 from kivy.core.window import Window
 from kivy.core.text import LabelBase
 from pygments import lexers
+from kivy.support import install_twisted_reactor
+install_twisted_reactor()
+from twisted.internet import defer
+
 import codecs
 import os
 
@@ -29,12 +33,15 @@ from compilador.utility.constants import Types, Operations, operations_map, sema
 current_code = '''
 OwO
 print(10*5);
+string name = input_s();
+print(name);
 '''
 
 # input = 0
 # output = 1
-# err = 3
-stdoutin= ['', '', '']
+# err = 2
+# status = 3
+stdoutin= ['', '', '', '']
 
 ### COMPILER
 
@@ -1221,17 +1228,14 @@ def e_error(e, p):
 
 # Error handling lexer
 def t_error(t):
-    print(f"Illegal character {t}")
+    raise Exception(f"Illegal character {t}")
     t.lexer.skip(1)
 
 # Error handling parser
 def p_error(p):
-    print("p_error called")
     if not p:
-        print("End of File!")
-        return
-    print(f"Error {p}")
-    sys.exit()
+        raise Exception(f"End of File! Probably missing a semicolon ;")
+    raise Exception(f"Error {p}")
 
 # Runs compiler, receives code as arg 
 def run_compiler(code):# Build the lexer
@@ -1374,7 +1378,7 @@ class CodeInputTest(App):
         
         self.output_box = CodeInputWithBindings(
             font_size=12,
-            text="SECTION: Input/Output\n",
+            text="SECTION: OUTPUT\n",
             key_bindings='default',
         )
 
@@ -1387,28 +1391,82 @@ class CodeInputTest(App):
 
         return b
 
+    def ask_user_input(self):
+        print("No he pasadoasdaosjkd poasjdlasdj")
+        print("YA PASE")
+        # return 'Azul'
+
     def compile(self, instance):
         print("Running compiler...")
         try:
-            print(f'{10*"#"} current_code {10*"#"} {self.get_code()}')
+            print(f'{10*"#"} current_code {10*"#"} {self.get_code()}\n{10*"#"} end_current_code {10*"#"}')
             run_compiler(self.get_code())
-            vm = VirtualMachine(quad_addr_list, constants_table, scope_tree, stdoutin=stdoutin)
-            vm.execute_quads()
+            self.vm = VirtualMachine(quad_addr_list, constants_table, scope_tree, stdoutin=stdoutin)
+            self.vm.execute_quads()
+            # Simulate do while
+            while (True):
+                yield_op_code = self.vm.execute_quads()
+                if yield_op_code in [Operations.INPUTSTRING, Operations.INPUTINT, Operations.INPUTFLOAT]:
+                    if stdoutin[0] == '':
+                        print('1: Waiting for user input on the graphical side.')
+                        # we return here cause execution will continue after
+                        # user_input, with a callback pointing to continue_execution()
+                        return
+                else:
+                    # Breaks out of do while if it doesnt return an input op_code
+                    # If it gets here it means that vm ended execution
+                    print("Breaking out of the loop yaaaaaay")
+                    break
             pass
         except KeyboardInterrupt:
             return
         except BaseException as err:
-            print(err)
+            print(f"Error caught: {err}")
+            stdoutin[2] += f"{str(err)}\n"
+
+        print(f"stdoutin: {stdoutin}")
+        self.display_output(stdoutin[1]) # stdout
+        self.display_output(stdoutin[2]) # stderr
+        # flush stdout/err after printing
+        stdoutin[1] = stdoutin[2] = ''
+        # print(f"Code: \n{current_code}")
+
+    def continue_execution(self):
+        print("Resuming execution after...")
+        try:
+            self.vm.execute_quads()
+            # Simulate do while
+            while (True):
+                yield_op_code = self.vm.execute_quads()
+                if yield_op_code in [Operations.INPUTSTRING, Operations.INPUTINT, Operations.INPUTFLOAT]:
+                    if stdoutin[0] == '':
+                        print('2: Waiting for user input on the graphical side.')
+                        return # this gets resumed if thers an input with the callback of the user_input
+                else:
+                    # Breaks out of do while if it doesnt return an input op_code
+                    # If it gets here it means that vm ended execution
+                    print("Breaking out of the loop yaaaaaay")
+                    break
+            pass
+        except KeyboardInterrupt:
+            return
+        except BaseException as err:
+            print(f"Error caught: {err}")
+            stdoutin[2] += f"{str(err)}\n"
+
         
         print(f"stdoutin: {stdoutin}")
-        self.display_output(stdoutin[1])
-        # flush stdout after printing
-        stdoutin[1] = ''
-        # print(f"Code: \n{current_code}")
+        self.display_output(stdoutin[1]) # stdout
+        self.display_output(stdoutin[2]) # stderr
+        # flush stdout/err after printing
+        stdoutin[1] = stdoutin[2] = ''
+        # print(f"Code: \n{current_code}") 
 
     def on_enter(self, instance):
       self.stdin = instance.text
-      self.display_output(self.stdin) 
+      self.display_output(f'{self.stdin}\n')
+      stdoutin[0] = self.stdin 
+      self.continue_execution()
 
     def get_code(self):
       return self.codeinput.text

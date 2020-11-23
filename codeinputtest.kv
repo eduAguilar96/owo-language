@@ -52,3 +52,14 @@
             Button:
                 text: "Save"
                 on_release: root.save(filechooser.path, text_input.text)
+
+<MyPopup>:
+    BoxLayout:
+        orientation: 'vertical'
+        TextInput:
+            id: text_input
+        BoxLayout:
+            orientation: 'horizontal'
+            Button:
+                text: 'OK'
+                on_press: root.printt(text_input.text)
