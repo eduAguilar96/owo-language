@@ -90,11 +90,11 @@ class VirtualMachine:
             # either by disabling the enter  on the graphical side till there's
             # a print or by checking for stdin and op_code mismatch here in vm.
             if not stdin and op_code in [Operations.INPUTSTRING, Operations.INPUTINT, Operations.INPUTFLOAT]:
-                print(f"Enterng yield because of opcode ({op_code})")
+                print(f"Pausing execution for input... ({op_code})")
                 return op_code
             self.execute_op(op_code)
             if op_code in [Operations.PRINT]:
-                print(f"Pausing execution for output... {op_code}")
+                print(f"Pausing execution for output... ({op_code})")
                 return op_code
             if(not self.is_running):
                 return None
@@ -288,7 +288,6 @@ class VirtualMachine:
         self.stdoutin[self.std['in']] = ''
 
     def op_inputstring(self):
-        # i = input(f"{self.bash_signature}<s ")
         i = self.stdoutin[self.std['in']]
         # flush stdin
         self.flush_stdin()
@@ -297,13 +296,25 @@ class VirtualMachine:
 
 
     def op_inputint(self):
-        i = input(f"{self.bash_signature}<i ")
-        self.mem_tree.set_value(self.current_quad.target, int(i))
+        i = self.stdoutin[self.std['in']]
+        # flush stdin
+        self.flush_stdin()
+        try:
+            self.mem_tree.set_value(self.current_quad.target, int(i))
+        except Exception as err:
+            # ValueError exception
+            raise Exception(f"Your input ({i}) is not a valid integer.")
         self.instruction_pointer = self.instruction_pointer + 1
 
     def op_inputfloat(self):
-        i = input(f"{self.bash_signature}<f ")
-        self.mem_tree.set_value(self.current_quad.target, float(i))
+        i = self.stdoutin[self.std['in']]
+        # flush stdin
+        self.flush_stdin()
+        try:
+            self.mem_tree.set_value(self.current_quad.target, float(i))
+        except Exception as err:
+            # ValueError exception
+            raise Exception(f"Your input ({i}) is not a valid float.")
         self.instruction_pointer = self.instruction_pointer + 1
     
 

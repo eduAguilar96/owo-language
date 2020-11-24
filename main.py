@@ -212,7 +212,9 @@ def init_compiler():
     global dir_last_empty_bool
     global quad_addr_list
     global quad_list 
+    global stdoutin
 
+    stdoutin = ['', '', '', '']
     current_type = None
     # Scope tree for storing variables and functions
     scope_tree = SemanticScopeTree()
@@ -1346,7 +1348,7 @@ class CodeInputTest(App):
             height='30pt')
         fnt_size = Spinner(
             text='FontSize: 12',
-            values=list(map(str, list(range(10, 40, 2)))))
+            values=list(map(str, list(range(10, 120, 5)))))
         fnt_size.bind(text=self._update_size)
 
         fonts = [
