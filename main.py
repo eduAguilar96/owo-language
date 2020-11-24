@@ -32,9 +32,13 @@ current_code = '''
 OwO
 print(10*5);
 string name = input_s();
-print("First input: " + name);
-string name2 = input_s();
-print("Second input: " + name2);
+print("String input: " + name);
+int i = input_i();
+print("Int input: ");
+print(i);
+float f = input_f();
+print("Float input: ");
+print(f);
 '''
 
 # input = 0
