@@ -822,6 +822,7 @@ def n_input(temp_var_type, op_code):
     PTypes.append(temp_var_type)
     pass
 
+virtual_var_list = []
 def p_n_arr_reference(p):
     'n_arr_reference : '
     # verify that named variable already exists
@@ -829,6 +830,7 @@ def p_n_arr_reference(p):
     aux_scope_ref = current_scope_ref
     d1 = -1
     arr_start_addr = -1
+    array_type = None
     while(aux_scope_ref > -1):
         scope_vars = scope_tree.dict[aux_scope_ref].vars
         if arr_name in scope_vars:
@@ -836,16 +838,18 @@ def p_n_arr_reference(p):
             d1 = scope_vars[arr_name]['d1']
             # get initial addr
             arr_start_addr = scope_vars[arr_name]['addr']
+            # get array type
+            array_type = scope_tree.dict[aux_scope_ref].vars[arr_name]['type']
             break
         if aux_scope_ref == 0:
             e_error(f"Dimensioned variable ({arr_name}) referenced before instantiated", p)
+        aux_scope_ref = scope_tree.dict[aux_scope_ref].parent_ref
 
     # VER Quad
     s1 = PilaO.pop()
     s1_type = PTypes.pop()
     if s1_type != Types.INT_TYPE:
         e_error(f"Cannot access dimensioned variable({arr_name}) address with non int value", p)
-    array_type = scope_tree.dict[current_scope_ref].vars[arr_name]['type']
 
     insert_constant(d1, Types.INT_TYPE)
     d1_addr = constants_table[d1]['addr']
@@ -857,6 +861,7 @@ def p_n_arr_reference(p):
     # Get address with QUAD
     virtual_var_name = gen_temp_var(True)
     virtual_var_addr = get_addr(virtual_var_name, array_type)
+    virtual_var_list.append(virtual_var_addr)
     scope_tree.dict[current_scope_ref].add_variable(virtual_var_name, array_type, virtual_var_addr, True)
 
     # arr_start_addr_name = gen_temp_var()
@@ -880,6 +885,7 @@ def p_n_matrix_reference(p):
     d1 = -1
     d2 = -1
     arr_start_addr = -1
+    array_type = None
     while(aux_scope_ref > -1):
         scope_vars = scope_tree.dict[aux_scope_ref].vars
         if arr_name in scope_vars:
@@ -888,9 +894,12 @@ def p_n_matrix_reference(p):
             d2 = scope_vars[arr_name]['d2']
             # get initial addr
             arr_start_addr = scope_vars[arr_name]['addr']
+            # get matrix type
+            array_type = scope_tree.dict[aux_scope_ref].vars[arr_name]['type']
             break
         if aux_scope_ref == 0:
             e_error(f"Dimensioned variable ({arr_name}) referenced before instantiated", p)
+        aux_scope_ref = scope_tree.dict[aux_scope_ref].parent_ref
     # TODO Potencialmente valga la pena generar los VER quads con mas puntos neuragicos a medio referenci, no al final?
     # VER Quad
     s2 = PilaO.pop()
@@ -899,7 +908,6 @@ def p_n_matrix_reference(p):
     s1_type = PTypes.pop()
     if s1_type != Types.INT_TYPE or s2_type != Types.INT_TYPE:
         e_error(f"Cannot access dimensioned variable({arr_name}) address with non int value", p)
-    array_type = scope_tree.dict[current_scope_ref].vars[arr_name]['type']
 
     insert_constant(d1, Types.INT_TYPE)
     d1_addr = constants_table[d1]['addr']
@@ -935,6 +943,7 @@ def p_n_matrix_reference(p):
 
     virtual_var_name = gen_temp_var(True)
     virtual_var_addr = get_addr(virtual_var_name, array_type)
+    virtual_var_list.append(virtual_var_addr)
     scope_tree.dict[current_scope_ref].add_variable(virtual_var_name, array_type, virtual_var_addr)
 
     insert_constant(arr_start_addr, Types.INT_TYPE)
@@ -1021,6 +1030,16 @@ def p_n_matrix_instantiate(p):
     last_arr_name = last_arr_name_stack.pop()
     scope_tree.dict[current_scope_ref].vars[last_arr_name]['d1'] = arr_size_d1
     scope_tree.dict[current_scope_ref].vars[last_arr_name]['d2'] = arr_size_d2
+    pass
+
+def p_n_left_bracket(p):
+    'n_left_bracket : '
+    POper.append("[")
+    pass
+
+def p_n_right_bracket(p):
+    'n_right_bracket : '
+    POper.pop()
     pass
 
 def p_n_end(p):
@@ -1232,9 +1251,8 @@ def p_reference(p):
 # Reference for an arrays's position/index
 def p_arr_reference(p):
     '''
-        arr_reference :
-        | NAME n_arr_reference_name LBRACKET expression RBRACKET n_arr_reference
-        | NAME n_arr_reference_name LBRACKET expression RBRACKET LBRACKET expression RBRACKET n_matrix_reference
+        arr_reference : NAME n_arr_reference_name LBRACKET n_left_bracket expression RBRACKET n_right_bracket n_arr_reference
+        | NAME n_arr_reference_name LBRACKET n_left_bracket expression RBRACKET n_right_bracket LBRACKET n_left_bracket expression RBRACKET n_right_bracket n_matrix_reference
     '''
     pass
 

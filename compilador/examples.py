@@ -355,11 +355,59 @@ data_examples.append(Example(
     'Test Arrays',
     '''
         OwO
-        function masUno int x : int {
-            return x + 1;
+        int A[10];
+        A[4] = 5;
+        print(A[4]);
+        print(A[4]);
+
+        int B[2][3];
+        B[0][2] = A[4];
+        int x = B[0][1+1];
+        print(x);
+    '''
+))
+
+# TODO add error check for when a function has no return
+data_examples.append(Example(
+    'Fibbonacci with cache',
+    '''
+        OwO
+        # print("Begin");
+        int f[500];
+        int i = 0;
+        # print("Declared");
+        while (i < 500) {
+            # print(i);
+            f[i] = 0;
+            i = i + 1;
         }
-        int A[50][10];
-        int x = A[1*4][masUno(masUno(1))];
-        # 19     4
+        print("After while");
+        function fibo int x : int {
+            if (x <= 1) {
+                return x;
+            }
+            if (f[x] == 0) {
+                int fibo = fibo(x-1) + fibo(x-2);
+                f[x] = fibo;
+            }
+            return f[x];
+        }
+        print(fibo(0));
+        print(fibo(1));
+        print(fibo(2));
+        print(fibo(3));
+        print(fibo(4));
+        print(fibo(5));
+        print(fibo(6));
+        print(fibo(100));
+    '''
+))
+
+data_examples.append(Example(
+    'Verify input',
+    '''
+        OwO
+        int x = input_i();
+        print(x);
     '''
 ))
