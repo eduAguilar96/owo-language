@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">OwO IDE</string>
-    <string name="private_version">1606127718.407967</string>
+    <string name="private_version">1606189920.652695</string>
     <string name="presplash_color">#000000</string>
     <string name="urlScheme">kivy</string>
 </resources>

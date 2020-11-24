@@ -1,0 +1,10 @@
+# lextab.py. This file automatically created by PLY (version 3.11). Don't edit!
+_tabversion   = '3.10'
+_lextokens    = set(('AND', 'BOOL_TYPE', 'COMMA', 'DIVIDE', 'DOT', 'DOUBLEDOT', 'DOUBLE_TYPE', 'ELSE', 'EQUAL', 'EQUALEQUAL', 'FALSE', 'FLOAT', 'FLOAT_TYPE', 'FOR', 'FUNCTION', 'GREATERTHAN', 'GREATERTHANOREQUAL', 'IDK', 'IF', 'INPUTFLOAT', 'INPUTINT', 'INPUTSTRING', 'INT', 'INT_TYPE', 'LBRACKET', 'LCURLY', 'LESSTHAN', 'LESSTHANOREQUAL', 'LPARENTHESIS', 'MINUS', 'MODULUS', 'NAME', 'NOT', 'NOTEQUAL', 'OR', 'OWO', 'PLUS', 'PRINT', 'RBRACKET', 'RCURLY', 'RETURN', 'RPARENTHESIS', 'SEMICOLON', 'STRING', 'STRING_TYPE', 'TIMES', 'TRUE', 'VOID', 'WHILE'))
+_lexreflags   = 64
+_lexliterals  = ''
+_lexstateinfo = {'INITIAL': 'inclusive'}
+_lexstatere   = {'INITIAL': [('(?P<t_NAME>[a-zA-Z_][a-zA-Z_0-9]*)|(?P<t_newline>\\n+)|(?P<t_FLOAT>((0|[1-9][0-9]*)\\.[0-9][0-9]*))|(?P<t_INT>(0|[1-9][0-9]*))|(?P<t_STRING>("(\\\\"|[^"])*"))|(?P<t_ignore_COMMENT>\\#.*)|(?P<t_PLUS>\\+)|(?P<t_TIMES>\\*)|(?P<t_LPARENTHESIS>\\()|(?P<t_RPARENTHESIS>\\))|(?P<t_LCURLY>\\{)|(?P<t_RCURLY>\\})|(?P<t_LBRACKET>\\[)|(?P<t_RBRACKET>\\])|(?P<t_DOT>\\.)|(?P<t_COMMA>\\,)|(?P<t_EQUALEQUAL>==)|(?P<t_NOTEQUAL>!=)|(?P<t_LESSTHANOREQUAL><=)|(?P<t_GREATERTHANOREQUAL>>=)|(?P<t_MINUS>-)|(?P<t_DIVIDE>/)|(?P<t_MODULUS>%)|(?P<t_DOUBLEDOT>:)|(?P<t_SEMICOLON>;)|(?P<t_EQUAL>=)|(?P<t_LESSTHAN><)|(?P<t_GREATERTHAN>>)', [None, ('t_NAME', 'NAME'), ('t_newline', 'newline'), (None, 'FLOAT'), None, None, (None, 'INT'), None, (None, 'STRING'), None, None, (None, None), (None, 'PLUS'), (None, 'TIMES'), (None, 'LPARENTHESIS'), (None, 'RPARENTHESIS'), (None, 'LCURLY'), (None, 'RCURLY'), (None, 'LBRACKET'), (None, 'RBRACKET'), (None, 'DOT'), (None, 'COMMA'), (None, 'EQUALEQUAL'), (None, 'NOTEQUAL'), (None, 'LESSTHANOREQUAL'), (None, 'GREATERTHANOREQUAL'), (None, 'MINUS'), (None, 'DIVIDE'), (None, 'MODULUS'), (None, 'DOUBLEDOT'), (None, 'SEMICOLON'), (None, 'EQUAL'), (None, 'LESSTHAN'), (None, 'GREATERTHAN')])]}
+_lexstateignore = {'INITIAL': ' \t'}
+_lexstateerrorf = {'INITIAL': 't_error'}
+_lexstateeoff = {}

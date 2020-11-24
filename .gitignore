@@ -1,3 +1,4 @@
 .DS_Store
+logs.txt
 *.zip
 __pycache__

@@ -99,6 +99,16 @@ def t_NAME(t):
     # Check if id is reserved keyword
     t.type = reserved.get(t.value, 'NAME')
     return t
+t_NAME.__doc__ = r'[a-zA-Z_][a-zA-Z_0-9]*'
+
+## Track line numbers
+def t_newline(t):
+  r'\n+'
+  t.lexer.lineno += len(t.value)
+t_newline.__doc__ = r'\n+'
+
+# t_NAME = r'[a-zA-Z_][a-zA-Z_0-9]*'
+# t_newline = r'[\n]+'
 
 t_FLOAT = r'((0|[1-9][0-9]*)\.[0-9][0-9]*)'
 t_INT = r'(0|[1-9][0-9]*)'
@@ -899,10 +909,6 @@ def gen_temp_var():
 
 # Gramatica
 
-## Track line numbers
-def t_newline(t):
-  r'[\n]+'
-  t.lexer.lineno += len(t.value)
 
 def p_empty(p):
     '''
@@ -1244,9 +1250,9 @@ def p_error(p):
 # Runs compiler, receives code as arg 
 def run_compiler(code):# Build the lexer
     init_compiler()
-    lexer = lex.lex()
+    lexer = lex.lex(optimize=1)
     # Build the parser
-    parser = yacc.yacc()
+    parser = yacc.yacc(optimize=1)
     # Read input in lexer
     lexer.input(code)
 
@@ -1403,7 +1409,15 @@ class CodeInputTest(App):
     def compile(self, instance):
         print("Running compiler...")
         print(f'{10*"#"} current_code {10*"#"} {self.get_code()}\n{10*"#"} end_current_code {10*"#"}')
-        run_compiler(self.get_code())
+        try:
+            run_compiler(self.get_code())
+        except KeyboardInterrupt:
+            return
+        except BaseException as err:
+            print(f"Error caught: {err}")
+            stdoutin[2] += f"{str(err)}\n"
+            self.display_and_flush_everything()
+
         self.vm = VirtualMachine(quad_addr_list, constants_table, scope_tree, stdoutin=stdoutin)
         # Starts execution for the first time
         self.resume_vm_execution()
@@ -1465,9 +1479,11 @@ class CodeInputTest(App):
 
     def _update_size(self, instance, size):
         self.codeinput.font_size = float(size)
+        self.output_box.font_size = float(size)
+        self.command_input.font_size = float(size)
 
     def _update_font(self, instance, fnt_name):
-        instance.font_name = self.codeinput.font_name = fnt_name
+        instance.font_name = self.codeinput.font_name = self.output_box.font_name = fnt_name
 
     def _file_menu_selected(self, instance, value):
         if value == 'File':
