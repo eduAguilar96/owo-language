@@ -242,13 +242,14 @@ data_examples.append(Example(
         function nose int x : void {
             print(x);
             if(x < 10) {
-                nose(x + 1); 
+                nose(x + 1);
             }
         }
         nose(1);
     '''
 ))
 
+# TODO add error check for when a function has no return
 data_examples.append(Example(
     'Fibbonacci',
     '''
@@ -260,6 +261,12 @@ data_examples.append(Example(
             return fibo(x-1) + fibo(x-2);
         }
         print(fibo(0));
+        print(fibo(1));
+        print(fibo(2));
+        print(fibo(3));
+        print(fibo(4));
+        print(fibo(5));
+        print(fibo(6));
     '''
 ))
 
@@ -289,7 +296,7 @@ data_examples.append(Example(
         float height = input_f();
         print("whats your name?");
         string name = input_s();
-        
+
         print("Hello " + name + " its great to meet you!");
         print(name + " is...");
         print(height);
@@ -341,5 +348,66 @@ data_examples.append(Example(
     '''
         OwO
         print(4 * (1 + 1));
+    '''
+))
+
+data_examples.append(Example(
+    'Test Arrays',
+    '''
+        OwO
+        int A[10];
+        A[4] = 5;
+        print(A[4]);
+        print(A[4]);
+
+        int B[2][3];
+        B[0][2] = A[4];
+        int x = B[0][1+1];
+        print(x);
+    '''
+))
+
+# TODO add error check for when a function has no return
+data_examples.append(Example(
+    'Fibbonacci with cache',
+    '''
+        OwO
+        # print("Begin");
+        int f[500];
+        int i = 0;
+        # print("Declared");
+        while (i < 500) {
+            # print(i);
+            f[i] = 0;
+            i = i + 1;
+        }
+        print("After while");
+        function fibo int x : int {
+            if (x <= 1) {
+                return x;
+            }
+            if (f[x] == 0) {
+                int fibo = fibo(x-1) + fibo(x-2);
+                f[x] = fibo;
+            }
+            return f[x];
+        }
+        print(fibo(0));
+        print(fibo(1));
+        print(fibo(2));
+        print(fibo(3));
+        print(fibo(4));
+        print(fibo(5));
+        print(fibo(6));
+        print(fibo(100));
+    '''
+))
+
+data_examples.append(Example(
+    'Verify input',
+    '''
+        OwO
+        int x = input_i();
+        print(x);
     '''
 ))

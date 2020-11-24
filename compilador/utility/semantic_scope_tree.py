@@ -11,17 +11,24 @@ class Scope:
         self.params = []
         self.return_value = None
 
-    def add_variable(self, name, type, addr=-1):
+    def add_variable(self, name, type, addr=-1, virtual=False):
         self.vars[name] = {
             'type': type,
-            'addr': addr
+            'addr': addr,
+            'd1': 1,
+            'd2': 1,
+            'v': virtual
         }
 
     def add_parameter(self, name):
         self.params.append(name)
 
     def __str__(self):
-        str_vars = f"vars: {self.vars}\n" if self.vars else ""
+        str_vars = ""
+        if self.vars:
+            vars_list = [f"\t{var_key}: {self.vars[var_key]}" for var_key in self.vars]
+            str_vars = "vars: " + "\n".join(vars_list)
+
         str_params = f"params: {self.params}\n" if self.func_name else ""
         str_functions = f"functions: {self.functions}\n" if self.functions else ""
         return f"ref: {self.ref} {self.func_name + ' : ' + str(self.return_type) + ' - ' + str(self.quad_start) if self.func_name else ''} \n" \
@@ -38,6 +45,8 @@ class SemanticScopeTree:
         scope.ref = self.counter
         self.dict[scope.ref] = scope
         self.counter = self.counter + 1
+
+    # TODO check duplicate variable names
 
     def __str__(self):
         lista = [str(self.dict[ref]) for ref in range(0, self.counter)]

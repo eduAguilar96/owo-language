@@ -1,4 +1,5 @@
 .DS_Store
+.buildozer/*
 logs.txt
 *.zip
 __pycache__

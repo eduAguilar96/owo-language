@@ -11,6 +11,7 @@ class Types(Enum):
   BOOL_TYPE = 'bool'
   STRING_TYPE = 'string'
   VOID = 'void'
+  ADDR = 'addr'
 
 types_map = {
   'int': Types.INT_TYPE,
@@ -18,6 +19,7 @@ types_map = {
   'bool': Types.BOOL_TYPE,
   'string': Types.STRING_TYPE,
   'void': Types.VOID,
+  'addr': Types.ADDR,
 }
 
 class Operations(Enum):
@@ -53,6 +55,7 @@ class Operations(Enum):
   END = 'end'
   PARAM = 'param'
   RETURN = 'return'
+  VER = 'ver'
   PRINT = 'print'
   INPUTSTRING = 'inputString'
   INPUTINT = 'inputInt'
@@ -85,6 +88,7 @@ operations_map = {
   'end': Operations.END,
   'param': Operations.PARAM,
   'return': Operations.RETURN,
+  'ver': Operations.VER,
 }
 
 semantic_cube = defaultdict(
@@ -154,3 +158,10 @@ semantic_cube[Types.FLOAT_TYPE][Types.INT_TYPE][Operations.EQUAL] = Types.FLOAT_
 semantic_cube[Types.STRING_TYPE][Types.STRING_TYPE][Operations.EQUAL] = Types.STRING_TYPE
 semantic_cube[Types.STRING_TYPE][Types.STRING_TYPE][Operations.PLUS] = Types.STRING_TYPE
 semantic_cube[Types.STRING_TYPE][Types.STRING_TYPE][Operations.EQUAL] = Types.BOOL_TYPE
+
+semantic_cube[Types.INT_TYPE][Types.ADDR][Operations.PLUS] = semantic_cube[Types.ADDR][Types.INT_TYPE][Operations.PLUS] = Types.ADDR
+semantic_cube[Types.INT_TYPE][Types.ADDR][Operations.MINUS] = semantic_cube[Types.ADDR][Types.INT_TYPE][Operations.MINUS] = Types.ADDR
+semantic_cube[Types.INT_TYPE][Types.ADDR][Operations.EQUAL] = semantic_cube[Types.ADDR][Types.INT_TYPE][Operations.EQUAL] = Types.INT_TYPE
+semantic_cube[Types.STRING_TYPE][Types.ADDR][Operations.EQUAL] = semantic_cube[Types.ADDR][Types.STRING_TYPE][Operations.EQUAL] = Types.STRING_TYPE
+semantic_cube[Types.FLOAT_TYPE][Types.ADDR][Operations.EQUAL] = semantic_cube[Types.ADDR][Types.FLOAT_TYPE][Operations.EQUAL] = Types.FLOAT_TYPE
+semantic_cube[Types.BOOL_TYPE][Types.ADDR][Operations.EQUAL] = semantic_cube[Types.ADDR][Types.BOOL_TYPE][Operations.EQUAL] = Types.BOOL_TYPE
