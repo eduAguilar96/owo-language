@@ -28,5 +28,15 @@ parser = yacc.yacc()
 
 run_compiler(data)
 
+# print_variable_scopes()
+# print_addr_used()
+# print_pilas()
+# print(constants_table)
+# print_scope_tree()
+print_quads()
+# print_addr_quads()
+
 vm = VirtualMachine(quad_addr_list, constants_table, scope_tree)
 vm.execute_quads(True)
+# vm.print_mem()
+# vm.print_mem_tree()

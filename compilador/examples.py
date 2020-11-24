@@ -249,6 +249,7 @@ data_examples.append(Example(
     '''
 ))
 
+# TODO add error check for when a function has no return
 data_examples.append(Example(
     'Fibbonacci',
     '''
@@ -260,6 +261,12 @@ data_examples.append(Example(
             return fibo(x-1) + fibo(x-2);
         }
         print(fibo(0));
+        print(fibo(1));
+        print(fibo(2));
+        print(fibo(3));
+        print(fibo(4));
+        print(fibo(5));
+        print(fibo(6));
     '''
 ))
 
@@ -348,5 +355,11 @@ data_examples.append(Example(
     'Test Arrays',
     '''
         OwO
+        function masUno int x : int {
+            return x + 1;
+        }
+        int A[50][10];
+        int x = A[1*4][masUno(masUno(1))];
+        # 19     4
     '''
 ))

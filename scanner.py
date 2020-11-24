@@ -30,11 +30,10 @@ reserved = {
     'if': 'IF',
     'else': 'ELSE',
     'while': 'WHILE',
-    'for': 'FOR',
     #logical
     'and': 'AND',
     'or': 'OR',
-    'not': 'NOT',
+    # 'not': 'NOT',
     'True': 'TRUE',
     'False': 'FALSE',
 }
@@ -48,7 +47,7 @@ tokens = [
     # Encapsulators
     'LPARENTHESIS','RPARENTHESIS', 'LCURLY', 'RCURLY', 'LBRACKET', 'RBRACKET',
     # Punctuations
-    'DOT', 'COMMA', 'DOUBLEDOT', 'SEMICOLON',
+    'COMMA', 'DOUBLEDOT', 'SEMICOLON',
     # Comparators
     'EQUAL', 'LESSTHAN', 'GREATERTHAN',
     # Compound Comparators
@@ -83,7 +82,6 @@ t_LBRACKET = r'\['
 t_RBRACKET = r'\]'
 
 # Punctuations
-t_DOT = r'\.'
 t_COMMA = r'\,'
 t_DOUBLEDOT = r':'
 t_SEMICOLON = r';'
@@ -111,7 +109,6 @@ scope_tree = SemanticScopeTree()
 current_scope_ref = 0
 
 constants_table = {}
-
 # Pending Operators
 POper = []
 # Pending Operands
@@ -121,8 +118,10 @@ PTypes = []
 # Pending Jumps
 PJumps = []
 # Counter for used temporary variables
+# Used for creating names for temporary variables in debuging output
 temps_counter = 1
 
+# Size for each independent memory stack
 DIR_SIZE = 1000
 
 DIR_INT = 1000
@@ -161,6 +160,7 @@ def get_var_addr(var, var_type):
     return -1
 
 def is_constant(token):
+    token = str(token)
     return token[0] == '"' or token[0].isdigit() or token == "True" or token == "False"
 
 # Get and/or generate the address for a variable or constant
@@ -176,8 +176,8 @@ def get_addr(value, value_type):
             return addr
 
     # Variable/constant is NEW, create new addr
+    global dir_last_empty_int
     if(value_type == Types.INT_TYPE):
-        global dir_last_empty_int
         check_out_of_mem(dir_last_empty_int, DIR_INT)
         addr = dir_last_empty_int
         dir_last_empty_int += 1
@@ -196,10 +196,14 @@ def get_addr(value, value_type):
         check_out_of_mem(dir_last_empty_bool, DIR_BOOL)
         addr = dir_last_empty_bool
         dir_last_empty_bool += 1
+    elif(value_type == Types.ADDR):
+        check_out_of_mem(dir_last_empty_int, DIR_INT)
+        addr = dir_last_empty_int
+        dir_last_empty_int += 1
     elif(value_type == Types.VOID):
         addr = -1
     else:
-        raise Exception("OwO: Attempting to generate address for unkown variable type")
+        raise Exception(f"OwO: Attempting to generate address for unkown variable type ({value_type})")
 
     return addr
 
@@ -289,11 +293,11 @@ def p_n_variable_instantiate_param(p):
     scope_tree.dict[current_scope_ref].add_variable(var_name, current_type, var_addr)
     scope_tree.dict[current_scope_ref].add_parameter(var_name)
 
-def insert_constant(constant, constant_type):
+def insert_constant(constant, constant_type, addr=None):
     if constant in constants_table:
         return
     constants_table[constant] = {
-            'addr': get_addr(constant, constant_type),
+            'addr': addr if addr else get_addr(constant, constant_type),
             'type': constant_type,
         }
 
@@ -535,7 +539,7 @@ def p_n_seen_equal_op(p):
     POper.append(operations_map[get_last_t(p)])
     pass
 
-def do_assign():
+def do_assign_var():
     if len(POper) == 0:
         pass
     elif POper[-1] in [Operations.EQUAL]:
@@ -787,6 +791,238 @@ def p_n_print(p):
     quad_addr_list.append(Quad(Operations.PRINT, target=get_addr(s, str_type)))
     pass
 
+def p_n_input_string(p):
+    'n_input_string : '
+    n_input(Types.STRING_TYPE, Operations.INPUTSTRING)
+    pass
+
+def p_n_input_int(p):
+    'n_input_int : '
+    n_input(Types.INT_TYPE, Operations.INPUTINT)
+    pass
+
+def p_n_input_float(p):
+    'n_input_float : '
+    n_input(Types.FLOAT_TYPE, Operations.INPUTFLOAT)
+    pass
+
+def n_input(temp_var_type, op_code):
+    temp_var = gen_temp_var()
+    # Add to debug quad
+    temp_quad = Quad(op_code, target=temp_var)
+    quad_list.append(temp_quad)
+    # Add to addr quad
+    temp_var_addr = get_addr(temp_var, temp_var_type)
+    addr_quad = Quad(op_code,  target=temp_var_addr)
+    quad_addr_list.append(addr_quad)
+    # Append variable temp a los scopes
+    scope_tree.dict[current_scope_ref].add_variable(temp_var, temp_var_type, temp_var_addr)
+    # Agregar a las pilas de operadores
+    PilaO.append(temp_var)
+    PTypes.append(temp_var_type)
+    pass
+
+def p_n_arr_reference(p):
+    'n_arr_reference : '
+    # verify that named variable already exists
+    arr_name = last_arr_name_stack.pop()
+    aux_scope_ref = current_scope_ref
+    d1 = -1
+    arr_start_addr = -1
+    while(aux_scope_ref > -1):
+        scope_vars = scope_tree.dict[aux_scope_ref].vars
+        if arr_name in scope_vars:
+            # get d1
+            d1 = scope_vars[arr_name]['d1']
+            # get initial addr
+            arr_start_addr = scope_vars[arr_name]['addr']
+            break
+        if aux_scope_ref == 0:
+            e_error(f"Dimensioned variable ({arr_name}) referenced before instantiated", p)
+
+    # VER Quad
+    s1 = PilaO.pop()
+    s1_type = PTypes.pop()
+    if s1_type != Types.INT_TYPE:
+        e_error(f"Cannot access dimensioned variable({arr_name}) address with non int value", p)
+    array_type = scope_tree.dict[current_scope_ref].vars[arr_name]['type']
+
+    insert_constant(d1, Types.INT_TYPE)
+    d1_addr = constants_table[d1]['addr']
+    # Add to debug quad
+    quad_list.append(Quad(Operations.VER, 0, d1, s1))
+    # Add to addr quad
+    quad_addr_list.append(Quad(Operations.VER, 0, d1_addr, get_addr(s1, array_type)))
+
+    # Get address with QUAD
+    virtual_var_name = gen_temp_var(True)
+    virtual_var_addr = get_addr(virtual_var_name, array_type)
+    scope_tree.dict[current_scope_ref].add_variable(virtual_var_name, array_type, virtual_var_addr, True)
+
+    # arr_start_addr_name = gen_temp_var()
+    # arr_start_addr_addr = get_addr(arr_start_addr_name, Types.INT_TYPE)
+    insert_constant(arr_start_addr, Types.INT_TYPE)
+    arr_start_addr_addr = constants_table[arr_start_addr]['addr']
+    # Add to debug quad
+    quad_list.append(Quad(Operations.PLUS, arr_start_addr, s1, virtual_var_name))
+    # Add to addr quad
+    quad_addr_list.append(Quad(Operations.PLUS, arr_start_addr_addr, get_addr(s1, Types.INT_TYPE), virtual_var_addr))
+
+    PilaO.append(virtual_var_name)
+    PTypes.append(array_type)
+    pass
+
+def p_n_matrix_reference(p):
+    'n_matrix_reference : '
+    # verify that named variable already exists
+    arr_name = last_arr_name_stack.pop()
+    aux_scope_ref = current_scope_ref
+    d1 = -1
+    d2 = -1
+    arr_start_addr = -1
+    while(aux_scope_ref > -1):
+        scope_vars = scope_tree.dict[aux_scope_ref].vars
+        if arr_name in scope_vars:
+            # get ds
+            d1 = scope_vars[arr_name]['d1']
+            d2 = scope_vars[arr_name]['d2']
+            # get initial addr
+            arr_start_addr = scope_vars[arr_name]['addr']
+            break
+        if aux_scope_ref == 0:
+            e_error(f"Dimensioned variable ({arr_name}) referenced before instantiated", p)
+    # TODO Potencialmente valga la pena generar los VER quads con mas puntos neuragicos a medio referenci, no al final?
+    # VER Quad
+    s2 = PilaO.pop()
+    s2_type = PTypes.pop()
+    s1 = PilaO.pop()
+    s1_type = PTypes.pop()
+    if s1_type != Types.INT_TYPE or s2_type != Types.INT_TYPE:
+        e_error(f"Cannot access dimensioned variable({arr_name}) address with non int value", p)
+    array_type = scope_tree.dict[current_scope_ref].vars[arr_name]['type']
+
+    insert_constant(d1, Types.INT_TYPE)
+    d1_addr = constants_table[d1]['addr']
+    insert_constant(d2, Types.INT_TYPE)
+    d2_addr = constants_table[d2]['addr']
+
+    # Add to debug quad
+    quad_list.append(Quad(Operations.VER, 0, d1, s1))
+    # Add to addr quad
+    quad_addr_list.append(Quad(Operations.VER, 0, d1_addr, get_addr(s1, array_type)))
+    # Add to debug quad
+    quad_list.append(Quad(Operations.VER, 0, d2, s2))
+    # Add to addr quad
+    quad_addr_list.append(Quad(Operations.VER, 0, d2_addr, get_addr(s2, array_type)))
+
+    # Get address with QUAD
+    s1_times_d2_name = gen_temp_var()
+    s1_times_d2_addr = get_addr(s1_times_d2_name, Types.INT_TYPE)
+    scope_tree.dict[current_scope_ref].add_variable(s1_times_d2_name, Types.INT_TYPE, s1_times_d2_addr)
+    # Add to debug quad
+    quad_list.append(Quad(Operations.TIMES, s1, d2, s1_times_d2_name))
+    # Add to addr quad
+    quad_addr_list.append(Quad(Operations.TIMES, get_addr(s1, Types.INT_TYPE), d2_addr, s1_times_d2_addr))
+
+    plus_s2_name = gen_temp_var()
+    plus_s2_addr = get_addr(plus_s2_name, Types.INT_TYPE)
+    scope_tree.dict[current_scope_ref].add_variable(plus_s2_name, Types.INT_TYPE, plus_s2_addr)
+    # Add to debug quad
+    quad_list.append(Quad(Operations.PLUS, s1_times_d2_name, s2, plus_s2_name))
+    # Add to addr quad
+    quad_addr_list.append(Quad(Operations.PLUS, s1_times_d2_addr, get_addr(s2, Types.INT_TYPE), plus_s2_addr))
+
+
+    virtual_var_name = gen_temp_var(True)
+    virtual_var_addr = get_addr(virtual_var_name, array_type)
+    scope_tree.dict[current_scope_ref].add_variable(virtual_var_name, array_type, virtual_var_addr)
+
+    insert_constant(arr_start_addr, Types.INT_TYPE)
+    arr_start_addr_addr = constants_table[arr_start_addr]['addr']
+    # Add to debug quad
+    quad_list.append(Quad(Operations.PLUS, arr_start_addr, plus_s2_name, virtual_var_name))
+    # Add to addr quad
+    quad_addr_list.append(Quad(Operations.PLUS, arr_start_addr_addr, plus_s2_addr, virtual_var_addr))
+
+    PilaO.append(virtual_var_name)
+    PTypes.append(array_type)
+    scope_tree.dict[current_scope_ref].add_variable(virtual_var_name, array_type, virtual_var_addr, True)
+    pass
+
+last_arr_name_stack = []
+def p_n_arr_instantiate_name(p):
+    'n_arr_instantiate_name : '
+    # get array initial position from type stack/mem
+    arr_name = get_last_t(p)
+    arr_type = current_type
+    arr_addr = get_addr(arr_name, arr_type)
+    # add to scope tree
+    scope_tree.dict[current_scope_ref].add_variable(arr_name, arr_type, arr_addr)
+    # add to last stack referenced
+    global last_arr_name_stack
+    last_arr_name_stack.append(arr_name)
+    pass
+
+def p_n_arr_reference_name(p):
+    'n_arr_reference_name : '
+    arr_name = get_last_t(p)
+    last_arr_name_stack.append(arr_name)
+    pass
+
+# stack to store the tokens for the the index's written for an array's size Ej: [i]
+arr_size_stack = []
+def p_n_arr_instantiate_size(p):
+    'n_arr_instantiate_size : '
+    # add size to size stack
+    arr_size = get_last_t(p)
+    arr_size_stack.append(arr_size)
+    pass
+
+def reserve_array_mem(arr_size, arr_type):
+    if(arr_type == Types.INT_TYPE):
+        global dir_last_empty_int
+        check_out_of_mem(dir_last_empty_int + arr_size - 1, DIR_INT)
+        dir_last_empty_int += arr_size - 1
+    elif(arr_type == Types.STRING_TYPE):
+        global dir_last_empty_string
+        check_out_of_mem(dir_last_empty_string + arr_size - 1, DIR_STRING)
+        dir_last_empty_string += arr_size - 1
+    elif(arr_type == Types.FLOAT_TYPE):
+        global dir_last_empty_float
+        check_out_of_mem(dir_last_empty_float + arr_size - 1, DIR_FLOAT)
+        dir_last_empty_float += arr_size - 1
+    elif(arr_type == Types.BOOL_TYPE):
+        global dir_last_empty_bool
+        check_out_of_mem(dir_last_empty_bool + arr_size - 1, DIR_BOOL)
+        dir_last_empty_bool += arr_size - 1
+    else:
+        raise Exception(f"OwO: Attempting to generate array size for unkown type ({arr_type})")
+
+def p_n_arr_instantiate(p):
+    'n_arr_instantiate : '
+    # pop the size of the array, 'apartar' la memoria
+    arr_size = int(arr_size_stack.pop())
+    arr_type = current_type
+    reserve_array_mem(arr_size, arr_type)
+    # Set size in scope tree
+    last_arr_name = last_arr_name_stack.pop()
+    scope_tree.dict[current_scope_ref].vars[last_arr_name]['d1'] = arr_size
+    pass
+
+def p_n_matrix_instantiate(p):
+    'n_matrix_instantiate : '
+    # reserve memory for matrix
+    arr_size_d2 = int(arr_size_stack.pop())
+    arr_size_d1 = int(arr_size_stack.pop())
+    arr_size = arr_size_d1 * arr_size_d2
+    arr_type = current_type
+    reserve_array_mem(arr_size, arr_type)
+    # Set size in scope tree
+    last_arr_name = last_arr_name_stack.pop()
+    scope_tree.dict[current_scope_ref].vars[last_arr_name]['d1'] = arr_size_d1
+    scope_tree.dict[current_scope_ref].vars[last_arr_name]['d2'] = arr_size_d2
+    pass
+
 def p_n_end(p):
     'n_end : '
     # Debug Quad list
@@ -795,9 +1031,10 @@ def p_n_end(p):
     quad_addr_list.append(Quad(Operations.END))
     pass
 
-def gen_temp_var():
+# Generate a name for temporary variables, used for debugging
+def gen_temp_var(addr=False):
     global temps_counter
-    result = f"$t{temps_counter}"
+    result = "$" + ("V" if addr else "") + f"t{temps_counter}"
     temps_counter += 1
     return result
 
@@ -871,7 +1108,7 @@ def p_function_type(p):
 
 def p_function_definition(p):
     '''
-    function_definition : n_before_function_definition FUNCTION NAME n_open_new_scope_function parameter_list DOUBLEDOT function_type LCURLY n_function_block_start codeblock return RCURLY n_close_scope n_function_block_end
+    function_definition : n_before_function_definition FUNCTION NAME n_open_new_scope_function parameter_list DOUBLEDOT function_type LCURLY n_function_block_start codeblock RCURLY n_close_scope n_function_block_end
     '''
     pass
 
@@ -879,7 +1116,6 @@ def p_return(p):
     '''
     return : RETURN expression n_return SEMICOLON
     | RETURN n_return_void SEMICOLON
-    | empty
     '''
     pass
 
@@ -968,37 +1204,6 @@ def p_factor(p):
     '''
     pass
 
-def p_n_input_string(p):
-    'n_input_string : '
-    n_input(Types.STRING_TYPE, Operations.INPUTSTRING)
-    pass
-
-def p_n_input_int(p):
-    'n_input_int : '
-    n_input(Types.INT_TYPE, Operations.INPUTINT)
-    pass
-
-def p_n_input_float(p):
-    'n_input_float : '
-    n_input(Types.FLOAT_TYPE, Operations.INPUTFLOAT)
-    pass
-
-def n_input(temp_var_type, op_code):
-    temp_var = gen_temp_var()
-    # Add to debug quad
-    temp_quad = Quad(op_code, target=temp_var)
-    quad_list.append(temp_quad)
-    # Add to addr quad
-    temp_var_addr = get_addr(temp_var, temp_var_type)
-    addr_quad = Quad(op_code,  target=temp_var_addr)
-    quad_addr_list.append(addr_quad)
-    # Append variable temp a los scopes
-    scope_tree.dict[current_scope_ref].add_variable(temp_var, temp_var_type, temp_var_addr)
-    # Agregar a las pilas de operadores
-    PilaO.append(temp_var)
-    PTypes.append(temp_var_type)
-    pass
-
 def p_input(p):
     '''
     input : INPUTSTRING LPARENTHESIS RPARENTHESIS n_input_string
@@ -1011,22 +1216,44 @@ def p_value(p):
     '''
     value : function_call
     | literal
-    | NAME n_variable_reference n_math_expression_1_name
+    | reference
     | input
     '''
     pass
 
+# When you reference a value from a variable or an array's postion/index
+def p_reference(p):
+    '''
+        reference : NAME n_variable_reference n_math_expression_1_name
+        | arr_reference
+    '''
+    pass
+
+# Reference for an arrays's position/index
+def p_arr_reference(p):
+    '''
+        arr_reference :
+        | NAME n_arr_reference_name LBRACKET expression RBRACKET n_arr_reference
+        | NAME n_arr_reference_name LBRACKET expression RBRACKET LBRACKET expression RBRACKET n_matrix_reference
+    '''
+    pass
+
+# When you declare a variable without an assign(=)after it
 def p_declare(p):
     '''
     declare : type NAME n_variable_instantiate
+    | type NAME n_arr_instantiate_name LBRACKET INT n_arr_instantiate_size RBRACKET n_arr_instantiate
+    | type NAME n_arr_instantiate_name LBRACKET INT n_arr_instantiate_size RBRACKET LBRACKET INT n_arr_instantiate_size RBRACKET n_matrix_instantiate
     '''
+    pass
 
+# When you assign a value to a variable, this could be its instantiation
 def p_assign(p):
     '''
     assign : type NAME n_variable_instantiate n_math_expression_1_name EQUAL n_seen_equal_op expression
-    | NAME n_variable_reference n_math_expression_1_name EQUAL n_seen_equal_op expression
+    | reference EQUAL n_seen_equal_op expression
     '''
-    e = do_assign()
+    e = do_assign_var()
     if e:
         e_error(e, p)
     pass
@@ -1053,18 +1280,10 @@ def p_statement_aux(p):
     # | PRINT
     pass
 
-def p_function_codeblock(p):
-    '''
-    function_codeblock : codeblock
-    | return
-    '''
-    pass
-
 def p_codeblock(p):
     '''
     codeblock : empty
     | codeblock_aux codeblock
-    | return
     '''
     pass
 
@@ -1074,13 +1293,13 @@ def p_codeblock_aux(p):
     | function_definition
     | condition_if
     | loop
+    | return
     '''
     pass
 
 def p_loop(p):
     '''
-    loop : forloop
-    | whileloop
+    loop : whileloop
     '''
     pass
 
@@ -1090,11 +1309,12 @@ def p_whileloop(p):
     '''
     pass
 
-def p_forloop(p):
-    '''
-    forloop : FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope
-    '''
-    pass
+# DEPRECATED
+# def p_forloop(p):
+#     '''
+#     forloop : FOR LPARENTHESIS n_open_new_scope assign DOUBLEDOT expression DOUBLEDOT assign RPARENTHESIS LCURLY codeblock RCURLY n_close_scope
+#     '''
+#     pass
 
 def p_condition_if(p):
     '''
@@ -1115,6 +1335,19 @@ def print_scope_tree():
     print("--Scope Tree")
     print(scope_tree)
 
+def print_addr_used():
+    print(f"DIR_INT: {DIR_INT}")
+    print(f"dir_last_empty_int: {dir_last_empty_int}")
+
+    print(f"DIR_STRING: {DIR_STRING}")
+    print(f"dir_last_empty_string: {dir_last_empty_string}")
+
+    print(f"DIR_FLOAT: {DIR_FLOAT}")
+    print(f"dir_last_empty_float: {dir_last_empty_float}")
+
+    print(f"DIR_BOOL: {DIR_BOOL}")
+    print(f"dir_last_empty_bool: {dir_last_empty_bool}")
+
 def print_variable_scopes():
     print("--Variable scopes")
     [print(scope_tree.dict[ref]) for ref in range(0, scope_tree.counter)]
@@ -1132,6 +1365,7 @@ def print_addr_quads():
 
 # Error handling for semantic exceptions
 def e_error(e, p):
+    print_scope_tree()
     raise Exception(f"OwO: {e} in line: {p.lineno(-1)}")
 
 # Error handling lexer
