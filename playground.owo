@@ -1,0 +1,253 @@
+'''
+BUBBLE SORT: (FAILING):
+OwO
+
+int arr2[4];
+arr2[0] = 64;
+arr2[1] = 34;
+arr2[2] = 25;
+arr2[3] = 12;
+#arr2[4] = 22;
+#arr2[5] = 11;
+#arr2[6] = 90;
+
+function print_arr int n : void {
+  int i = 0;
+  while (i < n) {
+    print(arr2[i]);
+    i = i + 1;
+  }
+}
+
+function swap int x, int y, int i, int j: void {
+  print("Being swap: ");
+  print("i: ");
+  print(i);
+  print("j: ");
+  print(j);
+  print("Before swap: ");
+  print(arr2[i]);
+  print(arr2[j]);
+  int tmp = x;
+  arr2[i] = y;
+  arr2[j] = tmp;
+  print("After swap: ");
+  print(arr2[j]);
+  print(arr2[i]);
+}
+
+#swap(arr2[0], arr2[1], 0, 1);
+
+function bubble_sort int n : void {
+print("Entering Bubble Sort: ");
+  int i = 0;
+  int j = 0;
+  while (i < n-1) {
+    while (j < n-i-1){
+      if (arr2[j] > arr2[j+1]) {
+        swap(arr2[j], arr2[j+1], j, j+1);
+      }
+      print("###### j ######");
+	  print(j);
+      j = j + 1;
+    }
+    print("###### i ######");
+	print(i);
+    i = i + 1;
+  }
+}
+
+print("Unsorted stuff: ");
+print_arr(4);
+print("Sorted array: ");
+bubble_sort(4);
+print_arr(4);
+'''
+
+'''
+BUBBLE SORT (arr of size 2):
+OwO
+
+int size = 100;
+int arr[100];
+
+int i = 0;
+while (i < size) {
+    arr[i] = 0;
+    i = i + 1;
+}
+
+# First number is 0
+# Second number is 1
+arr[0] = 0;
+arr[1] = 1;
+
+# Calculates fib till size
+function fib_n int n : void {
+  i = 2;
+  while (i < size) {
+    arr[i] = arr[i-2] + arr[i-1];
+    i = i + 1;
+  }
+  print("Fib answer: ");
+  if (n < size) {
+    print(arr[n]);
+  }
+}
+
+fib_n(3);
+fib_n(4);
+fib_n(5);
+fib_n(6);
+fib_n(7);
+'''
+
+
+'''
+# FIND CODE:
+OwO
+
+int arr[7];
+arr[0] = 64;
+arr[1] = 34;
+arr[2] = 25;
+arr[3] = 12;
+arr[4] = 22;
+arr[5] = 11;
+arr[6] = 90;
+
+
+function print_arr int n : void {
+  int i = 0;
+  while (i < n) {
+    print(arr[i]);
+    i = i + 1;
+  }
+}
+
+function find int size, int n : void {
+  int i = 0;
+  bool found_something = False;
+  while (i < size) {
+    int curr = arr[i];
+    if (curr == n) {
+      found_something = True;
+      print("Found number: ");
+      print(n);
+      print("In position: ");
+      print(i);
+    }
+    i = i + 1;
+  }
+  if (found_something == False) {
+    print("Didn't find number: ");
+    print(n);
+  }
+}
+
+find(7, 11);
+find(7, 90);
+find(7, 999);
+find(7, 64);
+'''
+
+
+'''
+# Fibonacci iterativo
+
+OwO
+
+int size = 100;
+int arr[100];
+
+int i = 0;
+while (i < size) {
+    arr[i] = 0;
+    i = i + 1;
+}
+
+# First number is 0
+# Second number is 1
+arr[0] = 0;
+arr[1] = 1;
+
+# Calculates fib till size
+function fib_n int n : void {
+  i = 2;
+  while (i < size) {
+    arr[i] = arr[i-2] + arr[i-1];
+    i = i + 1;
+  }
+  print("Fib answer: ");
+  if (n < size) {
+    print(arr[n]);
+  }
+}
+
+fib_n(3);
+fib_n(4);
+fib_n(5);
+fib_n(6);
+fib_n(7);
+
+'''
+
+'''
+MULTIPLICACION DE MATRICES (FAILED)
+
+OwO
+int res[2][2];
+int mat1[2][2];
+int mat2[2][2];
+int n = 2;
+int i = 0;
+int j = 0;
+int k = 0;
+
+res[0][0] = 0;
+res[0][1] = 0;
+res[1][0] = 0;
+res[1][1] = 0;
+
+mat1[0][0] = 1;
+mat1[0][1] = 1;
+mat1[1][0] = 2;
+mat1[1][1] = 2;
+
+mat2[0][0] = 1;
+mat2[0][1] = 1;
+mat2[1][0] = 2;
+mat2[1][1] = 2;
+
+i = 0;
+j = 0;
+k = 0;
+
+while(i < n) {
+  while(j < n) {
+    while(k < n) {
+      res[i][j] = res[i][j] + mat1[i][k] * mat2[k][j];
+      k = k + 1;
+    }
+    j = j + 1;
+  }
+  i = i + 1;
+}
+
+print("Result: ");
+
+i = 0;
+j = 0;
+while(i < n) {
+  while(j < n) {
+    print("### i ###");
+    print(i);
+    print("### j ###");
+    print(j);
+    print("### res[i][j] ###");
+    print(res[i][j]);
+    j = j + 1;
+  }
+  i = i + 1;
+}
+'''

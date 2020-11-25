@@ -1513,6 +1513,16 @@ def print_addr_quads():
     print("--Addr Quads")
     [print(f"{ref} {quad_addr_list[ref]}") for ref in range(0, len(quad_addr_list))]
 
+def get_adrr_quads_str():
+    return [(f"{ref} {quad_addr_list[ref]}") for ref in range(0, len(quad_addr_list))]
+
+def output_quads_to_file(file_name='output_quads.txt'):
+    with open(file_name, 'w+') as f:
+        quads_str_list = get_adrr_quads_str()
+        for quad in quads_str_list:
+            f.write(f'{quad}\n')
+    
+
 # Error handling for semantic exceptions
 def e_error(e, p):
     print_scope_tree()
@@ -1655,8 +1665,9 @@ class CodeInputTest(App):
         except BaseException as err:
             print(f"Error caught: {err}")
             stdoutin[2] += f"{str(err)}\n"
-            self.display_and_flush_everything()
-
+            self.display_and_flush_everything()            
+        # TODO: Remove this from output mobile build, dont use it
+        output_quads_to_file()
         self.vm = VirtualMachine(quad_addr_list, constants_table, scope_tree, virtual_var_list, stdoutin=stdoutin)
         # Starts execution for the first time
         self.resume_vm_execution()
