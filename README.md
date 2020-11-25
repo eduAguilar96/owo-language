@@ -1,6 +1,9 @@
 # OwO - Lenguaje de Programación
+by Eduardo Aguilar and Aaron Garcia
 
 **OwO** es un lenguaje de programación procedimental, se compila utilizando python y se ejecuta por una máquina virtual de Python. **Corre en cualquier sistema operativo** incluyendo dispositivos móviles.
+
+[Documentación y Consideraciones de OwO Language](https://docs.google.com/document/d/1wYxsjxeZLEEC3CDC_lQ8JxAXf0MV6j60eAPvt9NA0B4/edit?usp=sharing)
 
 - [OwO - Lenguaje de Programación](#owo---lenguaje-de-programación)
   - [Estructura del Programa](#estructura-del-programa)
@@ -241,7 +244,7 @@ Todos los operadores son asociativos a la izquierda, excepto el operador de asig
 
 ### Ordén de Precedencia
 - +, -
-- *, / %
+- *, /, %
 - <, >, <=, >=, ==, !=
 - or
 - and
