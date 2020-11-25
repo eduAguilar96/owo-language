@@ -369,7 +369,7 @@ data_examples.append(Example(
 
 # TODO add error check for when a function has no return
 data_examples.append(Example(
-    'Fibbonacci with cache',
+    'Fibbonacci with cache recursivo',
     '''
         OwO
         # print("Begin");
@@ -404,10 +404,169 @@ data_examples.append(Example(
 ))
 
 data_examples.append(Example(
+    'Fibonacci ciclico',
+    '''
+        OwO
+        function fibo int x : int {
+            if(x == 0){
+                return 0;
+            }
+            if(x == 1){
+                return 1;
+            }
+            int a = 0;
+            int b = 1;
+            int i = 1;
+            while(i < x){
+                int suma = a + b;
+                a = b;
+                b = suma;
+                i = i + 1;
+            }
+            return b;
+        }
+
+        print(fibo(0));
+        print(fibo(1));
+        print(fibo(2));
+        print(fibo(3));
+        print(fibo(4));
+        print(fibo(5));
+    '''
+))
+
+data_examples.append(Example(
     'Verify input',
     '''
         OwO
         int x = input_i();
         print(x);
+    '''
+))
+
+data_examples.append(Example(
+    'Double loop',
+    '''
+    OwO
+    int n = 0;
+    int i = 0;
+    while(i < 10) {
+        # print(i);
+        int j = 0;
+        while(j < 10) {
+            n = n + 1;
+            j = j + 1;
+        }
+        i = i + 1;
+
+    }
+    print(n);
+    '''
+))
+
+data_examples.append(Example(
+    'Bubble Sort',
+    '''
+    OwO
+    int arr[5];
+    arr[0] = 5;
+    arr[1] = 1;
+    arr[2] = 4;
+    arr[3] = 2;
+    arr[4] = 8;
+
+    function print_arr : void {
+        print("printing_arr");
+        int i = 0;
+        while(i < 5) {
+            print(arr[i]);
+            i = i + 1;
+        }
+    }
+    print("===Before Sort");
+    print_arr();
+
+    function swap_arr int a, int b : void {
+        int tempA = arr[a];
+        # int tempB = arr[b];
+        arr[a] = arr[b];
+        arr[b] = tempA;
+    }
+
+    bool unsorted = True;
+    while(unsorted) {
+        unsorted = False;
+        int i = 0;
+        while (i < 4) {
+            if (arr[i] > arr[i+1]) {
+                unsorted = True;
+                swap_arr(i, i+1);
+            }
+            i = i + 1;
+        }
+    }
+    print("===After Sort");
+    print_arr();
+    '''
+))
+
+data_examples.append(Example(
+    'Matrix multiplication',
+    '''
+    OwO
+    int matA[2][2];
+    matA[0][0] = 2;
+    matA[0][1] = 4;
+    matA[1][0] = 3;
+    matA[1][1] = 4;
+    int matB[2][2];
+    matB[0][0] = 1;
+    matB[0][1] = 2;
+    matB[1][0] = 1;
+    matB[1][1] = 3;
+    int res[2][2];
+    res[0][0] = 0;
+    res[0][1] = 0;
+    res[1][0] = 0;
+    res[1][1] = 0;
+
+    function print_res : void {
+        print("==Printing");
+        int i = 0;
+        while(i < 2) {
+            print("=Row: ");
+            print(i);
+            print("");
+            int j = 0;
+            while(j < 2) {
+
+                print(res[i][j]);
+
+                j = j + 1;
+            }
+            i = i + 1;
+        }
+    }
+
+    print("=== Before");
+    print_res();
+
+    int i = 0;
+    while(i < 2) {
+        int j = 0;
+        while(j < 2) {
+            int k = 0;
+            while(k < 2) {
+
+                res[i][j] = res[i][j] + matA[i][k] * matB[k][j];
+
+                k = k + 1;
+            }
+            j = j + 1;
+        }
+        i = i + 1;
+    }
+    print("=== After");
+    print_res();
     '''
 ))
