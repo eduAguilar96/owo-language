@@ -411,3 +411,11 @@ data_examples.append(Example(
         print(x);
     '''
 ))
+
+data_examples.append(Example(
+    'And, or',
+    '''
+        OwO
+        print(True or False and False);
+    '''
+))

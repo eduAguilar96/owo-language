@@ -1,4 +1,5 @@
-# Compiler imports
+# Scanner.py
+# This modules contains all the parser and scanner logic used to run the compiler on the temrinal, not on kiev
 import sys
 import lex
 import yacc

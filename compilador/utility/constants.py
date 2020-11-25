@@ -1,8 +1,6 @@
+# Module containing enum and constant Data
 from collections import defaultdict
 from enum import Enum, IntEnum, auto
-
-# MEMORY RANGES
-# TODO: Add this before moving on?
 
 # DATA TYPES
 class Types(Enum):
@@ -137,6 +135,8 @@ semantic_cube[Types.BOOL_TYPE][Types.BOOL_TYPE][Operations.MINUS] = Types.INT_TY
 semantic_cube[Types.BOOL_TYPE][Types.BOOL_TYPE][Operations.TIMES] = Types.INT_TYPE
 semantic_cube[Types.BOOL_TYPE][Types.BOOL_TYPE][Operations.DIVIDE] = Types.INT_TYPE
 semantic_cube[Types.BOOL_TYPE][Types.BOOL_TYPE][Operations.EQUAL] = Types.BOOL_TYPE
+semantic_cube[Types.BOOL_TYPE][Types.BOOL_TYPE][Operations.AND] = Types.INT_TYPE
+semantic_cube[Types.BOOL_TYPE][Types.BOOL_TYPE][Operations.OR] = Types.BOOL_TYPE
 semantic_cube[Types.BOOL_TYPE][Operations.PLUSUNARY] = Types.INT_TYPE
 semantic_cube[Types.BOOL_TYPE][Operations.MINUSUNARY] = Types.INT_TYPE
 semantic_cube[Types.BOOL_TYPE][Operations.NOT] = Types.BOOL_TYPE

@@ -1,3 +1,5 @@
+# main.py
+# This module contains the scanner and parser logic as well as the kivy execution code
 from kivy.app import App
 from kivy.extras.highlight import KivyLexer
 from kivy.uix.spinner import Spinner, SpinnerOption

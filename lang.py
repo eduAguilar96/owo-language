@@ -1,6 +1,9 @@
+# lang.py
+# Module to run the parse, scanner and finaly the virtual machine.
+# This file is only used for testing the compiler on the terminal, not on the build or apk
 from scanner import *
 
-# Runs compiler, receives code as arg
+# Runs compiler, receives written code as arg
 def run_compiler(code):
     # Read input in lexer
     lexer.input(data)

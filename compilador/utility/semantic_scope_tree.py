@@ -1,5 +1,8 @@
 class Scope:
-
+    '''Representation of a SemanticScope, this is defined by every change of
+    scope made by writing { }. This entails every if, else, loop and function
+    is a SemanticScope.
+    Store variables, functions, type and ref for every scope'''
     def __init__(self, parent_ref):
         self.ref = -1
         self.parent_ref = parent_ref
@@ -12,6 +15,7 @@ class Scope:
         self.return_value = None
 
     def add_variable(self, name, type, addr=-1, virtual=False):
+        '''Add a variable to the variables table of the SemanticScope'''
         self.vars[name] = {
             'type': type,
             'addr': addr,
@@ -21,6 +25,7 @@ class Scope:
         }
 
     def add_parameter(self, name):
+        '''Add a parameter name to the parameter list'''
         self.params.append(name)
 
     def __str__(self):
@@ -42,6 +47,7 @@ class SemanticScopeTree:
         self.add_scope(global_scope)
 
     def add_scope(self, scope):
+        '''Add a new scope to the ScopeTree'''
         scope.ref = self.counter
         self.dict[scope.ref] = scope
         self.counter = self.counter + 1
